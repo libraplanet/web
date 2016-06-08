@@ -1,0 +1,108 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- css. -->
+		<link rel="stylesheet" type="text/css" href="./res/css.css">
+		<link rel="stylesheet" type="text/css" href="./res/anim_uv.css">
+		<link rel="stylesheet" type="text/css" href="./res/anim_v.css">
+
+		<!-- jQuery. -->
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+
+		<!-- three.js. -->
+		<script src="./res/three.min.js" type="text/javascript"></script>
+		
+		<!-- vertex shader. -->
+		<script id="vshader" type="x-shader/x-vertex">
+		</script>
+
+		<!-- flagment shader. -->
+		<script id="fshader" type="x-shader/x-fragment">
+		</script>
+		<script src="./res/script.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<h1>RatioUVAnimHTML</h1>
+		<div id="AREA_RESOURCE">
+			<div class="floatBox">
+				<div>
+					<div class="message_box">
+						<h2 class="message_active">anim uv(10*10) img</h2>
+					</div>
+					<img src="res/img.png" />
+				</div>
+			</div>
+			<div class="floatBox">
+				<div>
+					<div class="message_box">
+						<h2 class="message_active">anim v(1*100) img</h2>
+					</div>
+					<div class="clip">
+						<img src="res/img_anim_v.png" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="both " />
+		<div id="AREA_ANIM_JS">
+			<div class="floatBox">
+				<div id="ANIM_CNVAS_CNVASAPI">
+					<div class="message_box">
+						<h2 class="message_active">anim uv(10*10) canvas api</h2>
+					</div>
+					<canvas id="CANVAS_CNVASAPI" width="800" height="600"></canvas>
+				</div>
+			</div>
+			<div class="floatBox">
+				<div id="ANIM_CANVAS_WEBGL">
+					<div class="message_box">
+						<h2 class="message_active">anim ewbgl</h2>
+					</div>
+					<canvas id="CANVAS_WEBGL" width="800" height="600"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="both " />
+		<div>
+			<div class="floatBox">
+				<div class="message_box" width="800" height="600">
+					<h2>anim uv(10*10) scale &amp; translation3d</h2>
+				</div>
+				<div class="animBoxClip">
+					<div class="animBoxScale">
+						<img class="animTranslateUV" src="res/img.png"/>
+					</div>
+				</div>
+			</div>
+			<div class="floatBox">
+				<div class="message_box">
+					<h2>anim v(1*10)scale &amp; translation3d</h2>
+				</div>
+				<div class="animBoxClip">
+					<div class="animBoxScale">
+						<img class="animTranslateV" src="res/img_anim_v.png"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="both " />
+		<div>
+			<div class="floatBox">
+				<div class="message_box" width="800" height="600">
+					<h2>anim uv(10*10) scale &amp; anim matrix</h2>
+				</div>
+				<div class="animBoxClip">
+					<img class="animMatrixUV" src="res/img.png" />
+				</div>
+			</div>
+			<div class="floatBox">
+				<div class="message_box">
+					<h2>anim v(1*10) scale &amp; anim matrix</h2>
+				</div>
+				<div class="animBoxClip">
+					<img class="animMatrixV" src="res/img_anim_v.png" />
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

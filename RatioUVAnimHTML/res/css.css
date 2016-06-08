@@ -1,0 +1,67 @@
+
+body {
+	background-color:#666666;
+	color:white;
+}
+
+div.both {
+	clear:both;
+}
+
+div.floatBox{
+	background-color:#FFFFFF;
+	border-color:#000000;
+	border-style:double;
+	border-width:3px;
+	color:#666666;
+	padding: 10 10 10 10;
+	margin: 5 5 5 5;
+	float:left;
+}
+div.message_box h2{
+	color:#EE3366;
+	border-color:#EE3366;
+	border-style:solid;
+	border-width:0px 0px 1px 15px;
+	padding: 3px 0 3px 10px;
+}
+/*
+canvas#CANVAS_CNVASAPI, canvas#CANVAS_WEBGL{
+	width:800;
+	height:600;
+}
+*/
+
+div#AREA_RESOURCE .clip {
+	width:auto;
+	height:120;
+	overflow: scroll;
+}
+
+/**
+ * box clip
+ */
+div.animBoxClip{
+	width:800;
+	height:600;
+	overflow: hidden;
+	position: relative;
+	vertical-align: top;
+}
+
+/**
+ * scaling box
+ */
+div.animBoxScale{
+	width:16;
+	height:12;
+	position: relative;
+	-ms-transform-origin: left top;
+	-ms-transform: scale(50, 50);
+	-moz-transform-origin: left top;
+	-moz-transform: scale(50, 50);
+	-webkit-transform-origin: left top;
+	-webkit-transform: scale(50, 50);
+	-o-transform-origin: left top;
+	-o-transform: scale(50, 50);
+}

@@ -1,0 +1,103 @@
+/**
+ * translation anime image v
+ */
+img.animTranslateV{
+	/*IE*/
+	-ms-animation-name: animTranslateV;
+	-ms-animation-delay: 0s;
+	-ms-animation-duration: 3300ms;
+	-ms-animation-timing-function: steps(100,end);
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-direction : normal;
+	/*gecko*/
+	-moz-animation-name: animTranslateV;
+	-moz-animation-delay: 0s;
+	-moz-animation-duration: 3300ms;
+	-moz-animation-timing-function: steps(100,end);
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-direction : normal;
+	/*webkit*/
+	-webkit-animation-name: animTranslateV;
+	-webkit-animation-delay: 0s;
+	-webkit-animation-duration: 3300ms;
+	-webkit-animation-timing-function: steps(100,end);
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction : normal;
+	/*opera*/
+	-o-animation-name: animTranslateV;
+	-o-animation-delay: 0s;
+	-o-animation-duration: 3300ms;
+	-o-animation-timing-function: steps(100,end);
+	-o-animation-iteration-count: infinite;
+	-o-animation-direction : normal;
+}
+@-ms-keyframes animTranslateV{
+	  0% {-ms-transform:translate3d( 0px, 0px,0);}
+	100% {-ms-transform:translate3d( 0px, -1188px,0);}
+}
+@-moz-keyframes animTranslateV{
+	  0% {-moz-transform:translate3d( 0px,  0px,0);}
+	100% {-moz-transform:translate3d( 0px, -1188px,0);}
+}
+@-webkit-keyframes animTranslateV{
+	  0% {-webkit-transform:translate3d( 0px, 0px,0);}
+	100% {-webkit-transform:translate3d( 0px, -1188px,0);}
+}
+@-o-keyfra-o-mes animTranslateV{
+	  0% {-o-transform:translate3d( 0px, 0px,0);}
+	100% {-o-transform:translate3d( 0px, -1188px,0);}
+}
+
+/**
+ * matrix anime image v
+ */
+img.animMatrixV{
+	/*IE*/
+	-ms-animation-name: animMatrixV;
+	-ms-animation-delay: 0s;
+	-ms-animation-duration: 3300ms;
+	-ms-animation-timing-function: steps(100, end);
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-direction : normal;
+	-ms-transform-origin: left top;
+	/*gecko*/
+	-moz-animation-name: animMatrixV;
+	-moz-animation-delay: 0s;
+	-moz-animation-duration: 3300ms;
+	-moz-animation-timing-function: steps(100, end);
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-direction : normal;
+	-moz-transform-origin: left top;
+	/*webkit*/
+	-webkit-animation-name: animMatrixV;
+	-webkit-animation-delay: 0s;
+	-webkit-animation-duration: 3300ms;
+	-webkit-animation-timing-function: steps(100, end);
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction : normal;
+	-webkit-transform-origin: left top;
+	/*opera*/
+	-o-animation-name: animMatrixV;
+	-o-animation-delay: 0s;
+	-o-animation-duration: 3300ms;
+	-o-animation-timing-function: steps(100, end);
+	-o-animation-iteration-count: infinite;
+	-o-animation-direction : normal;
+	-o-transform-origin: left top;
+}
+@-ms-keyframes animMatrixV {
+	  0% {-ms-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0,      0, 0, 1);}
+	100% {-ms-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0, -59400, 0, 1);}
+}
+@-moz-keyframes animMatrixV {
+	  0% {-moz-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0,      0, 0, 1);}
+	100% {-moz-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0, -59400, 0, 1);}
+}
+@-webkit-keyframes animMatrixV {
+	  0% {-webkit-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0,      0, 0, 1);}
+	100% {-webkit-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0, -59400, 0, 1);}
+}
+@-o-keyframes animMatrixV {
+	 0%  {-o-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0,      0, 0, 1);}
+	100% {-o-transform: matrix3d(50, 0, 0, 0,0, 50, 0, 0,0, 0, 1, 0, 0, -59400, 0, 1);}
+}

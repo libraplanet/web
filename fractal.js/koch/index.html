@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>koch</title>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<style type="text/css">
+		<!--
+			body { 
+				background-color: #666666;
+				color: #FFFFFF;
+				margin:0px;
+				padding:0px;
+				font-size: 0.7em;
+				-webkit-text-size-adjust: 100%;
+			}
+			div#root{
+				width:100%;
+			}
+			canvas {
+				background-color: #FFFFFF;
+				/*border: 1px solid #000000;*/
+				color: #FFFFFF;
+			}
+			table, tr, td
+			{
+				padding:0px;
+				margin:0px;
+			}
+			td.pad
+			{
+				width:10px;
+			}
+			span.pad
+			{
+				padding:0px;
+				padding-left:5px;
+			}
+			div.caption
+			{
+				margin-bottom:3px;
+			}
+			td.element
+			{
+				border-color: #EEEEFF;
+				border-style: solid;
+				border-left-width: 10px;
+				border-bottom-width: 1px;
+				border-right-width: 0px;
+				border-top-width: 0px;
+				padding-top:2px;
+				padding-bottom:2px;
+				padding-left:10px;
+				padding-right:10px;
+			}
+			td.submit
+			{
+			}
+			input, select
+			{
+				font-size: 0.7em;
+			}
+			input
+			{
+				padding:0px;
+				margin:0px;
+				padding-left:0px;
+				padding-right:0px;
+			}
+			span.add_button
+			{
+				padding:0px;
+				padding-left:5px;
+				padding-right:5px;
+				margin:0px;
+				background-color: #c0c0c0;
+				color:#000000;
+				border-style:solid;
+				border-width:1px;
+				border-top-color: #FFFFFF;
+				border-left-color: #FFFFFF;
+				border-bottom-color: #000000;
+				border-right-color: #000000;
+			}
+			span.add_button:active
+			{
+				border-top-color: #000000;
+				border-left-color: #000000;
+				border-bottom-color: #FFFFFF;
+				border-right-color: #FFFFFF;
+			}
+			img.add_button
+			{
+				height:12px;
+				padding:0px;
+				padding-left:5px;
+				padding-right:5px;
+				margin:0px;
+				background-color: #c0c0c0;
+				color:#000000;
+				border-style:solid;
+				border-width:1px;
+				border-top-color: #FFFFFF;
+				border-left-color: #FFFFFF;
+				border-bottom-color: #000000;
+				border-right-color: #000000;
+				vertical-align:top;
+			}
+			img.add_button:active
+			{
+				border-top-color: #000000;
+				border-left-color: #000000;
+				border-bottom-color: #FFFFFF;
+				border-right-color: #FFFFFF;
+			}
+			input.text
+			{
+				text-align: right;
+			}
+			
+			select, input.text
+			{
+				width:50px;
+			}
+			
+			select#select_level, select#select_divide, input#input_scale
+			{
+				/*font-size: 0.75em;*/
+			}
+			li
+			{
+				color:#FF8888;
+			}
+			input#button_redraw
+			{
+				width:100%;
+			}
+			div#note
+			{
+				margin:5px;
+				color:#FF8888;
+			}
+		-->
+		</style>
+		<script type="text/javascript">
+			/*member*/
+			var self = this;
+			
+			var lineData = undefined;
+
+
+			/*prototype*/
+			self.startDraw = function(){}
+
+			window.onload = function()
+			{
+				var c = document.getElementById('cvs');
+				var timerId = -1;
+				(function()
+				{
+					var root = document.getElementById('root');
+					var len = Math.min(root.clientWidth, 480);
+					var aspect = c.width / c.height;
+					c.width = len;
+					c.height = len / aspect;
+				})();
+				if(c.getContext)
+				{
+					var g = c.getContext('2d');
+					g.clearRect(0, 0, c.width, c.height);
+					var recursive = function (base_x, base_y, base_length, type, scale, divide, deg, level, f)
+					{
+						if(level > 0)
+						{
+							var len = base_length * scale;
+							for(var i = 0; i < divide; i++)
+							{
+								var d, r, x, y, f;
+								if(type == 0)
+								{
+									d = ((180.0 * (i + 1) / (divide + 1)) - 90.0 + deg);
+								}
+								else
+								{
+									d = ((360 * i / divide) + deg);
+								}
+								r = -(d * Math.PI / 180.0);
+								x = base_x + (Math.cos(r) * len);
+								y = base_y + (Math.sin(r) * len);
+								f(base_x, base_y, x, y);
+								recursive(x, y, base_length, type, scale * scale, divide, d, level - 1, f);
+							}
+						}
+					}
+
+					self.startDraw = function()
+					{
+						var $base_length = $('#input_base_length');
+						var $level = $('#select_level');
+						var $divide = $('#select_divide');
+						var $scale = $('#input_scale');
+						var base_length = parseFloat($base_length.val());
+						var level = parseInt($level.val());
+						var divide = parseInt($divide.val());
+						var scale = parseFloat($scale.val());
+						var type, mode;
+						var $error = $('#errorarea > ul');
+						var errors = [];
+						$error.empty();
+						
+						if($('input#draw_type_180:checked').length) {
+							type = 0;
+						}
+						else if($('input#draw_type_360:checked').length) {
+							type = 1;
+						}
+						if($('input#recursive_mode_timer:checked').length) {
+							mode = false;
+						}
+						else if($('input#recursive_mode_recursive:checked').length) {
+							mode = true;
+						}
+						if(isNaN(base_length))
+						{
+							errors.push('基本サイズが無効です。');
+						}
+						if(isNaN(level))
+						{
+							errors.push('階層が無効です。');
+						}
+						if(isNaN(divide))
+						{
+							errors.push('本数が無効です。');
+						}
+						if(isNaN(scale))
+						{
+							errors.push('スケールが無効です。小数で入力してください。');
+						}
+						if(errors.length > 0)
+						{
+							for(var i = 0; i < errors.length; i++)
+							{
+								var $mes = $('<li>');
+								$mes.text(errors[i]);
+								$error.append($mes);
+							}
+						}
+						else
+						{
+							if(timerId >= 0)
+							{
+								clearTimeout(timerId);
+								timerId = -1;
+							}
+
+							var f;
+							var lines = [];
+							g.clearRect(0, 0, c.width, c.height);
+							g.fillStyle = 'rgb(0, 0, 0)';
+							recursive(c.width / 2, c.height / 2, base_length, type, scale, divide, 90.0, level, function(base_x, base_y, x, y)
+							{
+								if(mode)
+								{
+									g.beginPath();
+									g.moveTo(base_x, base_y);
+									g.lineTo(x, y);
+									g.stroke();
+								}
+								else
+								{
+									lines.push({
+										base_x: base_x,
+										base_y: base_y,
+										x: x,
+										y: y
+									})
+								}
+							});
+							if(mode === false)
+							{
+								f = function()
+								{
+									if(lines.length > 0)
+									{
+										var l = lines.shift();
+										var base_x = l.base_x;
+										var base_y = l.base_y;
+										var x = l.x;
+										var y = l.y;
+										g.beginPath();
+										g.moveTo(base_x, base_y);
+										g.lineTo(x, y);
+										g.stroke();
+										timerId = setTimeout(f, 1);
+									}
+								};
+								f();
+							}
+						}
+					}
+				}
+			}
+			
+			self.addInputValue = function(id, v)
+			{
+				var $input = $(id);
+				var fV = parseFloat(v);
+				var fInput = parseFloat($input.val());
+				var nV;
+				var nInput;
+				if(isNaN(fV)){
+					nv = 0;
+				}
+				if(isNaN(fInput)){
+					input = 0;
+				}
+				nInput =  parseInt(fInput * 1000000);
+				nV = parseInt(fV * 1000000);
+				nInput += nV;
+				$input.val(nInput / 1000000);
+			}
+
+			self.addSelectValue = function(id, v)
+			{
+				var $select = $(id);
+				var $options = $select.find('option');
+
+				var nv =  parseInt(v);
+				if(!isNaN(nv)){
+					var index = 0;
+					var selected = $select.val();
+					for(index = 0; index < $options.length; index++)
+					{
+						var $o = $($options.get(index));
+						var v = $o.val();
+						if(v == selected){
+							break;
+						}
+					}
+					index += nv;
+					index += $options.length;
+					index %= $options.length;
+					$select.val($($options[index]).val());
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="root">
+			<div><a href="#note">※注意</a></div>
+			<br />
+			<div id="errorarea"><ul></ul></div>
+			<table>
+				<tr>
+					<td class="element">
+						<div class="caption">
+							再帰モード
+						</div>
+						<div>
+							<input id="recursive_mode_recursive" type="radio" name="recursive_mode" value="1" onclick="startDraw();" checked />一括描画
+						</div>
+						<div>
+							<input id="recursive_mode_timer" type="radio" name="recursive_mode" value="0" onclick="startDraw();"/>遅延描画
+						</div>
+					</td>
+					<td class="pad"></td>
+					<td class="element">
+						<div class="caption">
+							描画タイプ
+						</div>
+						<div>
+							<input id="draw_type_360" type="radio" name="draw_type" value="1" onclick="startDraw();" checked />360度
+						</div>
+						<div>
+							<input id="draw_type_180" type="radio" name="draw_type" value="0" onclick="startDraw();"/>180度
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="element">
+						<div class="caption">
+							基準とする長さ
+						</div>
+						<div>
+							<img class="add_button" src="minus.svg" onclick="addInputValue('#input_base_length', -1);startDraw();">
+							<span class="pad"></span>
+							<input class="text" id="input_base_length" type="text" size="6" value="60" />
+							px
+							<span class="pad"></span>
+							<img class="add_button" src="plus.svg" onclick="addInputValue('#input_base_length', +1);startDraw();">
+						</div>
+					</td>
+					<td class="pad"></td>
+					<td class="element" >
+						<div class="caption">
+							長さの補正
+						</div>
+						<div>
+							<img class="add_button" src="minus.svg" onclick="addInputValue('#input_scale', -0.1);startDraw();">
+							<span class="pad"></span>
+							<input class="text" id="input_scale" type="text" size="5" value="0.9"/>
+							<span class="pad"></span>
+							<img class="add_button" src="plus.svg" onclick="addInputValue('#input_scale', +0.1);startDraw();">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="element">
+						<div class="caption">
+							1階層の本数
+						</div>
+						<div>
+							<img class="add_button" src="minus.svg" onclick="addSelectValue('#select_divide', -1);startDraw();">
+							<span class="pad"></span>
+							<select id="select_divide" onchange="startDraw();" size="1">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5" selected>5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+							<span class="pad"></span>
+							<img class="add_button" src="plus.svg" onclick="addSelectValue('#select_divide', +1);startDraw();">
+						</div>
+					</td>
+					<td class="pad"></td>
+					<td class="element">
+						<div class="caption">
+							階層の深度
+						</div>
+						<div>
+							<img class="add_button" src="minus.svg" onclick="addSelectValue('#select_level', -1);startDraw();">
+							<span class="pad"></span>
+							<select id="select_level" onchange="startDraw();" size="1">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3" selected>3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+							<span class="pad"></span>
+							<img class="add_button" src="plus.svg" onclick="addSelectValue('#select_level', +1);startDraw();">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="element" colspan="3">
+						<input id="button_redraw" type="submit" value="redraw" onclick="startDraw();"/>
+					</td>
+				</tr>
+			</table>
+			<canvas id="cvs" width="600px" height="600px"></canvas>
+			<div id="note">
+				1階層の本数 ^ 階層度の深度分の計算が必要になります。<br />
+				10本 ^ 10深度で10,000,000,000回(100億回)。<br />
+				デカい回数にすると暫く計算に時間かかって固まるので<br />
+				注意してく笹井。<br />
+			</div>
+		</div>
+	</body>
+</html>
