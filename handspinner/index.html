@@ -1,0 +1,392 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>hand spinner</title>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<style type="text/css">
+		<!--
+			body {
+				background-color:#666666;
+				color: #FFFFFF;
+				margin:0;
+				/*padding:0;*/
+			}
+		-->
+		</style>
+		<script type="text/javascript">
+		<!--
+			/**
+			 * 角度をラジアンに変換.
+			 * @param deg 角度
+			 * @return ラジアン
+			 */
+			function deg2Rad(deg) {
+				return deg * Math.PI / 180;
+			};
+
+			/**
+			 * ラジアンを角度に変換.
+			 * @param rad ラジアン 
+			 * @return 角度
+			 */
+			function rad2Deg(rad) {
+				return rad * 180 / Math.PI;
+			};
+
+			/**
+			 * リモコン風のBOXの描画.
+			 * @param g コンテキスト
+			 * @param baseX 外接円の中心X座標
+			 * @param baseY 外接円の中心Y座標
+			 * @param radius 外接円の半径
+			 * @param deg BOXの回転角度
+			 */
+			function drawRemobox(g, baseX, baseY, radius, deg) {
+				/**
+				 * 円に内接する矩形の描画.
+				 * 基準角度を元に長方形を描画します.
+				 * ・第一象限頂点 基準角度より算出
+				 * ・第二象限頂点 第一象限の水平反転位置
+				 * ・第三象限頂点 第一象限の180度回転位置
+				 * ・第四象限頂点 第一象限の垂直反転位置
+				 * @param x 外接円の中心X座標
+				 * @param y 外接円の中心Y座標
+				 * @param r 外接円の半径
+				 * @param a 基準角度
+				 * @param d 矩形の回転角度
+				 */
+				var drawBox = function(x, y, r, a, d) {
+					var rad = [
+						deg2Rad(d + a),				//第一象限の頂点
+						deg2Rad(d + 180 - a),		//第二象限の頂点
+						deg2Rad(d + 180 + a),		//第三象限の頂点
+						deg2Rad(d + 360 - a)		//第四象限の頂点
+					];
+					g.beginPath();
+					g.moveTo(x + (Math.cos(rad[0]) * r), y + (Math.sin(rad[0]) * r));
+					g.lineTo(x + (Math.cos(rad[1]) * r), y + (Math.sin(rad[1]) * r));
+					g.lineTo(x + (Math.cos(rad[2]) * r), y + (Math.sin(rad[2]) * r));
+					g.lineTo(x + (Math.cos(rad[3]) * r), y + (Math.sin(rad[3]) * r));
+					g.closePath();
+					g.stroke();
+				};
+
+				/**
+				 * 円の描画.
+				 * @param x 中心X座標
+				 * @param y 中心Y座標
+				 * @param r 半径
+				 */
+				var drawCircle = function(x, y, r) {
+					g.beginPath();
+					g.arc(x, y, r, 0, Math.PI*2, false);
+					g.stroke();
+				};
+
+				g.strokeStyle = 'rgb(255, 255, 255)';
+				g.lineWidth = 5;
+				//円を描く
+				(function() {
+					drawCircle(baseX, baseY, radius);
+				})();
+				//内接四角形を描く
+				(function() {
+					drawBox(baseX, baseY, radius, 18, deg);
+				})();
+				//十字キー
+				(function() {
+					var x = baseX + (Math.cos(deg2Rad(deg + 180)) * radius * 0.6);
+					var y = baseY + (Math.sin(deg2Rad(deg + 180)) * radius * 0.6);
+					var r = radius * 0.2;
+					drawBox(x, y, r, 18, deg);
+					drawBox(x, y, r, 90 - 18, deg);
+				})();
+				//ホームボタン群
+				(function() {
+					var bx = baseX + (Math.cos(deg2Rad(deg + 180)) * radius * 0.1);
+					var by = baseY + (Math.sin(deg2Rad(deg + 180)) * radius * 0.1);
+					var r = radius * 0.04;
+					(function() {
+						var x = bx + (Math.cos(deg2Rad(deg + 0)) * radius * 0);
+						var y = by + (Math.sin(deg2Rad(deg + 0)) * radius * 0);
+						drawCircle(x, y, r);
+					})();
+					(function() {
+						var x = bx + (Math.cos(deg2Rad(deg + 90)) * radius * 0.18);
+						var y = by + (Math.sin(deg2Rad(deg + 90)) * radius * 0.18);
+						drawCircle(x, y, r);
+					})();
+					(function() {
+						var x = bx + (Math.cos(deg2Rad(deg + 270)) * radius * 0.18);
+						var y = by + (Math.sin(deg2Rad(deg + 270)) * radius * 0.18);
+						drawCircle(x, y, r);
+					})();
+				})();
+				//AB
+				(function() {
+					var bx = baseX + (Math.cos(deg2Rad(deg + 0)) * radius * 0.5);
+					var by = baseY + (Math.sin(deg2Rad(deg + 0)) * radius * 0.5);
+					var r = radius * 0.05;
+					(function() {
+						var x = bx + (Math.cos(deg2Rad(deg + 0)) * radius * 0.15);
+						var y = by + (Math.sin(deg2Rad(deg + 0)) * radius * 0.15);
+						drawCircle(x, y, r);
+					})();
+					(function() {
+						var x = bx + (Math.cos(deg2Rad(deg + 180)) * radius * 0.15);
+						var y = by + (Math.sin(deg2Rad(deg + 180)) * radius * 0.15);
+						drawCircle(x, y, r);
+					})();
+				})();
+			}
+
+			var drawSpinner = function(g, img, cx, cy, deg, r) {
+				g.save();
+				g.translate(cx, cy);
+				g.rotate(deg2Rad(deg));
+				g.drawImage(img, -(img.width / 2), -(img.height / 2));
+				//g.translate((img.width / 2), (img.height / 2));
+				g.restore();
+			};
+			
+			var fillPosText = function(g, cap, vx, vy, vz, x, y) {
+				var conv = function(v) {
+					var sig = '';
+					var str1 = '0000' + Math.floor(Math.abs(v));
+					var str2 = '0' + Math.floor((Math.abs(v) * 100) % 100);
+					str1 = str1.slice(-4);
+					str2 = str2.slice(-2);
+					if(v < 0) {
+						sig = '-';
+					} else {
+						sig = '+';
+					}
+					return sig + str1 + '.'+ str2
+				}
+
+				g.fillText(cap, x, y);
+				g.fillText(conv(vx), x + 150, y);
+				g.fillText(conv(vy), x + 300, y);
+				g.fillText(conv(vz), x + 450, y);
+			};
+
+			/**
+			 * 初期化処理
+			 */
+			$(function(){
+				var self = this;
+				var curDeg = 0;
+				var tgtDeg = 0;
+				var startPos = {x:0, y:0, z:0};
+				var endPos = {x:0, y:0, z:0};
+
+				/**
+				 * アジャスト処理.
+				 */
+				var ajustBox = function() {
+					var $window = $(window);
+					var $body = $('#BODY');
+					var $canvas = $('#CANVAS');
+					var width = $canvas.width();
+					var height = $canvas.height();
+					var ratio = height / width;
+					var f = function() {
+						var w = $window.width();
+						var h = $window.height();
+						var scale = Math.min(w / width, h / height);
+						$canvas.css({
+							width: width * scale,
+							height: width * scale * ratio
+						});
+						$canvas.width(width * scale);
+						$canvas.height(width * scale * ratio);
+					};
+					//イベント登録
+					$window.resize(f);
+					//初回トリガー
+					setTimeout(f, 1);
+				};
+
+				/**
+				 * センサー登録.
+				 */
+				var registCensorListener = function() {
+					var isMobile = (function() {
+						var agent = navigator.userAgent;
+						if(agent.search(/iPhone/) != -1) {
+							return true;
+						} else if(agent.search(/iPhone/) != -1) {
+							return true;
+						} else if(agent.search(/iPad/) != -1) {
+							return true;
+						} else if(agent.search(/iPod/) != -1) {
+							return true;
+						} else if(agent.search(/Android/) != -1) {
+							return true;
+						} else {
+							return false;
+						}
+					})();
+					if(true  || isMobile) {
+						//開始
+						window.addEventListener("touchstart", function(event) {
+							event.preventDefault();
+							startPos.x = event.touches[0].pageX;
+							startPos.y = event.touches[0].pageY;
+							startPos.z = 0;
+							endPos.x = 0;
+							endPos.y = 0;
+							endPos.z = 0;
+						}, false);
+						//移動中
+						window.addEventListener("touchmove", function(event) {
+							event.preventDefault();
+						}, false);
+						//終了
+						window.addEventListener("touchend", function(event) {
+							endPos.x = event.touches[0].pageX;
+							endPos.y = event.touches[0].pageY;
+							endPos.z = 0;
+							
+							
+						}, false);
+						
+					} else {
+						//dummy
+						var f = function() {
+							tgtDeg++;
+							tgtDeg %= 360;
+							setTimeout(f, 1000/60);
+						};
+						f();
+					}
+				};
+
+				/**
+				 * 描画更新処理.
+				 */
+				var stratTick = function(){
+					var c = document.getElementById('CANVAS');
+					if(c) {
+						var $c = $($c);
+						var g = c.getContext('2d');
+						var lasttime = new Date();
+						var cnt = 0;
+						var fps = 0;
+						var img = new Image();
+						var l, f;
+						// loadメソッド
+						l = function() {
+							var cnt = 0;
+							var imgs = [];
+
+							//画像のパスを定義
+							img.src = './res/img.jpg' + '?' + new Date().getTime();
+
+							//読み込みリストに追加
+							imgs.push(img);
+
+							imgs.forEach(function(value) {
+								value.onload = function() {
+									cnt++;
+									if(cnt >= imgs.length) {
+										//読み込み完了で実行開始
+										f();
+									}
+								}
+							});
+						};
+						// 実行メソッド
+						f = function() {
+							//更新処理
+							(function(){
+								//角度
+								(function(){
+									var dist = tgtDeg - curDeg;
+									var v = dist * 0.1;
+									curDeg += v;
+								})();
+
+								//fps
+								(function(){
+									var date = new Date();
+									var dist = date - lasttime;
+									if(dist < 1000) {
+										cnt++;
+									} else {
+										fps = cnt * 1000 / dist;
+										lasttime = date;
+										cnt = 0;
+									}
+								})();
+							})();
+							//描画処理
+							(function(){
+								//bg
+								(function(){
+									g.fillStyle = 'rgb(33, 33, 33)';
+									g.fillRect(0, 0, c.width, c.height);
+								})();
+								//spinner
+								(function(){
+									var x = c.width / 2;
+									var y = c.height / 2;
+									var d = curDeg;
+									var r = (c.height / 2) * 0.90;
+									drawRemobox(g, x, y, r, d);
+									drawSpinner(g, img, x, y, d, r);
+								})();
+								//info
+								(function(){
+									(function(){
+										g.font = "bold 25px 'Ariel'";
+										g.fillStyle = 'rgb(255, 255, 255)';
+										g.textAlign = "left";
+										g.fillText('curDeg   : ' + curDeg, 10, 25);
+										fillPosText(g, 'startPos : ', startPos.x, startPos.y, startPos.z, 10, 50);
+										fillPosText(g, 'endPos   : ', endPos.x, endPos.y, endPos.z, 10, 75);
+									})();
+									(function(){
+										var f = [
+											Math.floor(fps / 10) % 10,
+											Math.floor(fps / 1)  % 10,
+											Math.floor(fps * 10)  % 10,
+										];
+										g.textAlign = "right";
+										g.fillText(f[0] + '' + f[1] + '.' + f[2] + 'fps', 580, 580);
+									})();
+								})();
+							})();
+							setTimeout(f, 1000/60);
+						};
+						l();
+					}
+				};
+				
+				/**
+				 * 初期化処理.
+				 */
+				var init = function() {
+					//アジャスト
+					ajustBox();
+
+					//センサ リスナ登録
+					registCensorListener();
+
+					//描画
+					stratTick();
+				};
+
+				init();
+			})
+		-->
+		</script>
+	</head>
+	<body id="BODY">
+		<h1>hand spinnerｩ</h1>
+		<div id="BOX">
+			<canvas id="CANVAS" width="600" height="600"></canvas>
+		</div>
+	</body>
+</html>
