@@ -282,7 +282,7 @@
 								var tgt = [0, 0, 0];
 								var norm = [0, 1, 0];
 								Matrix.lookAt(pos, tgt, norm, matCamera);
-								Matrix.perspective(45, c.width / c.height, 0.1, 100,  matProjection);
+								Matrix.perspective(45, c.width / c.height, 0.01, 1000,  matProjection);
 							}
 
 							if(ret) {
