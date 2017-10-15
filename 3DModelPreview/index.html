@@ -1,0 +1,393 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>3DModelPreview</title>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<!--<script src="./minMatrix.js"></script>-->
+		<script src="https://wgld.org/j/minMatrixb.js" type="text/javascript"></script>
+
+		<script id="V_SHADER" type="x-shader/x-vertex">
+			attribute vec3 aPosition;
+			uniform vec4 uColor;
+			uniform mat4 uMatrix;
+			varying vec4 vColor;
+			void main(void) {
+				vColor = uColor;
+				gl_Position = uMatrix * vec4(aPosition, 1.0);
+			}
+		</script>
+
+		<script id="F_SHADER" type="x-shader/x-fragment">
+			precision mediump float;
+			varying vec4 vColor;
+			void main(void) {
+				gl_FragColor = vColor;
+			}
+		</script>
+
+		<style type="text/css">
+		<!--
+			body {
+				background-color:#666666;
+				color: #FFFFFF;
+				margin:0;
+				/*padding:0;*/
+			}
+		-->
+		</style>
+		<script type="text/javascript">
+		<!--
+			/**
+			 * 角度をラジアンに変換.
+			 * @param deg 角度
+			 * @return ラジアン
+			 */
+			function deg2Rad(deg) {
+				return deg * Math.PI / 180;
+			};
+
+			/**
+			 * ラジアンを角度に変換.
+			 * @param rad ラジアン 
+			 * @return 角度
+			 */
+			function rad2Deg(rad) {
+				return rad * 180 / Math.PI;
+			};
+
+			/**
+			 * 初期化処理
+			 */
+			$(function(){
+				var self = this;
+				var glCanvas;
+				var glGraphics;
+				var glShdProgram;
+				var glShdParamLocAPosition;
+				var glShdParamLocUColor;
+				var glShdParamLocUMattix;
+
+				// mat
+				var Matrix = new matIV();
+				var Quaternion = new qtnIV();
+				var matCamera = Matrix.identity(Matrix.create());
+				var matProjection = Matrix.identity(Matrix.create());
+
+				//point
+				var mouseMode;
+				var lastPointX;
+				var lastPointY;
+
+				/**
+				 * アジャスト処理.
+				 */
+				var ajustBox = function() {
+					var $window = $(window);
+					var $body = $('#BODY');
+					var $canvas = $('#CANVAS');
+					var width = $canvas.width();
+					var height = $canvas.height();
+					var ratio = height / width;
+					var f = function() {
+						var w = $window.width();
+						var h = $window.height();
+						var scale = Math.min(w / width, h / height);
+						$canvas.css({
+							width: width * scale,
+							height: width * scale * ratio
+						});
+						$canvas.width(width * scale);
+						$canvas.height(width * scale * ratio);
+					};
+					//イベント登録
+					$window.resize(f);
+					//初回トリガー
+					setTimeout(f, 1);
+				};
+
+				/**
+				 * リスナー登録.
+				 */
+				var registListener = function() {
+					if(glCanvas) {
+						var c = glCanvas;
+						var isMobile = (function() {
+							var agent = navigator.userAgent;
+							if(agent.search(/iPhone/) != -1) {
+								return true;
+							} else if(agent.search(/iPhone/) != -1) {
+								return true;
+							} else if(agent.search(/iPad/) != -1) {
+								return true;
+							} else if(agent.search(/iPod/) != -1) {
+								return true;
+							} else if(agent.search(/Android/) != -1) {
+								return true;
+							} else {
+								return false;
+							}
+						})();
+						if(isMobile) {
+
+						} else {
+							var rotateQ = function(vx, vy){
+								var m = Matrix.identity(Matrix.create());
+								var q = Quaternion.identity(Quaternion.create());
+								var v = Math.sqrt((vx * vx) + (vy * vy));
+								var a = Math.atan2(vy, vx);
+								var v2 = v * 0.00005;
+								var a2 = a;// += Math.PI / 2;
+								Quaternion.rotate(v2, [Math.cos(a2), Math.sin(a2), 0.0], q);
+								//Quaternion.rotate(deg2Rad(1), [-1.0, 0.0, 0.0], q);
+								Quaternion.toMatIV(q, m);
+								Matrix.multiply(matCamera, m, matCamera);
+
+								draw();
+							}
+							var rotateQ2 = function(vx, vy){
+								var m = Matrix.identity(Matrix.create());
+								var q = Quaternion.identity(Quaternion.create());
+								var qYaw = Quaternion.identity(Quaternion.create());
+								var qPitch = Quaternion.identity(Quaternion.create());
+								Quaternion.rotate(deg2Rad(vx * 0.1), [0.0, 1.0, 0.0], qYaw);
+								Quaternion.rotate(deg2Rad(vy * 0.1), [1.0, 0.0, 0.0], qPitch);
+								Quaternion.multiply(q, qYaw, q);
+								Quaternion.multiply(q, qPitch, q);
+								Quaternion.toMatIV(q, m);
+								Matrix.multiply(matCamera, m, matCamera);
+
+								draw();
+							}
+							var translate = function(vx, vy){
+								Matrix.translate(matCamera, [-vx * 0.1, vy * 0.1, 0], matCamera);
+								draw();
+							}
+
+							// イベント処理
+							c.addEventListener('contextmenu', function(e){
+									if(e.preventDefault){
+										e.preventDefault();
+									}else{
+										return false;
+									}
+								}, true);
+							c.addEventListener('mousedown', function(e){
+								var x = e.clientX;
+								var y = e.clientY;
+								lastPointX = x;
+								lastPointY = y;
+								if(e.button == 0) {
+									//左
+									mouseMode = 0;
+								} else if(e.button == 1) {
+									//中央
+									mouseMode = 1;
+								} else if(e.button == 2) {
+									//右
+									mouseMode = 2;
+								}
+							}, true);
+							c.addEventListener('mouseup', function(e){
+								mouseMode = undefined;
+								lastPointX = undefined;
+								lastPointY = undefined;
+							}, true);
+							c.addEventListener('mousemove', function(e){
+								if(lastPointX && lastPointY) {
+									var x = e.clientX;
+									var y = e.clientY;
+									var vx = lastPointX - x;
+									var vy = lastPointY - y;
+									lastPointX = x;
+									lastPointY = y;
+									if(mouseMode == 0) {
+										//左
+										rotateQ2(vx, vy);
+									} else if(mouseMode == 2) {
+										//右
+										translate(vx, vy);
+									}
+								}
+							}, true);
+						}
+					}
+				};
+
+				/**
+				 * 描画更新処理.
+				 */
+				var init3D = function(){
+					var c = document.getElementById('CANVAS');
+					if(c) {
+						var gl = c.getContext('webgl');
+						if(gl) {
+							var ret = true;
+							var elmVShader, srcVShader, vShader;
+							var elmFShader, srcFShader, fShader;
+							var shdProgram;
+							var shdParamLocAPosition;
+							var shdParamLocUColor;
+							var shdParamLocUMattix;
+
+							if(ret) {
+								elmVShader = document.getElementById('V_SHADER');
+								elmFShader = document.getElementById('F_SHADER');
+
+								srcVShader = elmVShader.text;
+								srcFShader = elmFShader.text;
+
+								vShader = gl.createShader(gl.VERTEX_SHADER);
+								fShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+								gl.shaderSource(vShader, srcVShader);
+								gl.shaderSource(fShader, srcFShader);
+
+								gl.compileShader(vShader);
+								gl.compileShader(fShader);
+
+								if(!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) {
+									ret &= false;
+									alert('#V_SHADER' + '\n' + gl.getShaderInfoLog(vShader));
+								}
+								if(!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) {
+									ret &= false;
+									alert('#F_SHADER' + '\n' + gl.getShaderInfoLog(fShader));
+								}
+							}
+
+							if(ret) {
+								shdProgram = gl.createProgram();
+								gl.attachShader(shdProgram, vShader);
+								gl.attachShader(shdProgram, fShader);
+								gl.linkProgram(shdProgram);
+								if(gl.getProgramParameter(shdProgram, gl.LINK_STATUS)) {
+									gl.useProgram(shdProgram);
+								} else {
+									ret &= false;
+									alert('progrm' + '\n' + gl.getProgramInfoLog(shdProgram));
+								}
+							}
+							if(ret) {
+								shdParamLocAPosition = gl.getAttribLocation(shdProgram, 'aPosition');
+								shdParamLocUColor = gl.getUniformLocation(shdProgram, 'uColor');
+								shdParamLocUMattix = gl.getUniformLocation(shdProgram, 'uMatrix');
+								//gl.enableVertexAttribArray(uColorLocation);
+								//gl.enableVertexAttribArray(uMatrixLocation);
+								//gl.vertexAttribPointer(aColorLocation, 4,    gl.FLOAT, false, 0, 0);
+							}
+							
+							if(ret) {
+								var pos = [0.0, 10.0, 50.0];
+								var tgt = [0, 0, 0];
+								var norm = [0, 1, 0];
+								Matrix.lookAt(pos, tgt, norm, matCamera);
+								Matrix.perspective(45, c.width / c.height, 0.1, 100,  matProjection);
+							}
+
+							if(ret) {
+								glCanvas = c;
+								glGraphics = gl;
+								glShdProgram = shdProgram;
+								glShdParamLocAPosition = shdParamLocAPosition;
+								glShdParamLocUColor = shdParamLocUColor;
+								glShdParamLocUMattix = shdParamLocUMattix;
+							}
+						}
+					}
+				};
+				
+				var drawLine3D = function(gl, array) {
+					var glBuffer = gl.createBuffer();
+					gl.bindBuffer(gl.ARRAY_BUFFER, null);
+					gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array), gl.STATIC_DRAW);
+
+					gl.enableVertexAttribArray(glShdParamLocAPosition);
+					gl.vertexAttribPointer(glShdParamLocAPosition, 3, gl.FLOAT, false, 0, 0);
+
+					gl.drawArrays(gl.LINES, 0, array.length / 3);
+				}
+				
+
+				var drawGrid = function(gl, matWorldBase) {
+					var array = [];
+					var matLocal = Matrix.identity(Matrix.create());
+					Matrix.multiply(matWorldBase, matLocal, matLocal);
+
+					gl.uniformMatrix4fv(glShdParamLocUMattix, false, matLocal);
+
+					gl.uniform4fv(glShdParamLocUColor, new Float32Array([1.0, 1.0, 1.0, 1.0]));
+//					array.push( 0, 0, 50,  0,  0,-50)
+//					array.push(50, 0,  0, -50, 0,  0);
+					for(var i = 0; i  < 10;  i++) {
+						var j = i + 1;
+						var v = j * 5;
+						array.push(v,  0, 50,   v, 0, -50);
+						array.push(-v, 0, 50,  -v, 0, -50);
+						array.push(50, 0,  v, -50, 0,   v);
+						array.push(50, 0, -v, -50, 0,  -v);
+					}
+					drawLine3D(gl, array);
+
+					gl.uniform4fv(glShdParamLocUColor, new Float32Array([1.0, 0.0, 0.0, 1.0]));
+					drawLine3D(gl, [-50.0, 0.0, 0.0, 50.0, 0.0, 0.0]);
+					gl.uniform4fv(glShdParamLocUColor, new Float32Array([0.0, 1.0, 0.0, 1.0]));
+					drawLine3D(gl, [0.0, -50.0, 0.0, 0.0, 50.0, 0.0, 0.0]);
+					gl.uniform4fv(glShdParamLocUColor, new Float32Array([0.0, 0.0, 1.0, 1.0]));
+					drawLine3D(gl, [0.0, 0.0, -50.0, 0.0, 0.0, 50.0, 0.0]);
+				};
+
+				var draw = function() {
+					if(glGraphics) {
+						var c = glCanvas;
+						var gl = glGraphics;
+						var matWorldBase = Matrix.identity(Matrix.create());
+						gl.viewport(0, 0, c.width, c.height);
+						gl.clearColor(0.2, 0.2, 0.2, 1);
+						gl.clearDepth(1.0);
+						gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+						Matrix.multiply(matProjection, matCamera, matWorldBase);
+
+						drawGrid(gl, matWorldBase);
+						(function(){
+							
+						})();
+						
+						gl.flush();
+					}
+				};
+				
+				/**
+				 * 初期化処理.
+				 */
+				var init = function() {
+					//アジャスト
+					ajustBox();
+
+					//3Dの初期化
+					init3D();
+
+					//リスナ登録
+					registListener();
+
+					//描画
+					draw();
+					
+					//
+					$('#CAP').text($('#CAP').text() + 'ｩ');
+				};
+
+				init();
+			})
+		-->
+		</script>
+	</head>
+	<body id="BODY">
+		<h1 id='CAP'>3DModelPreview</h1>
+		<div id="BOX">
+			<canvas id="CANVAS" width="600" height="600"></canvas>
+		</div>
+	</body>
+</html>
