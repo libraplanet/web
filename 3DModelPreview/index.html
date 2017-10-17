@@ -146,7 +146,7 @@
 								draw();
 							}
 							var rotateQ2 = function(vx, vy){
-								var m = Matrix.identity(Matrix.create());
+								var mq = Matrix.identity(Matrix.create());
 								var q = Quaternion.identity(Quaternion.create());
 								var qYaw = Quaternion.identity(Quaternion.create());
 								var qPitch = Quaternion.identity(Quaternion.create());
@@ -154,13 +154,19 @@
 								Quaternion.rotate(deg2Rad(vy * 0.1), [1.0, 0.0, 0.0], qPitch);
 								Quaternion.multiply(q, qYaw, q);
 								Quaternion.multiply(q, qPitch, q);
-								Quaternion.toMatIV(q, m);
-								Matrix.multiply(matCamera, m, matCamera);
+								Quaternion.toMatIV(q, mq);
+
+								Matrix.multiply(mq, matCamera, matCamera);
 
 								draw();
 							}
+
 							var translate = function(vx, vy){
-								Matrix.translate(matCamera, [-vx * 0.1, vy * 0.1, 0], matCamera);
+								var m = Matrix.identity(Matrix.create());
+								Matrix.translate(m, [-vx * 0.1, vy * 0.1, 0], m);
+
+								Matrix.multiply(m, matCamera, matCamera);
+
 								draw();
 							}
 
