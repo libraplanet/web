@@ -6,6 +6,7 @@
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
 		<!--<script src="./minMatrix.js"></script>-->
 		<script src="https://wgld.org/j/minMatrixb.js" type="text/javascript"></script>
+		<script src="./minVectorb.js"></script>
 
 		<script id="V_SHADER" type="x-shader/x-vertex">
 			attribute vec3 aPosition;
@@ -69,9 +70,11 @@
 				var glShdParamLocUMattix;
 
 				// mat
+				var Vector = new vecIII();
 				var Matrix = new matIV();
 				var Quaternion = new qtnIV();
 				var matCamera = Matrix.identity(Matrix.create());
+				var matVecTgt = Matrix.identity(Matrix.create());
 				var matProjection = Matrix.identity(Matrix.create());
 
 				//point
@@ -146,7 +149,9 @@
 								draw();
 							}
 							var rotateQ2 = function(vx, vy){
+								var mi = Matrix.inverse(matVecTgt,  Matrix.identity(Matrix.create()));
 								var mq = Matrix.identity(Matrix.create());
+								var m = Matrix.identity(Matrix.create());
 								var q = Quaternion.identity(Quaternion.create());
 								var qYaw = Quaternion.identity(Quaternion.create());
 								var qPitch = Quaternion.identity(Quaternion.create());
@@ -155,6 +160,16 @@
 								Quaternion.multiply(q, qYaw, q);
 								Quaternion.multiply(q, qPitch, q);
 								Quaternion.toMatIV(q, mq);
+
+								/*
+								Matrix.multiply(m, mi, m);
+								Matrix.multiply(m, matCamera, m);
+								Matrix.multiply(m, mq, m);
+								Matrix.multiply(m, matVecTgt, m);
+								
+								Matrix.identity(matCamera);
+								Matrix.multiply(matCamera, m, matCamera);
+								*/
 
 								Matrix.multiply(mq, matCamera, matCamera);
 
@@ -166,6 +181,7 @@
 								Matrix.translate(m, [-vx * 0.1, vy * 0.1, 0], m);
 
 								Matrix.multiply(m, matCamera, matCamera);
+								Matrix.translate(m, matVecTgt, matVecTgt);
 
 								draw();
 							}
@@ -284,10 +300,13 @@
 							}
 							
 							if(ret) {
-								var pos = [0.0, 10.0, 50.0];
-								var tgt = [0, 0, 0];
-								var norm = [0, 1, 0];
-								Matrix.lookAt(pos, tgt, norm, matCamera);
+								var camPos = Vector.set3fv([0.0, 10.0, 50.0], Vector.create());
+								var camTgt = Vector.set3fv([0, 0, 0], Vector.create());
+								var camNorm = [0, 1, 0];
+								var vecTgt = Vector.subtract(camTgt, camPos, Vector.create());
+
+								Matrix.lookAt(camPos, camTgt, camNorm, matCamera);
+								Matrix.translate(matVecTgt, vecTgt, matVecTgt);
 								Matrix.perspective(45, c.width / c.height, 0.01, 1000,  matProjection);
 							}
 
