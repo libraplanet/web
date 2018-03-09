@@ -28,6 +28,10 @@
 			div.hex {
 				font-family: 'Inconsolata', monospace, Consolas, 'Courier New', Courier, Monaco;
 			}
+			div.prev, div.sep {
+				font-size:0.8em;
+			}
+
 
 			/* bgcolor */
 			#CONTENTS_BODY table thead {
@@ -60,16 +64,16 @@
 				width: 100%;
 			}
 			#CONTENTS_BODY table .src {
-				width:200px;
+				width: 150px;
 			}
 			#CONTENTS_BODY table .hex {
-				width:200px;
+				width: 200px;
 			}
 			#CONTENTS_BODY table .prev {
-				width:200px;
+				width: 150px;
 			}
-			#CONTENTS_BODY table .split {
-				width:200px;
+			#CONTENTS_BODY table .sep {
+				width: 170px;
 			}
 
 			/* 高さ*/
@@ -102,7 +106,7 @@
 			var elmOrgSrc,   elmNfcSrc,   elmNfdSrc;
 			var elmOrgHex,   elmNfcHex,   elmNfdHex;
 			var elmOrgPrev,  elmNfcPrev,  elmNfdPrev;
-			var elmOrgSplit, elmNfcSplit, elmNfdSplit;
+			var elmOrgSep,   elmNfcSep,   elmNfdSep;
 			
 			var bufStr;
 
@@ -122,15 +126,15 @@
 				elmOrgSrc   = document.getElementById('CELL_ORG_SRC');
 				elmOrgHex   = document.getElementById('CELL_ORG_HEX');
 				elmOrgPrev  = document.getElementById('CELL_ORG_PREV');
-				elmOrgSplit = document.getElementById('CELL_ORG_SPLIT');
+				elmOrgSep   = document.getElementById('CELL_ORG_SEP');
 				elmNfcSrc   = document.getElementById('CELL_NFC_SRC');
 				elmNfcHex   = document.getElementById('CELL_NFC_HEX');
 				elmNfcPrev  = document.getElementById('CELL_NFC_PREV');
-				elmNfcSplit = document.getElementById('CELL_NFC_SPLIT');
+				elmNfcSep   = document.getElementById('CELL_NFC_SEP');
 				elmNfdSrc   = document.getElementById('CELL_NFD_SRC');
 				elmNfdHex   = document.getElementById('CELL_NFD_HEX');
 				elmNfdPrev  = document.getElementById('CELL_NFD_PREV');
-				elmNfdSplit = document.getElementById('CELL_NFD_SPLIT');
+				elmNfdSep   = document.getElementById('CELL_NFD_SEP');
 
 				setInterval(function(){
 					var strOrgSrc = elmOrgSrc.value;
@@ -265,9 +269,9 @@
 				elmNfcPrev.innerHTML = toHtml(strNfcSrc);
 				elmNfdPrev.innerHTML = toHtml(strNfdSrc);
 
-				elmOrgSplit.innerHTML = toHtml(toSplit(strOrgSrc));
-				elmNfcSplit.innerHTML = toHtml(toSplit(strNfcSrc));
-				elmNfdSplit.innerHTML = toHtml(toSplit(strNfdSrc));
+				elmOrgSep.innerHTML = toHtml(toSplit(strOrgSrc));
+				elmNfcSep.innerHTML = toHtml(toSplit(strNfcSrc));
+				elmNfdSep.innerHTML = toHtml(toSplit(strNfdSrc));
 				
 				bufStr = strOrgSrc;
 			}
@@ -284,7 +288,7 @@
 				<!-- #CONTENTS_MESS -->
 				<div id="CONTENTS_MESS">
 					<div>
-						<h2>#めっさげ</h2>
+						<h2>#UA(IEは無理ゲ🖕)</h2>
 					</div>
 					<div id="MESS_AREA">
 					</div>
@@ -296,12 +300,12 @@
 				<!-- #CONTENTS_OPT-->
 				<div id="CONTENTS_OPT">
 					<div>
-						<h2>#おｐちおｎ</h2>
+						<h2>#option</h2>
 					</div>
 					<div>
 						<el>
 							<li><input id="ST_CHK_SURROGATE_PAIR" onchange='changed();' type="checkbox" value="true" checked>[HEX] サロゲート ペアを1つのコードポイントで表示する。</input></li>
-							<li><input id="ST_CHK_RETCODE"        onchange='changed();' type="checkbox" value="true" checked>[HEX] 改行はコード ポイントに展開しない(改行で表示をする)。</input></li>
+							<li><input id="ST_CHK_RETCODE"        onchange='changed();' type="checkbox" value="true" checked>[HEX] 改行はコード ポイントにしないで改行する)。</input></li>
 						</el>
 					</div>
 				</div>
@@ -312,34 +316,34 @@
 					<table border="1" >
 						<thead>
 							<tr>
-								<th>ROW</th>
-								<th>INPUT</th>
-								<th>HEX</th>
-								<th>PREVIEW</th>
-								<th>SPLIT</th>
+								<th>Normalize</th>
+								<th>Source Text</th>
+								<th>Hex code point</th>
+								<th>Preview TEXT</th>
+								<th>Preview TEXT<br>(separate char)</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr id='ROW_ORG' class="row">
 								<td class="head">ORIGINAL</td>
-								<td><textarea id="CELL_ORG_SRC" class='src'>ガパピー𠮷🍆¥e🖕\</textarea></td>
+								<td><textarea id="CELL_ORG_SRC" class='src'>ガパピー𠮷🍆¥e\</textarea></td>
 								<td><div id='CELL_ORG_HEX'      class='hex'></div></td>
 								<td><div id='CELL_ORG_PREV'     class='prev'></div></td>
-								<td><div id='CELL_ORG_SPLIT'    class='split'></div></td>
+								<td><div id='CELL_ORG_SEP'      class='sep'></div></td>
 							</tr>
 							<tr id='ROW_NFC' class="row">
 								<td class="head">NFC</td>
 								<td><textarea id="CELL_NFC_SRC" class='src readonly' readonly></textarea></td>
 								<td><div id='CELL_NFC_HEX'      class='hex'></div></td>
 								<td><div id='CELL_NFC_PREV'     class='prev'></div></td>
-								<td><div id='CELL_NFC_SPLIT'    class='split'></div></td>
+								<td><div id='CELL_NFC_SEP'      class='sep'></div></td>
 							</tr>
 							<tr id='ROW_NFD' class="row">
 								<td class="head">NFD</td>
 								<td><textarea id="CELL_NFD_SRC" class='src readonly' readonly></textarea></td>
 								<td><div id='CELL_NFD_HEX'      class='hex'></div></td>
 								<td><div id='CELL_NFD_PREV'     class='prev'></div></td>
-								<td><div id='CELL_NFD_SPLIT'    class='split'></div></td>
+								<td><div id='CELL_NFD_SEP'      class='sep'></div></td>
 							</tr>
 						</tbody>
 					</table>
