@@ -1,0 +1,359 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- UNICODEのNFC/NFDを確認するツール -->
+		<!--
+			・normalize メソッド (String) (JavaScript)
+			https://msdn.microsoft.com/ja-jp/library/mt146836(v=vs.94).aspx
+			> >必要条件
+			>> Microsoft Edge (Edge ブラウザー) でサポートされます。
+			>> ストア アプリ (Windows 10 の Microsoft Edge) でもサポートされます。「バージョン情報」を参照してください。
+			>>
+			>> Quirks、Internet Explorer 6 標準、Internet Explorer 7 標準、Internet Explorer 8 標準、
+			>> Internet Explorer 9 標準、Internet Explorer 10 標準、および Internet Explorer 11 標準の各ドキュメント モードでサポートされません。
+			>> Windows 8.1 ではサポートされません。
+		-->
+		<title>ガパピー.js - UNICODE NFC/NFD Chechker -</title>
+
+		<style type="text/css">
+			@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+			@import url(https://fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
+
+			/* font */
+			body, textarea {
+				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif, "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic";
+			}
+			div.hex {
+				font-family: 'Inconsolata', monospace, Consolas, 'Courier New', Courier, Monaco;
+			}
+
+			/* bgcolor */
+			#CONTENTS_BODY table thead {
+				color: #FFFFFF;
+				background-color: #666666;
+			}
+
+			#ROW_ORG .head {
+				background-color: #F0FFFF;
+			}
+			#ROW_NFC .head {
+				background-color: #F0FFF0;
+			}
+			#ROW_NFD .head {
+				background-color: #FFF0F0;
+			}
+			textarea.readonly {
+				background-color: #F0F0F0;
+			}
+			/*
+			#CONTENTS_BODY table {
+				min-width: 800px;
+				max-width: 1200px;
+			}
+			*/
+
+
+			/* width */
+			#CONTENTS_BODY {
+				width: 100%;
+			}
+			#CONTENTS_BODY table .src {
+				width:200px;
+			}
+			#CONTENTS_BODY table .hex {
+				width:200px;
+			}
+			#CONTENTS_BODY table .prev {
+				width:200px;
+			}
+			#CONTENTS_BODY table .split {
+				width:200px;
+			}
+
+			/* 高さ*/
+			#CONTENTS_BODY table tbody tr td {
+				height: 200px;
+				text-wrap:suppress;
+				word-wrap:break-word;
+			}
+			#CONTENTS_BODY table tbody tr textarea {
+				width: 100%;
+				height: 100%;
+				/*background-color: #F0F0FF;*/
+			}
+			#CONTENTS_BODY table tbody tr div {
+				width: 100%;
+				height: 100%;
+				/*background-color: #FFF0F0;*/
+				text-wrap:suppress;
+				word-wrap:break-word;
+ 				overflow-y: scroll;
+			}
+			/* tmp */
+			#CELL_NFC_SRC, #CELL_NFD_SRC {
+			}
+
+		</style>
+		<script type="text/javascript">
+			var elmChkSurrogatePair;
+			var elmChkRetCode;
+			var elmOrgSrc,   elmNfcSrc,   elmNfdSrc;
+			var elmOrgHex,   elmNfcHex,   elmNfdHex;
+			var elmOrgPrev,  elmNfcPrev,  elmNfdPrev;
+			var elmOrgSplit, elmNfcSplit, elmNfdSplit;
+			
+			var bufStr;
+
+			/**
+			 * onload
+			 */
+			window.onload = function() {
+				var elmMes = document.getElementById('MESS_AREA');
+				elmMes.innerHTML = '';
+				elmMes.innerHTML += '<div>'+ window.navigator.userAgent +'</div>';
+				//elmMes.innerHTML += '<div>'+ ScriptEngine() +'</div>';
+				//elmMes.innerHTML += '<div>'+ ScriptEngineMajorVersion() +'</div>';
+				//elmMes.innerHTML += '<div>'+ ScriptEngineMinorVersion() +'</div>';
+				//elmMes.innerHTML += '<div>'+ ScriptEngineBuildVersion() +'</div>';
+				elmChkSurrogatePair = document.getElementById('ST_CHK_SURROGATE_PAIR');
+				elmChkRetCode       = document.getElementById('ST_CHK_RETCODE');
+				elmOrgSrc   = document.getElementById('CELL_ORG_SRC');
+				elmOrgHex   = document.getElementById('CELL_ORG_HEX');
+				elmOrgPrev  = document.getElementById('CELL_ORG_PREV');
+				elmOrgSplit = document.getElementById('CELL_ORG_SPLIT');
+				elmNfcSrc   = document.getElementById('CELL_NFC_SRC');
+				elmNfcHex   = document.getElementById('CELL_NFC_HEX');
+				elmNfcPrev  = document.getElementById('CELL_NFC_PREV');
+				elmNfcSplit = document.getElementById('CELL_NFC_SPLIT');
+				elmNfdSrc   = document.getElementById('CELL_NFD_SRC');
+				elmNfdHex   = document.getElementById('CELL_NFD_HEX');
+				elmNfdPrev  = document.getElementById('CELL_NFD_PREV');
+				elmNfdSplit = document.getElementById('CELL_NFD_SPLIT');
+
+				setInterval(function(){
+					var strOrgSrc = elmOrgSrc.value;
+					if(bufStr != strOrgSrc) {
+						changed();
+					}
+				}, 1000);
+			}
+
+			/**
+			 * codePoint2HexStr
+			 * @param cp
+			 * @param pad
+			 */
+			function codePoint2HexStr(cp, pad) {
+				var len;
+				var hex, str
+				hex = cp.toString(16);
+				hex = hex.toUpperCase();
+				len = Math.max(pad.length, hex.length);
+				str = pad + hex;
+				str = str.slice(-len);
+				return 'U+' + str;
+			}
+
+			/**
+			 * toHex
+			 * @param str
+			 * @param isSurrogatePair2CodePint
+			 * @param isRetcode2cp
+			 */
+			function toHex(str, isSurrogatePair2CodePint, isRetcode2cp) {
+				var ret = '';
+				var pad;
+				var lines = [];
+				if(isSurrogatePair2CodePint) {
+					pad = '00000000';
+				} else {
+					pad = '0000';
+				}
+				if(isRetcode2cp) {
+					lines.push(str);
+				} else {
+					var a = str.split(/\r\n|\n/);
+					if(a) {
+						lines = lines.concat(lines, a);
+					}
+				}
+
+				for(var line of lines) {
+					if(line) {
+						var buf = '';
+						isRetcode2cp
+						if(isSurrogatePair2CodePint) {
+							for(var c of line) {
+								var cp = c.codePointAt();
+								buf += ' ' + codePoint2HexStr(cp, pad);
+							}
+						} else {
+							for(var i = 0; i < line.length; i++) {
+								var cp = line.charCodeAt(i);
+								buf += ' ' + codePoint2HexStr(cp, pad);
+							}
+						}
+						if(ret != '') {
+							ret += '\n';
+						}
+						ret += buf.slice(1);
+					}
+				}
+				return ret;
+			}
+
+			/**
+			 * toSplit
+			 * @param str
+			 */
+			function toSplit(str) {
+				var ret = '';
+				if(str) {
+					var buf = '';
+					var f = function(c) {
+						if(buf != '') {
+							//buf += '&#8203;';
+							buf += ' ';
+						}
+						buf += c;
+					}
+
+					//for(var i = 0; i < str.length; i++) {
+					//	f(str.charAt(i));
+					//}
+					for(var c of str) {
+						f(c);
+					}
+					ret = buf;
+				}
+				return ret;
+			}
+
+			/**
+			 * toHtml
+			 * @param str
+			 */
+			function toHtml(str) {
+				if(str) {
+					return str.replace(/\r\n|\r|\n/g, '<br>');
+				} else {
+					return str;
+				}
+			}
+
+			/**
+			 * change
+			 */
+			function changed(){
+				var strOrgSrc = elmOrgSrc.value;
+				var strNfcSrc = strOrgSrc.normalize('NFC');
+				var strNfdSrc = strOrgSrc.normalize('NFD');
+
+				var isSurrogatePair2CodePint = elmChkSurrogatePair.checked;
+				var isRetcode2cp = !elmChkRetCode.checked;
+
+				elmNfcSrc.value = strNfcSrc;
+				elmNfdSrc.value = strNfdSrc;
+
+				elmOrgHex.innerHTML = toHtml(toHex(strOrgSrc, isSurrogatePair2CodePint, isRetcode2cp));
+				elmNfcHex.innerHTML = toHtml(toHex(strNfcSrc, isSurrogatePair2CodePint, isRetcode2cp));
+				elmNfdHex.innerHTML = toHtml(toHex(strNfdSrc, isSurrogatePair2CodePint, isRetcode2cp));
+
+				elmOrgPrev.innerHTML = toHtml(strOrgSrc);
+				elmNfcPrev.innerHTML = toHtml(strNfcSrc);
+				elmNfdPrev.innerHTML = toHtml(strNfdSrc);
+
+				elmOrgSplit.innerHTML = toHtml(toSplit(strOrgSrc));
+				elmNfcSplit.innerHTML = toHtml(toSplit(strNfcSrc));
+				elmNfdSplit.innerHTML = toHtml(toSplit(strNfdSrc));
+				
+				bufStr = strOrgSrc;
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<div id="ROOT">
+				<!-- #CONTENTS_HEAD -->
+				<div>
+					<h1>ガパピー.js - UNICODE NFC/NFD Chechker -</h1>
+				</div>
+				<!-- #CONTENTS_MESS -->
+				<!-- #CONTENTS_MESS -->
+				<div id="CONTENTS_MESS">
+					<div>
+						<h2>#めっさげ</h2>
+					</div>
+					<div id="MESS_AREA">
+					</div>
+				</div>
+				<!-- #CONTENTS_MESS -->
+
+				<div style="margin:20px;"></div>
+
+				<!-- #CONTENTS_OPT-->
+				<div id="CONTENTS_OPT">
+					<div>
+						<h2>#おｐちおｎ</h2>
+					</div>
+					<div>
+						<el>
+							<li><input id="ST_CHK_SURROGATE_PAIR" onchange='changed();' type="checkbox" value="true" checked>[HEX] サロゲート ペアを1つのコードポイントで表示する。</input></li>
+							<li><input id="ST_CHK_RETCODE"        onchange='changed();' type="checkbox" value="true" checked>[HEX] 改行はコード ポイントに展開しない(改行で表示をする)。</input></li>
+						</el>
+					</div>
+				</div>
+				<!-- #CONTENTS_OPT-->
+
+				<!-- #CONTENTS_BODY -->
+				<div id="CONTENTS_BODY">
+					<table border="1" >
+						<thead>
+							<tr>
+								<th>ROW</th>
+								<th>INPUT</th>
+								<th>HEX</th>
+								<th>PREVIEW</th>
+								<th>SPLIT</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr id='ROW_ORG' class="row">
+								<td class="head">ORIGINAL</td>
+								<td><textarea id="CELL_ORG_SRC" class='src'>ガパピー𠮷🍆¥e🖕\</textarea></td>
+								<td><div id='CELL_ORG_HEX'      class='hex'></div></td>
+								<td><div id='CELL_ORG_PREV'     class='prev'></div></td>
+								<td><div id='CELL_ORG_SPLIT'    class='split'></div></td>
+							</tr>
+							<tr id='ROW_NFC' class="row">
+								<td class="head">NFC</td>
+								<td><textarea id="CELL_NFC_SRC" class='src readonly' readonly></textarea></td>
+								<td><div id='CELL_NFC_HEX'      class='hex'></div></td>
+								<td><div id='CELL_NFC_PREV'     class='prev'></div></td>
+								<td><div id='CELL_NFC_SPLIT'    class='split'></div></td>
+							</tr>
+							<tr id='ROW_NFD' class="row">
+								<td class="head">NFD</td>
+								<td><textarea id="CELL_NFD_SRC" class='src readonly' readonly></textarea></td>
+								<td><div id='CELL_NFD_HEX'      class='hex'></div></td>
+								<td><div id='CELL_NFD_PREV'     class='prev'></div></td>
+								<td><div id='CELL_NFD_SPLIT'    class='split'></div></td>
+							</tr>
+						</tbody>
+					</table>
+					<div id="PAIN_INPUT">
+					</div>
+					<div id="PAIN_NFC">
+					</div>
+					<div id="PAIN_NFD">
+					</div>
+					<div id="XXXX">
+					<div class="both">
+				</div>
+				<!-- #CONTENTS_BODY -->
+			</div>
+		</form>
+	</body>
+</html>
