@@ -46,10 +46,13 @@
 				background-color: #F0FFF0;
 			}
 			#ROW_NFD .head {
+				background-color: #FFFFF0;
+			}
+			textarea.input {
 				background-color: #FFF0F0;
 			}
-			textarea.readonly {
-				background-color: #F0F0F0;
+			textarea.readonly, div.readonly {
+				background-color: #F7F7F7;
 			}
 			/*
 			#CONTENTS_BODY table {
@@ -305,7 +308,7 @@
 					<div>
 						<el>
 							<li><input id="ST_CHK_SURROGATE_PAIR" onchange='changed();' type="checkbox" value="true" checked>[HEX] サロゲート ペアを1つのコードポイントで表示する。</input></li>
-							<li><input id="ST_CHK_RETCODE"        onchange='changed();' type="checkbox" value="true" checked>[HEX] 改行はコード ポイントにしないで改行する)。</input></li>
+							<li><input id="ST_CHK_RETCODE"        onchange='changed();' type="checkbox" value="true" checked>[HEX] 改行はコード ポイントにしないで改行で表示する。</input></li>
 						</el>
 					</div>
 				</div>
@@ -325,25 +328,25 @@
 						</thead>
 						<tbody>
 							<tr id='ROW_ORG' class="row">
-								<td class="head">ORIGINAL</td>
-								<td><textarea id="CELL_ORG_SRC" class='src'>ガパピー𠮷🍆¥e\</textarea></td>
-								<td><div id='CELL_ORG_HEX'      class='hex'></div></td>
-								<td><div id='CELL_ORG_PREV'     class='prev'></div></td>
-								<td><div id='CELL_ORG_SEP'      class='sep'></div></td>
+								<td class="head">INPUT</td>
+								<td><textarea id="CELL_ORG_SRC" class='src  input'>ガパピー𠮷🍆¥e\</textarea></td>
+								<td><div id='CELL_ORG_HEX'      class='hex  readonly'></div></td>
+								<td><div id='CELL_ORG_PREV'     class='prev readonly'></div></td>
+								<td><div id='CELL_ORG_SEP'      class='sep  readonly'></div></td>
 							</tr>
 							<tr id='ROW_NFC' class="row">
 								<td class="head">NFC</td>
 								<td><textarea id="CELL_NFC_SRC" class='src readonly' readonly></textarea></td>
-								<td><div id='CELL_NFC_HEX'      class='hex'></div></td>
-								<td><div id='CELL_NFC_PREV'     class='prev'></div></td>
-								<td><div id='CELL_NFC_SEP'      class='sep'></div></td>
+								<td><div id='CELL_NFC_HEX'      class='hex  readonly'></div></td>
+								<td><div id='CELL_NFC_PREV'     class='prev readonly'></div></td>
+								<td><div id='CELL_NFC_SEP'      class='sep  readonly'></div></td>
 							</tr>
 							<tr id='ROW_NFD' class="row">
 								<td class="head">NFD</td>
-								<td><textarea id="CELL_NFD_SRC" class='src readonly' readonly></textarea></td>
-								<td><div id='CELL_NFD_HEX'      class='hex'></div></td>
-								<td><div id='CELL_NFD_PREV'     class='prev'></div></td>
-								<td><div id='CELL_NFD_SEP'      class='sep'></div></td>
+								<td><textarea id="CELL_NFD_SRC" class='src  readonly' readonly></textarea></td>
+								<td><div id='CELL_NFD_HEX'      class='hex  readonly'></div></td>
+								<td><div id='CELL_NFD_PREV'     class='prev readonly'></div></td>
+								<td><div id='CELL_NFD_SEP'      class='sep  readonly'></div></td>
 							</tr>
 						</tbody>
 					</table>
