@@ -291,6 +291,15 @@
 				}
 			}
 
+			function chengeTrigImage() {
+				$bitcellsL = $('.bitcell.left');
+				$bitcellsR = $('.bitcell.right');
+				$bitcellsL.removeClass('left');
+				$bitcellsL.addClass('right');
+				$bitcellsR.removeClass('right');
+				$bitcellsR.addClass('left');
+			}
+
 			function chengeImage(type) {
 				$bitcells = $('.bitcell');
 				$bitcells.removeClass('left');
@@ -454,8 +463,8 @@
 					■ mario
 				<div>
 				<div class="sample">
-					<img src="mario_l2.png" onclick="chengeImage('left')">
-					<img src="mario_r2.png" onclick="chengeImage('right')">
+					<img src="mario_l2.png" onclick="chengeTrigImage()">
+					<img src="mario_r2.png" onclick="chengeTrigImage()">
 				<div>
 			</div>
 		</div>
