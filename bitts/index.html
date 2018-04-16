@@ -17,6 +17,9 @@
 				/*margin: 0px;*/
 				height: 100%;
 			}
+			div.title {
+				text-align:center;
+			}
 			span.title {
 				font-size:2em;
 			}
@@ -24,6 +27,8 @@
 				border-collapse:collapse;
 				border:solid 2px #000000;
 			}
+			
+			
 			thead {
 				border:solid 2px #000000;
 				background-color:#444488;
@@ -52,20 +57,26 @@
 			th.rsolid, td.rsolid {
 				border-right:solid 2px #000000;
 			}
+			table#TABLE_VIEW td {
+				font-size:0.75em;
+				font-weight:0.75em;
+			}
+			td.caption, td.value {
+			}
+			td.value {
+				text-align: right;
+			}
 			td.bitcell {
 				text-align:center;
 			}
 			td.bitcell > div {
 				width:100%
-				height:auto
+				height:auto;
+				background-color: #F0F0F0;
 			}
-
-			td.caption, td.value {
-			}
-
 			td.bitcell > div > div.img{
-				height:64px;
-				width:32px;
+				height:56px;
+				width:28px;
 				background-size:100%;
 				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
 				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
@@ -74,9 +85,8 @@
 				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 				margin:auto;
 			}
-
-			td.value {
-				text-align: right;
+			td.bitcell > div.true {
+				background-color:#D0FFFF;
 			}
 			td.bitcell.left > div > div.img{
 				background-image: url("./mario_l0.png")
@@ -90,12 +100,20 @@
 			td.bitcell.right > div.true > div.img{
 				background-image: url("./mario_r1.png")
 			}
-			
-			
 			table#TABLE_VIEW
 			, table#TABLE_BIT_EDIT
-			, input#TEXTBOX_PASTE {
+			, input#TEXTBOX_INPUT {
 				width:100%;
+			}
+			img.sample {
+				height:128px;
+				width:64px;
+				background-color:#FFFFFF;
+				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
+				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
+				image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
+				image-rendering: -o-crisp-edges;            /* Opera 12.x */
+				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 			}
 		-->
 		</style>
@@ -220,24 +238,59 @@
 				updateStyle(n);
 			}
 
-			function paste() {
-				var charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-				var $textbox = $('#TEXTBOX_PASTE');
+			function changeInput() {
+				var $textbox = $('#TEXTBOX_INPUT');
+				var $radioInputFormatBinVal = $('input#RADIO_INPUT_FORMAT_BIN:checked');
+				var $radioInputFormatDecVal = $('input#RADIO_INPUT_FORMAT_DEC:checked');
+				var $radioInputFormatHexVal = $('input#RADIO_INPUT_FORMAT_HEX:checked');
+				var charList;
 				var str0 = $textbox.val();
 				var str1;
 				var strCleand = '';
 				var num;
+
+				if($radioInputFormatBinVal.val()) {
+					charList = ['0', '1'];
+				} else if($radioInputFormatDecVal.val()) {
+					charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+				} else if($radioInputFormatHexVal.val()) {
+					charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+				} else {
+					charList = [];
+				}
+
 				str1 = str0.toUpperCase();
 				for(var c of str1) {
 					if(charList.indexOf(c) >= 0) {
 						strCleand += c;
 					}
 				}
-				strCleand = strCleand.slice(-10);
-				num = parseInt(strCleand, 10);
-				rootValue = num;
-				updateText(num);
-				updateStyle(num);
+
+
+				if($radioInputFormatBinVal.val()) {
+					strCleand = strCleand.slice(-32);
+					num = parseInt(strCleand, 2);
+				} else if($radioInputFormatDecVal.val()) {
+					strCleand = strCleand.slice(-10);
+					num = parseInt(strCleand, 10);
+				} else if($radioInputFormatHexVal.val()) {
+					strCleand = strCleand.slice(-8);
+					num = parseInt(strCleand, 16);
+				} else {
+					strCleand = undefined;
+				}
+				if(strCleand) {
+					rootValue = num;
+					updateText(num);
+					updateStyle(num);
+				}
+			}
+
+			function chengeImage(type) {
+				$bitcells = $('.bitcell');
+				$bitcells.removeClass('left');
+				$bitcells.removeClass('right');
+				$bitcells.addClass(type);
 			}
 
 			/**
@@ -251,7 +304,7 @@
 	<body>
 		<div>
 			<!-- title. -->
-			<div>
+			<div class="title">
 				<span>
 					<img src="mario_l0.png">
 					<img src="mario_r1.png">
@@ -271,10 +324,14 @@
 					■ view values
 				<div>
 				<table id="TABLE_VIEW">
+					<colgroup>
+						<col style="width:3em;"></col>
+						<col style="width:auto;"></col>
+					</colgroup>
 					<thead>
 						<tr>
-							<td>n</td>
-							<td>val</td>
+							<td>進数</td>
+							<td>値</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -299,9 +356,24 @@
 					■ edit
 				<div>
 				<div>
-					<input id="TEXTBOX_PASTE" type="textbox" placeholder="ここにペースト" onchange="paste();" onkeyup="paste();"></input>
+					<input id="TEXTBOX_INPUT" type="textbox" placeholder="ここに入力" onchange="changeInput();" onkeyup="changeInput();"></input>
+					<br>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_BIN" onchange="changeInput();"><label for="RADIO_INPUT_FORMAT_BIN">BIN</label></input>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_DEC" onchange="changeInput();" checked><label for="RADIO_INPUT_FORMAT_DEC">DEC</label></input>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_HEX" onchange="changeInput();" ><label for="RADIO_INPUT_FORMAT_HEX">HEX</label></input>
 				<div>
 				<table id="TABLE_BIT_EDIT">
+					<colgroup>
+						<col style="width:1em;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+						<col style="width:auto;"></col>
+					</colgroup>
 					<thead>
 						<tr>
 							<th class="caption rsolid">n</th>
@@ -366,6 +438,16 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<!-- . -->
+			<div>
+				<div>
+					■ mario
+				<div>
+				<div>
+					<img class="sample" src="mario_l2.png" onclick="chengeImage('left')">
+					<img class="sample" src="mario_r2.png" onclick="chengeImage('right')">
+				<div>
 			</div>
 		</div>
 	</body>
