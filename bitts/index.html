@@ -1,0 +1,372 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!--<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />-->
+		<title>bits</title>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<style type="text/css">
+		<!--
+			@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+			@import url(https://fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
+			body {
+				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif, "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic";
+				background-color:#666666;
+				color:#FFFFFF;
+			}
+			body {
+				/*margin: 0px;*/
+				height: 100%;
+			}
+			span.title {
+				font-size:2em;
+			}
+			table {
+				border-collapse:collapse;
+				border:solid 2px #000000;
+			}
+			thead {
+				border:solid 2px #000000;
+				background-color:#444488;
+				color:#FFFFFF;
+			}
+			tbody {
+				background-color:#FFFFFF;
+				color:#000000;
+			}
+
+			td, th {
+				border-left:dashed 1px #000000;
+				border-right:dashed 1px #000000;
+				border-top:solid 1px #000000;
+				border-bottom:solid 1px #000000;
+			}
+			th.caption, td.caption {
+				border-right:solid 2px #000000;
+			}
+			td.caption {
+				background-color:#FFFFD0;
+				color:#000000;
+			}
+
+			th.rsolid, td.rsolid {
+				border-right:solid 2px #000000;
+			}
+			td.bitcell {
+				text-align:center;
+			}
+
+			td.bitcell > div{
+				height:50px;
+				width:25px;
+				background-size:100% 100%;
+				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
+				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
+				image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
+				image-rendering: -o-crisp-edges;            /* Opera 12.x */
+				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
+				margin:auto;
+			}
+			td.caption, td.value {
+			}
+			td.value {
+				text-align: right;
+			}
+			td.bitcell.left > div{
+				background-image: url("./mario_l0.png")
+			}
+			td.bitcell.right > div{
+				background-image: url("./mario_r0.png")
+			}
+			td.bitcell.left > div.true{
+				background-image: url("./mario_l1.png")
+			}
+			td.bitcell.right > div.true{
+				background-image: url("./mario_r1.png")
+			}
+			
+			
+			table#TABLE_VIEW
+			, table#TABLE_BIT_EDIT
+			, input#TEXTBOX_PASTE {
+				width:100%;
+			}
+		-->
+		</style>
+
+		<script type="text/javascript">
+			/*member*/
+			var self = this;
+
+			/* values. */
+			var rootValue = 0;
+
+
+
+			self.getNumberOnlyString = function (str){
+				var ret = "";
+				for(var c of str) {
+					if((c >= '0') && (c <= '9')) {
+						ret += c;
+					}
+				}
+				return ret;
+			}
+
+			self.getBitValueString = function (val, bitLength) {
+				var ret = '';
+				var n = val;
+				for(var i = 0; i < bitLength; i++) {
+					var s = '' + (n % 2);
+					ret = s + ret;
+					n = Math.floor(n /2);
+				}
+				return ret;
+			}
+
+			self.getReverseString = function (str) {
+				var ret = [];
+				for(var c of str) {
+					ret.unshift(c);
+				}
+				return ret.join('');
+			}
+
+			self.getAddedDelimiterString = function (str, count,delim) {
+				var ret = '';
+				var i = 0;
+				for(var c of str) {
+					if(((i % count) == 0) && (i != 0)) {
+						ret += delim;
+					}
+					ret += c;
+					i++;
+				}
+				return ret;
+			}
+
+			self.updateText = function (curValue){
+				var $elmViewValueBin = $('#VIEW_VALUE_BIN');
+				var $elmViewValueDec = $('#VIEW_VALUE_DEC');
+				var $elmViewValueHex = $('#VIEW_VALUE_HEX');
+				var valueU32 = (curValue >>> 0);
+				/** bin. */
+				(function(){
+					var str = valueU32.toString(2);
+					str += '00000000000000000000000000000000' + str;
+					str = str.slice(-32);
+					//str = getReverseString(str);
+					str = getAddedDelimiterString(str, 8, '-');
+					//str = getReverseString(str);
+					$elmViewValueBin.text(str);
+				})();
+
+				/** dec. */
+				(function(){
+					var str = valueU32.toString(10);
+					//str += '00000000000000000000000000000000' + str;
+					//str = str.slice(-32);
+					str = getReverseString(str);
+					str = getAddedDelimiterString(str, 3, ',');
+					str = getReverseString(str);
+					$elmViewValueDec.text(str);
+				})();
+
+				/** hex. */
+				(function(){
+					var str = valueU32.toString(16);
+					str = str.toUpperCase();
+					str = '00000000' + str;
+					str = str.slice(-8);
+					str = '0x' + str;
+					$elmViewValueHex.text(str);
+				})();
+			}
+			self.updateStyle = function (curValue){
+				$bitcell = $('.bitcell');
+				for(var i = 0; i < 32; i++) {
+					var $classes;
+					var className = 'bitpos_0x'
+					var flg = ((curValue & (1 << i)) != 0);
+					var str = i.toString(16);
+					str = str.toLowerCase();
+					str = '00000000' + str;
+					str = str.slice(-8);
+					className += str;
+					$classes = $bitcell.find('div.' + className);
+					$classes.each(function() {
+						var index = i;
+						var $e = $(this);
+						if(flg) {
+							$e.addClass('true');
+						} else {
+							$e.removeClass('true');
+						}
+					});
+				}
+			}
+
+			function chengeBit (bitPos) {
+				var b = (1 << bitPos);
+				var n = rootValue ^ b;
+				rootValue = n;
+				updateText(n);
+				updateStyle(n);
+			}
+
+			function paste() {
+				var charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+				var $textbox = $('#TEXTBOX_PASTE');
+				var str0 = $textbox.val();
+				var str1;
+				var strCleand = '';
+				var num;
+				str1 = str0.toUpperCase();
+				for(var c of str1) {
+					if(charList.indexOf(c) >= 0) {
+						strCleand += c;
+					}
+				}
+				strCleand = strCleand.slice(-10);
+				num = parseInt(strCleand, 10);
+				rootValue = num;
+				updateText(num);
+				updateStyle(num);
+			}
+
+			/**
+			 * onload
+			 */
+			window.onload = function() {
+				self.updateText(rootValue);
+			}
+		</script>
+	</head>
+	<body>
+		<div>
+			<!-- title. -->
+			<div>
+				<span>
+					<img src="mario_l0.png">
+					<img src="mario_r1.png">
+					<img src="mario_l1.png">
+				</span>
+				<span class="title">bitts</span>
+				<span>
+					<img src="mario_r1.png">
+					<img src="mario_r0.png">
+					<img src="mario_l1.png">
+
+				</span>
+			</div>
+			<!-- view -->
+			<div>
+				<div>
+					■ view values
+				<div>
+				<table id="TABLE_VIEW">
+					<thead>
+						<tr>
+							<td>n</td>
+							<td>val</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="caption">2進</td>
+							<td class="value" id="VIEW_VALUE_BIN"></td>
+						</tr>
+						<tr>
+							<td class="caption">10進</td>
+							<td class="value" id="VIEW_VALUE_DEC"></td>
+						</tr>
+						<tr>
+							<td class="caption">16進</td>
+							<td class="value" id="VIEW_VALUE_HEX"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- edit. -->
+			<div>
+				<div>
+					■ edit
+				<div>
+				<div>
+					<input id="TEXTBOX_PASTE" type="textbox" placeholder="ここにペースト" onchange="paste();" onkeyup="paste();"></input>
+				<div>
+				<table id="TABLE_BIT_EDIT">
+					<thead>
+						<tr>
+							<th>F</th>
+							<th>E</th>
+							<th>D</th>
+							<th>C</th>
+							<th>B</th>
+							<th>A</th>
+							<th>9</th>
+							<th class="rsolid">8</th>
+							<th>7</th>
+							<th>6</th>
+							<th>5</th>
+							<th>4</th>
+							<th>3</th>
+							<th>2</th>
+							<th>1</th>
+							<th class="rsolid">0</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="caption rsolid" colspan="8">4 byte</td>
+							<td class="caption rsolid" colspan="8">3 byte</td>
+						</tr>
+						<tr>
+							<!-- 4byte. -->
+							<td class="bitcell right"><div class="bitpos_0x0000001f" onclick="chengeBit(037);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000001e" onclick="chengeBit(036);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000001d" onclick="chengeBit(035);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000001c" onclick="chengeBit(034);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000001b" onclick="chengeBit(033);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000001a" onclick="chengeBit(032);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000019" onclick="chengeBit(031);"></div></td>
+							<td class="bitcell right rsolid"><div class="bitpos_0x00000018" onclick="chengeBit(030);"></div></td>
+							<!-- 3byte. -->
+							<td class="bitcell right"><div class="bitpos_0x00000017" onclick="chengeBit(027);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000016" onclick="chengeBit(026);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000015" onclick="chengeBit(025);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000014" onclick="chengeBit(024);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000013" onclick="chengeBit(023);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000012" onclick="chengeBit(022);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000011" onclick="chengeBit(021);"></div></td>
+							<td class="bitcell right rsolid"><div class="bitpos_0x00000010" onclick="chengeBit(020);"></div></td>
+						</tr>
+						<tr>
+							<td class="caption rsolid" colspan="8">2 byte</td>
+							<td class="caption rsolid" colspan="8">1 byte</td>
+						</tr>
+						<tr>
+							<!-- 2byte. -->
+							<td class="bitcell right"><div class="bitpos_0x0000000f" onclick="chengeBit(017);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000000e" onclick="chengeBit(016);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000000d" onclick="chengeBit(015);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000000c" onclick="chengeBit(014);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000000b" onclick="chengeBit(013);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x0000000a" onclick="chengeBit(012);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000009" onclick="chengeBit(011);"></div></td>
+							<td class="bitcell right rsolid"><div class="bitpos_0x00000008" onclick="chengeBit(010);"></div></td>
+							<!-- 1byte. -->
+							<td class="bitcell right"><div class="bitpos_0x00000007" onclick="chengeBit(007);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000006" onclick="chengeBit(006);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000005" onclick="chengeBit(005);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000004" onclick="chengeBit(004);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000003" onclick="chengeBit(003);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000002" onclick="chengeBit(002);"></div></td>
+							<td class="bitcell right"><div class="bitpos_0x00000001" onclick="chengeBit(001);"></div></td>
+							<td class="bitcell right rsolid"><div class="bitpos_0x00000000" onclick="chengeBit(000);"></div></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
