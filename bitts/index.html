@@ -105,10 +105,15 @@
 			, input#TEXTBOX_INPUT {
 				width:100%;
 			}
-			img.sample {
+			div.sample {
+				text-align:center;
+				background-color:#FFFFFF;
+			}
+			div.sample img {
 				height:128px;
 				width:64px;
-				background-color:#FFFFFF;
+				margin:0px;
+				padding:4px;
 				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
 				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
 				image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
@@ -308,13 +313,17 @@
 				<span>
 					<img src="mario_l0.png">
 					<img src="mario_r1.png">
+					<img src="mario_l0.png">
 					<img src="mario_l1.png">
+					<img src="mario_r2.png">
 				</span>
 				<span class="title">bitts</span>
 				<span>
 					<img src="mario_r1.png">
 					<img src="mario_r0.png">
-					<img src="mario_l1.png">
+					<img src="mario_l2.png">
+					<img src="mario_r1.png">
+					<img src="mario_l0.png">
 
 				</span>
 			</div>
@@ -444,9 +453,13 @@
 				<div>
 					■ mario
 				<div>
-				<div>
-					<img class="sample" src="mario_l2.png" onclick="chengeImage('left')">
-					<img class="sample" src="mario_r2.png" onclick="chengeImage('right')">
+				<div class="sample">
+					<img src="mario_l1.png" onclick="chengeImage('left')">
+					<img src="mario_l2.png" onclick="chengeImage('left')">
+					<img src="mario_l0.png" onclick="chengeImage('left')">
+					<img src="mario_r0.png" onclick="chengeImage('right')">
+					<img src="mario_r2.png" onclick="chengeImage('right')">
+					<img src="mario_r1.png" onclick="chengeImage('right')">
 				<div>
 			</div>
 		</div>
