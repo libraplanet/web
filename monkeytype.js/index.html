@@ -1,0 +1,593 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>MonkeyType.js🐵</title>
+
+		<style type="text/css">
+			@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+			@import url(https://fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
+
+			/* font */
+			body, textarea {
+				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif;
+			}
+			div.hex {
+				font-family: 'Inconsolata', monospace, Consolas, 'Courier New', Courier, Monaco;
+			}
+			div.prev, div.sep {
+				font-size:0.8em;
+			}
+			input.mapInputCell {
+				width:2.5em;
+			}
+
+			textarea {
+				width: 100%;
+				height: 20em;
+			}
+		</style>
+		<script type="text/javascript">
+			/**
+			 * onload
+			 */
+			window.onload = () => {
+				var elmSrc, elmTgt;
+				var bufStr;
+
+				/**
+				 * init.
+				 */
+				(() => {
+					var elmMes = document.getElementById('MESS_AREA');
+					elmMes.innerHTML = '';
+					elmMes.innerHTML += '<div>'+ window.navigator.userAgent +'</div>';
+
+					elmSrc = document.getElementById('CELL_SRC');
+					elmTgt = document.getElementById('CELL_TGT');
+				})();
+
+				/**
+				 * change
+				 */
+				var changed = () => {
+					var strOrgSrc = elmSrc.value;
+					var strMonkey = '';
+					var lines = (strOrgSrc.split(/\r\n|\n/) || []);
+					var convMap = [];
+					//cretae map
+					(() => {
+						var elmInputKeys = document.querySelectorAll('input.mapDefKey[data-key]');
+						Array.prototype.forEach.call(elmInputKeys, (elmInputKey) => {
+							var dataKeyName = elmInputKey.getAttribute('data-key');
+							var convTgtChar = elmInputKey.value;
+							var elmInputVals = document.querySelectorAll('input.mapDefVal[data-key="' + dataKeyName + '"]');
+							Array.prototype.forEach.call(elmInputVals, (elmInputVal) => {
+								var str = elmInputVal.value;
+								for(convSrcChar of str) {
+									convMap[convSrcChar.toUpperCase()] = convTgtChar;
+								}
+							});
+						});
+					})();
+					for(var line of lines) {
+						if(line) {
+							var s = '';
+							for(var c of line) {
+								s += (convMap[c.toUpperCase()] || c);
+							}
+							strMonkey += s;
+							strMonkey += '\n';
+						}
+					}
+					elmTgt.value = strMonkey;
+				}
+
+				setInterval(() => {
+					var strOrgSrc = elmSrc.value;
+					if(bufStr != strOrgSrc) {
+						changed();
+						bufStr = strOrgSrc;
+					}
+				}, 1000);
+			};
+
+			function setPreset(presetName){
+				var map = [];
+				if(presetName == 'ATOK') {
+					map['input.mapDefKey[data-key="mapDefNo11"'] ='あ';
+					map['input.mapDefKey[data-key="mapDefNo12"'] ='い';
+					map['input.mapDefKey[data-key="mapDefNo13"'] ='う';
+					map['input.mapDefKey[data-key="mapDefNo14"'] ='え';
+					map['input.mapDefKey[data-key="mapDefNo15"'] ='お';
+					map['input.mapDefKey[data-key="mapDefNo21"'] ='か';
+					map['input.mapDefKey[data-key="mapDefNo22"'] ='き';
+					map['input.mapDefKey[data-key="mapDefNo23"'] ='く';
+					map['input.mapDefKey[data-key="mapDefNo24"'] ='け';
+					map['input.mapDefKey[data-key="mapDefNo25"'] ='こ';
+					map['input.mapDefKey[data-key="mapDefNo31"'] ='さ';
+					map['input.mapDefKey[data-key="mapDefNo32"'] ='し';
+					map['input.mapDefKey[data-key="mapDefNo33"'] ='す';
+					map['input.mapDefKey[data-key="mapDefNo34"'] ='せ';
+					map['input.mapDefKey[data-key="mapDefNo35"'] ='そ';
+					map['input.mapDefVal[data-key="mapDefNo11"'] ='1.';
+					map['input.mapDefVal[data-key="mapDefNo12"'] ='/';
+					map['input.mapDefVal[data-key="mapDefNo13"'] ='@';
+					map['input.mapDefVal[data-key="mapDefNo14"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo15"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo21"'] ='A2';
+					map['input.mapDefVal[data-key="mapDefNo22"'] ='B';
+					map['input.mapDefVal[data-key="mapDefNo23"'] ='C';
+					map['input.mapDefVal[data-key="mapDefNo24"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo25"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo31"'] ='D3';
+					map['input.mapDefVal[data-key="mapDefNo32"'] ='E';
+					map['input.mapDefVal[data-key="mapDefNo33"'] ='F';
+					map['input.mapDefVal[data-key="mapDefNo34"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo35"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo41"'] ='た';
+					map['input.mapDefKey[data-key="mapDefNo42"'] ='ち';
+					map['input.mapDefKey[data-key="mapDefNo43"'] ='つ';
+					map['input.mapDefKey[data-key="mapDefNo44"'] ='て';
+					map['input.mapDefKey[data-key="mapDefNo45"'] ='と';
+					map['input.mapDefKey[data-key="mapDefNo51"'] ='な';
+					map['input.mapDefKey[data-key="mapDefNo52"'] ='に';
+					map['input.mapDefKey[data-key="mapDefNo53"'] ='ぬ';
+					map['input.mapDefKey[data-key="mapDefNo54"'] ='ね';
+					map['input.mapDefKey[data-key="mapDefNo55"'] ='の';
+					map['input.mapDefKey[data-key="mapDefNo61"'] ='は';
+					map['input.mapDefKey[data-key="mapDefNo62"'] ='ひ';
+					map['input.mapDefKey[data-key="mapDefNo63"'] ='ふ';
+					map['input.mapDefKey[data-key="mapDefNo64"'] ='へ';
+					map['input.mapDefKey[data-key="mapDefNo65"'] ='ほ';
+					map['input.mapDefVal[data-key="mapDefNo41"'] ='G4';
+					map['input.mapDefVal[data-key="mapDefNo42"'] ='H';
+					map['input.mapDefVal[data-key="mapDefNo43"'] ='I';
+					map['input.mapDefVal[data-key="mapDefNo44"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo45"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo51"'] ='J5';
+					map['input.mapDefVal[data-key="mapDefNo52"'] ='K';
+					map['input.mapDefVal[data-key="mapDefNo53"'] ='L';
+					map['input.mapDefVal[data-key="mapDefNo54"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo55"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo61"'] ='M6';
+					map['input.mapDefVal[data-key="mapDefNo62"'] ='N';
+					map['input.mapDefVal[data-key="mapDefNo63"'] ='O';
+					map['input.mapDefVal[data-key="mapDefNo64"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo65"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo71"'] ='ま';
+					map['input.mapDefKey[data-key="mapDefNo72"'] ='み';
+					map['input.mapDefKey[data-key="mapDefNo73"'] ='む';
+					map['input.mapDefKey[data-key="mapDefNo74"'] ='め';
+					map['input.mapDefKey[data-key="mapDefNo75"'] ='も';
+					map['input.mapDefKey[data-key="mapDefNo81"'] ='や';
+					map['input.mapDefKey[data-key="mapDefNo82"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo83"'] ='ゆ';
+					map['input.mapDefKey[data-key="mapDefNo82"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo85"'] ='よ';
+					map['input.mapDefKey[data-key="mapDefNo91"'] ='ら';
+					map['input.mapDefKey[data-key="mapDefNo92"'] ='り';
+					map['input.mapDefKey[data-key="mapDefNo93"'] ='る';
+					map['input.mapDefKey[data-key="mapDefNo94"'] ='れ';
+					map['input.mapDefKey[data-key="mapDefNo95"'] ='ろ';
+					map['input.mapDefVal[data-key="mapDefNo71"'] ='P7';
+					map['input.mapDefVal[data-key="mapDefNo72"'] ='Q';
+					map['input.mapDefVal[data-key="mapDefNo73"'] ='R';
+					map['input.mapDefVal[data-key="mapDefNo74"'] ='S';
+					map['input.mapDefVal[data-key="mapDefNo75"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo81"'] ='T8';
+					map['input.mapDefVal[data-key="mapDefNo82"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo83"'] ='U';
+					map['input.mapDefVal[data-key="mapDefNo82"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo85"'] ='V';
+					map['input.mapDefVal[data-key="mapDefNo91"'] ='W9';
+					map['input.mapDefVal[data-key="mapDefNo92"'] ='X';
+					map['input.mapDefVal[data-key="mapDefNo93"'] ='Y';
+					map['input.mapDefVal[data-key="mapDefNo94"'] ='Z';
+					map['input.mapDefVal[data-key="mapDefNo95"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL1"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL2"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL3"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL4"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL5"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo01"'] ='わ';
+					map['input.mapDefKey[data-key="mapDefNo02"'] ='を';
+					map['input.mapDefKey[data-key="mapDefNo03"'] ='ん';
+					map['input.mapDefKey[data-key="mapDefNo04"'] ='ゎ';
+					map['input.mapDefKey[data-key="mapDefNo05"'] ='ー';
+					map['input.mapDefKey[data-key="mapDefNoR1"'] ='、';
+					map['input.mapDefKey[data-key="mapDefNoR2"'] ='。';
+					map['input.mapDefKey[data-key="mapDefNoR3"'] ='？';
+					map['input.mapDefKey[data-key="mapDefNoR4"'] ='！';
+					map['input.mapDefKey[data-key="mapDefNoR5"'] ='・';
+					map['input.mapDefVal[data-key="mapDefNoL1"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL2"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL3"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL4"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL5"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo01"'] ='0';
+					map['input.mapDefVal[data-key="mapDefNo02"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo03"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo04"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo05"'] ='-';
+					map['input.mapDefVal[data-key="mapDefNoR1"'] =',';
+					map['input.mapDefVal[data-key="mapDefNoR2"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoR3"'] ='?';
+					map['input.mapDefVal[data-key="mapDefNoR4"'] ='!';
+					map['input.mapDefVal[data-key="mapDefNoR5"'] ='';
+				} else if(presetName == 'T9') {
+					map['input.mapDefKey[data-key="mapDefNo11"'] ='あ';
+					map['input.mapDefKey[data-key="mapDefNo12"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo13"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo14"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo15"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo21"'] ='か';
+					map['input.mapDefKey[data-key="mapDefNo22"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo23"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo24"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo25"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo31"'] ='さ';
+					map['input.mapDefKey[data-key="mapDefNo32"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo33"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo34"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo35"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo11"'] ='1./@';
+					map['input.mapDefVal[data-key="mapDefNo12"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo13"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo14"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo15"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo21"'] ='2ABC';
+					map['input.mapDefVal[data-key="mapDefNo22"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo23"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo24"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo25"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo31"'] ='3DEF';
+					map['input.mapDefVal[data-key="mapDefNo32"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo33"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo34"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo35"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo41"'] ='た';
+					map['input.mapDefKey[data-key="mapDefNo42"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo43"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo44"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo45"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo51"'] ='な';
+					map['input.mapDefKey[data-key="mapDefNo52"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo53"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo54"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo55"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo61"'] ='は';
+					map['input.mapDefKey[data-key="mapDefNo62"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo63"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo64"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo65"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo41"'] ='4GHI';
+					map['input.mapDefVal[data-key="mapDefNo42"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo43"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo44"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo45"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo51"'] ='5JKL';
+					map['input.mapDefVal[data-key="mapDefNo52"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo53"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo54"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo55"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo61"'] ='6MNO';
+					map['input.mapDefVal[data-key="mapDefNo62"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo63"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo64"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo65"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo71"'] ='ま';
+					map['input.mapDefKey[data-key="mapDefNo72"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo73"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo74"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo75"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo81"'] ='や';
+					map['input.mapDefKey[data-key="mapDefNo82"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo83"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo82"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo85"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo91"'] ='ら';
+					map['input.mapDefKey[data-key="mapDefNo92"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo93"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo94"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo95"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo71"'] ='7PQRS';
+					map['input.mapDefVal[data-key="mapDefNo72"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo73"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo74"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo75"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo81"'] ='8TUV';
+					map['input.mapDefVal[data-key="mapDefNo82"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo83"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo82"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo85"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo91"'] ='9WXYZ';
+					map['input.mapDefVal[data-key="mapDefNo92"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo93"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo94"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo95"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL1"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL2"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL3"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL4"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoL5"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo01"'] ='わ';
+					map['input.mapDefKey[data-key="mapDefNo02"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo03"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo04"'] ='';
+					map['input.mapDefKey[data-key="mapDefNo05"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoR1"'] ='、';
+					map['input.mapDefKey[data-key="mapDefNoR2"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoR3"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoR4"'] ='';
+					map['input.mapDefKey[data-key="mapDefNoR5"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL1"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL2"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL3"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL4"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoL5"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo01"'] ='0-';
+					map['input.mapDefVal[data-key="mapDefNo02"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo03"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo04"'] ='';
+					map['input.mapDefVal[data-key="mapDefNo05"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoR1"'] =',?!';
+					map['input.mapDefVal[data-key="mapDefNoR2"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoR3"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoR4"'] ='';
+					map['input.mapDefVal[data-key="mapDefNoR5"'] ='';
+				}
+				//Array.prototype.forEach.call(map,)
+				Object.keys(map).map((key) => {
+					var elms = document.querySelectorAll(key);
+					var val = map[key];
+					Array.prototype.forEach.call(elms, (elm) => {
+						elm.value = val;
+					})
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<div id="ROOT">
+				<!-- #CONTENTS_HEAD -->
+				<div>
+					<h1>MonkeyType.js🐵</h1>
+				</div>
+				<!-- /#CONTENTS_HEAD -->
+				<!-- #CONTENTS_MESS -->
+				<div id="CONTENTS_MESS">
+					<div>
+						<h2>#UA</h2>
+					</div>
+					<div id="MESS_AREA">
+					</div>
+				</div>
+				<!-- /#CONTENTS_MESS -->
+
+				<div style="margin:20px;"></div>
+				<!-- #CONTENTS_OPT-->
+				<div id="CONTENTS_OPT">
+					<div>
+						<h2>#option</h2>
+					</div>
+				</div>
+				<!-- /#CONTENTS_OPT-->
+				<!-- #CONTENTS_BODY -->
+				<div id="CONTENTS_BODY">
+					<h2>#edit</h2>
+					<table border="1" >
+						<thead>
+							<colgroup>
+								<col width="300px" />
+								<col width="300px" />
+							</colgroup>
+							<tr>
+								<td>input</td>
+								<td>output</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><textarea id="CELL_SRC" class='src input'>Hellow world&#x0A;Windows&#x0A;CD</textarea></td>
+								<td><textarea id="CELL_TGT" class='src readonly' readonly></textarea></td>
+							</tr>
+						<tbody>
+					</table>
+				</div>
+				<!-- #CONTENTS_BODY -->
+				<!-- #CONTENTS_CONVMAP-->
+				<div id="CONTENTS_CONVMAP">
+					<div>
+						<h2>#convert map</h2>
+						<table border="1" >
+							<!-- 1段目 -->
+							<tr>
+								<td colspan="2">preset</td>
+								<td colspan="14">
+									<input type="button" onclick="setPreset('ATOK');return false;" value="ATOK"></input>
+									<input type="button" onclick="setPreset('T9');return false;" value="T9"></input>
+								</td>
+							</tr>
+							<!-- 1段目 -->
+							<tr>
+								<td>no</td>
+								<td colspan="5">1</td>
+								<td colspan="5">2</td>
+								<td colspan="5">3</td>
+							</tr>
+							<tr>
+								<td>tgt</td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo11" type="text" value="あ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo12" type="text" value="い" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo13" type="text" value="う" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo14" type="text" value="え" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo15" type="text" value="お" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo21" type="text" value="か" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo22" type="text" value="き" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo23" type="text" value="く" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo24" type="text" value="け" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo25" type="text" value="こ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo31" type="text" value="さ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo32" type="text" value="し" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo33" type="text" value="す" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo34" type="text" value="せ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo35" type="text" value="そ" /></td>
+							</tr>
+							<tr>
+								<td>src</td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo11" type="text" value="1." /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo12" type="text" value="/" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo13" type="text" value="@" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo14" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo15" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo21" type="text" value="A2" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo22" type="text" value="B" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo23" type="text" value="C" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo24" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo25" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo31" type="text" value="D3" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo32" type="text" value="E" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo33" type="text" value="F" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo34" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo35" type="text" value="" /></td>
+							</tr>
+							<!-- 2段目 -->
+							<tr>
+								<td>no</td>
+								<td colspan="5">4</td>
+								<td colspan="5">5</td>
+								<td colspan="5">6</td>
+							</tr>
+							<tr>
+								<td>tgt</td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo41" type="text" value="た" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo42" type="text" value="ち" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo43" type="text" value="つ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo44" type="text" value="て" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo45" type="text" value="と" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo51" type="text" value="な" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo52" type="text" value="に" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo53" type="text" value="ぬ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo54" type="text" value="ね" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo55" type="text" value="の" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo61" type="text" value="は" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo62" type="text" value="ひ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo63" type="text" value="ふ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo64" type="text" value="へ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo65" type="text" value="ほ" /></td>
+							</tr>
+							<tr>
+								<td>src</td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo41" type="text" value="G4" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo42" type="text" value="H" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo43" type="text" value="I" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo44" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo45" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo51" type="text" value="J5" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo52" type="text" value="K" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo53" type="text" value="L" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo54" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo55" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo61" type="text" value="M6" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo62" type="text" value="N" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo63" type="text" value="O" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo64" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo65" type="text" value="" /></td>
+							</tr>
+							<!-- 3段目 -->
+							<tr>
+								<td>no</td>
+								<td colspan="5">7</td>
+								<td colspan="5">8</td>
+								<td colspan="5">9</td>
+							</tr>
+							<tr>
+								<td>tgt</td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo71" type="text" value="ま" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo72" type="text" value="み" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo73" type="text" value="む" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo74" type="text" value="め" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo75" type="text" value="も" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo81" type="text" value="や" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo82" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo83" type="text" value="ゆ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo82" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo85" type="text" value="よ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo91" type="text" value="ら" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo92" type="text" value="り" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo93" type="text" value="る" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo94" type="text" value="れ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo95" type="text" value="ろ" /></td>
+							</tr>
+							<tr>
+								<td>src</td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo71" type="text" value="P7" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo72" type="text" value="Q" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo73" type="text" value="R" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo74" type="text" value="S" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo75" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo81" type="text" value="T8" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo82" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo83" type="text" value="U" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo82" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo85" type="text" value="V" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo91" type="text" value="W9" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo92" type="text" value="X" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo93" type="text" value="Y" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo94" type="text" value="Z" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo95" type="text" value="" /></td>
+							</tr>
+							<!-- 4段目 -->
+							<tr>
+								<td>no</td>
+								<td colspan="5">*</td>
+								<td colspan="5">0</td>
+								<td colspan="5">#</td>
+							</tr>
+							<tr>
+								<td>tgt</td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoL1" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoL2" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoL3" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoL4" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoL5" type="text" value="--" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo01" type="text" value="わ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo02" type="text" value="を" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo03" type="text" value="ん" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo04" type="text" value="ゎ" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNo05" type="text" value="ー" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoR1" type="text" value="、" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoR2" type="text" value="。" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoR3" type="text" value="？" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoR4" type="text" value="！" /></td>
+								<td><input class="mapInputCell mapDefKey" data-key="mapDefNoR5" type="text" value="・" /></td>
+							</tr>
+							<tr>
+								<td>src</td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoL1" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoL2" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoL3" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoL4" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoL5" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo01" type="text" value="0" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo02" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo03" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo04" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNo05" type="text" value="-" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoR1" type="text" value="," /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoR2" type="text" value="" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoR3" type="text" value="?" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoR4" type="text" value="!" /></td>
+								<td><input class="mapInputCell mapDefVal" data-key="mapDefNoR5" type="text" value="" /></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- /#CONTENTS_OPT-->
+			</div>
+		</form>
+	</body>
+</html>
