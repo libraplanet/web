@@ -3,7 +3,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>hand spinner</title>
-		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
 		<style type="text/css">
 		<!--
 			body {
@@ -228,7 +228,7 @@
 							return false;
 						}
 					})();
-					if(true  || isMobile) {
+					if(isMobile) {
 						//開始
 						window.addEventListener("touchstart", function(event) {
 							event.preventDefault();
@@ -248,8 +248,6 @@
 							endPos.x = event.touches[0].pageX;
 							endPos.y = event.touches[0].pageY;
 							endPos.z = 0;
-							
-							
 						}, false);
 						
 					} else {
