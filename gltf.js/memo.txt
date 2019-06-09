@@ -73,3 +73,6 @@ https://qiita.com/cx20/items/b99e66a8979f0d982dd1
 
 ・WebGL 対応のライブラリの比較 - Qiita
 https://qiita.com/cx20/items/726c40f9fa8f85dafaf5#comment-7c936c8b3951114269ca
+
+・DeviceOrientationCamera right handed - Questions - Babylon.js
+https://forum.babylonjs.com/t/deviceorientationcamera-right-handed/218
