@@ -1,0 +1,39 @@
+■
+■ CDN
+
+https://cdn.babylonjs.com/babylon.js
+https://cdn.babylonjs.com/babylon.max.js (unminified)
+https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js
+https://cdn.babylonjs.com/loaders/babylonjs.loaders.js
+https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js
+https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.js
+https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.min.js
+https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js
+https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js
+https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js
+https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.min.js
+
+■ sample models
+https://github.com/KhronosGroup/glTF-Sample-Models
+
+■URL
+・KhronosGroup/glTF: glTF – Runtime 3D Asset Delivery
+https://github.com/KhronosGroup/glTF
+
+・three.js – Javascript 3D library
+https://threejs.org/	
+
+・The Babylon.js Viewer - Babylon.js Documentation
+https://doc.babylonjs.com/extensions/the_babylon_viewer
+
+・BabylonJS/CDN: CDN repo for babylon.js files
+https://github.com/BabylonJS/CDN
+
+・cx20/gltf-test: I test glTF loader in some WebGL libraries.
+https://github.com/cx20/gltf-test
+
+・Test of glTF 2.0 loader in some WebGL libraries.
+https://cx20.github.io/gltf-test/
+
+・glTF 対応 WebGL ライブラリを比較してみる - Qiita
+https://qiita.com/cx20/items/b99e66a8979f0d982dd1
