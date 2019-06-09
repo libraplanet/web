@@ -12,10 +12,13 @@
 		<script type="text/javascript">
 			window.onload = function() {
 				var createScene = function(engine) {
-					var scene = new BABYLON.Scene(engine);
-					var camera;
 					var defCameraTgt = new BABYLON.Vector3(0, 0, 0);
 					var defCameraPos = new BABYLON.Vector3(8, 5, 8);
+
+					var scene = new BABYLON.Scene(engine);
+					var camera;
+					var meshModel;
+					var meshTextPlaneX, meshTextPlaneY, meshTextPlaneZ;
 
 					// camera
 					(function() {
@@ -50,12 +53,12 @@
 
 					// Append glTF model to scene.
 					(function() {
-						//var fname = 'BoomBox.glb';
-						//var fname = 'Buggy.glb';
-						var fname = 'Duck.gltf';
+						//var fname = './res/BoomBox.glb';
+						//var fname = './res/Buggy.glb';
+						var fname = './res/Duck.gltf';
 						//BABYLON.SceneLoader.Append('./res/', 'BoomBox.glb', scene, function (scene) {
-						var mesh = BABYLON.SceneLoader.Append('./res/', fname, scene, function (scene) {
-							//camera.focusOn(mesh);
+						meshModel = BABYLON.SceneLoader.Append(fname, null, scene, function (scene) {
+							//camera.focusOn(meshModel);
 						});
 					})();
 
@@ -81,8 +84,6 @@
 
 						//中心軸
 						(function() {
-							var camQ = camera.rotationQuaternion;
-							var revQ = BABYLON.Quaternion.Inverse(camQ || BABYLON.Quaternion.Identity());
 							var createTextPlaneMesh = function(text, color, size) {
 								var dynamicTexture, plane;
 								var dynamicTexture = new BABYLON.DynamicTexture('DynamicTexture', 50, scene, true);
@@ -95,21 +96,19 @@
 								plane.material.diffuseTexture = dynamicTexture;
 								return plane;
 							};
-							var drawTextPlane = function(text, color, size, pos) {
-								var panel = createTextPlaneMesh(text, color, size);
-								panel.position = pos;
-								panel.rotationQuaternion = revQ;
-							};
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3( len,    0,    0)], new BABYLON.Color3(  1, 0.2, 0.2));
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0,  len,    0)], new BABYLON.Color3(0.2,   1, 0.2));
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0,    0,  len)], new BABYLON.Color3(0.2, 0.2,   1));
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(-len,    0,    0)], color);
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0, -len,    0)], color);
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0,    0, -len)], color);
-							
-							drawTextPlane('X', '#FF3333', 1.0, new BABYLON.Vector3( len,    0,    0));
-							drawTextPlane('Y', '#33FF33', 1.0, new BABYLON.Vector3(   0,  len,    0));
-							drawTextPlane('Z', '#3333FF', 1.0, new BABYLON.Vector3(   0,    0,  len));
+
+							meshTextPlaneX = createTextPlaneMesh('X', '#FF3333', 1.0);
+							meshTextPlaneY = createTextPlaneMesh('Y', '#33FF33', 1.0);
+							meshTextPlaneZ = createTextPlaneMesh('Z', '#3333FF', 1.0);
+							meshTextPlaneX.position = new BABYLON.Vector3( len,    0,    0);
+							meshTextPlaneY.position = new BABYLON.Vector3(   0,  len,    0);
+							meshTextPlaneZ.position = new BABYLON.Vector3(   0,    0,  len);
 						})();
 					})();
 
@@ -131,6 +130,20 @@
 					(function() {
 						var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 						var panel = new BABYLON.GUI.StackPanel();
+						var resetCamera = function() {
+							camera.setTarget(defCameraTgt);
+							camera.setPosition(defCameraPos);
+						};
+						var reloadModel = function(url) {
+							var m = BABYLON.SceneLoader.Append(url, null, scene, function (scene) {
+								//if(meshModel) {
+								//	scene.removeMesh(meshModel);
+								//	meshModel = undefined;
+								//}
+								meshModel = m;
+								resetCamera();
+							});
+						};
 						(function() {
 							panel.width = "220px";
 							panel.fontSize = "14px";
@@ -141,22 +154,76 @@
 							var button = BABYLON.GUI.Button.CreateSimpleButton("button1", "camera reset");
 							button.paddingTop = "10px";
 							button.paddingBottom = "10px";
-							button.width = "100px";
+							button.width = "180px";
 							button.height = "50px";
 							button.color = "white";
 							button.background = "blue";
 							button.onPointerDownObservable.add(function(){
-								camera.setTarget(defCameraTgt);
-								camera.setPosition(defCameraPos);
+								resetCamera();
+							});
+							panel.addControl(button);
+						})();
+						(function() {
+							var button = BABYLON.GUI.Button.CreateSimpleButton("button2", "(NG) model BoomBox.glb");
+							button.paddingTop = "10px";
+							button.paddingBottom = "10px";
+							button.width = "180px";
+							button.height = "50px";
+							button.color = "white";
+							button.background = "red";
+							button.onPointerDownObservable.add(function(){
+								reloadModel('./res/BoomBox.glb');
+							});
+							panel.addControl(button);
+						})();
+						(function() {
+							var button = BABYLON.GUI.Button.CreateSimpleButton("button3", "(NG) model Buggy.glb");
+							button.paddingTop = "10px";
+							button.paddingBottom = "10px";
+							button.width = "180px";
+							button.height = "50px";
+							button.color = "white";
+							button.background = "red";
+							button.onPointerDownObservable.add(function(){
+								reloadModel('./res/Buggy.glb');
+							});
+							panel.addControl(button);
+						})();
+						(function() {
+							var button = BABYLON.GUI.Button.CreateSimpleButton("button4", "(NG) model Duck.glt");
+							button.paddingTop = "10px";
+							button.paddingBottom = "10px";
+							button.width = "180px";
+							button.height = "50px";
+							button.color = "white";
+							button.background = "red";
+							button.onPointerDownObservable.add(function(){
+								reloadModel('./res/Duck.gltf');
 							});
 							panel.addControl(button);
 						})();
 						advancedTexture.addControl(panel);
 					})();
 
+					// Animations
+					scene.registerBeforeRender(function() {
+						//billbording
+						(function() {
+							//var camMat = camera.getViewMatrix();
+							var camMat = camera.getWorldMatrix();
+							if(camMat) {
+								var iMat = BABYLON.Matrix.Identity();
+								var revMat = camMat.multiply(iMat);
+								var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
+								meshTextPlaneX.rotationQuaternion = revQuat;
+								meshTextPlaneY.rotationQuaternion = revQuat;
+								meshTextPlaneZ.rotationQuaternion = revQuat;
+							}
+						})();
+					});
 
 					//render loop
-					engine.runRenderLoop(function(){
+					engine.runRenderLoop(function() {
 						scene.render();
 					});
 
