@@ -1,20 +1,42 @@
-■
-■ CDN
+■ repo
+	・Babylon.js GUI module
+	https://github.com/BabylonJS/Babylon.js/tree/master/dist/preview%20release/gui
 
-https://cdn.babylonjs.com/babylon.js
-https://cdn.babylonjs.com/babylon.max.js (unminified)
-https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js
-https://cdn.babylonjs.com/loaders/babylonjs.loaders.js
-https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js
-https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.js
-https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.min.js
-https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js
-https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js
-https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js
-https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.min.js
+■ CDN
+	・Babylon.js
+	https://cdn.babylonjs.com/babylon.js
+	https://cdn.babylonjs.com/babylon.max.js (unminified)
+	https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js
+
+	・Babylon.js GUI module
+	https://cdn.babylonjs.com/gui/babylon.gui.js
+	https://cdn.babylonjs.com/gui/babylon.gui.min.js
+
+	・Babylon.js loader
+	https://cdn.babylonjs.com/loaders/babylonjs.loaders.js
+	https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js
+	https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js
+	https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.min.js
+	(unuse)
+	https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.js
+	https://cdn.babylonjs.com/loaders/babylon.glTF1FileLoader.min.js
+	https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js
+	https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js
+
 
 ■ sample models
 https://github.com/KhronosGroup/glTF-Sample-Models
+
+
+■ 参考demo
+	・examples
+	https://doc.babylonjs.com/examples/
+
+	・座標系
+	https://www.babylonjs-playground.com/#2EYZPE
+
+	・モデルサンプル (UIの参考)
+	https://www.babylonjs-playground.com/#DMLMIP#1
 
 ■URL
 ・KhronosGroup/glTF: glTF – Runtime 3D Asset Delivery
