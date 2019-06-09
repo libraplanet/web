@@ -20,6 +20,8 @@
 					var meshModel;
 					var meshTextPlaneX, meshTextPlaneY, meshTextPlaneZ;
 
+					scene.useRightHandedSystem = true;
+
 					// camera
 					(function() {
 						//var camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
@@ -146,16 +148,16 @@
 						};
 						(function() {
 							panel.width = "220px";
-							panel.fontSize = "14px";
+							panel.fontSize = "12px";
 							panel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
 							panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
 						})();
 						(function() {
 							var button = BABYLON.GUI.Button.CreateSimpleButton("button1", "camera reset");
-							button.paddingTop = "10px";
-							button.paddingBottom = "10px";
-							button.width = "180px";
-							button.height = "50px";
+							button.paddingTop = "5px";
+							button.paddingBottom = "5px";
+							button.width = "160px";
+							button.height = "35px";
 							button.color = "white";
 							button.background = "blue";
 							button.onPointerDownObservable.add(function(){
@@ -165,10 +167,10 @@
 						})();
 						(function() {
 							var button = BABYLON.GUI.Button.CreateSimpleButton("button2", "(NG) model BoomBox.glb");
-							button.paddingTop = "10px";
-							button.paddingBottom = "10px";
-							button.width = "180px";
-							button.height = "50px";
+							button.paddingTop = "5px";
+							button.paddingBottom = "5px";
+							button.width = "160px";
+							button.height = "35px";
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){
@@ -178,10 +180,10 @@
 						})();
 						(function() {
 							var button = BABYLON.GUI.Button.CreateSimpleButton("button3", "(NG) model Buggy.glb");
-							button.paddingTop = "10px";
-							button.paddingBottom = "10px";
-							button.width = "180px";
-							button.height = "50px";
+							button.paddingTop = "5px";
+							button.paddingBottom = "5px";
+							button.width = "160px";
+							button.height = "35px";
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){
@@ -191,10 +193,10 @@
 						})();
 						(function() {
 							var button = BABYLON.GUI.Button.CreateSimpleButton("button4", "(NG) model Duck.glt");
-							button.paddingTop = "10px";
-							button.paddingBottom = "10px";
-							button.width = "180px";
-							button.height = "50px";
+							button.paddingTop = "5px";
+							button.paddingBottom = "5px";
+							button.width = "160px";
+							button.height = "35px";
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){

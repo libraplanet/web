@@ -28,6 +28,17 @@
 https://github.com/KhronosGroup/glTF-Sample-Models
 
 
+■ 座標系
+	・Solidwkrks：右手系
+	・babylon.js：左手系 ※ glTF Loader は右手系に設定している(？？？)
+	・DirectX   ：左手系
+
+	・OpenGL    ：右手系
+	・Three.js  ：右手系
+	・CubicVR.js：右手系
+
+	・glTF      ：右手系
+
 ■ 参考demo
 	・examples
 	https://doc.babylonjs.com/examples/
@@ -59,3 +70,6 @@ https://cx20.github.io/gltf-test/
 
 ・glTF 対応 WebGL ライブラリを比較してみる - Qiita
 https://qiita.com/cx20/items/b99e66a8979f0d982dd1
+
+・WebGL 対応のライブラリの比較 - Qiita
+https://qiita.com/cx20/items/726c40f9fa8f85dafaf5#comment-7c936c8b3951114269ca
