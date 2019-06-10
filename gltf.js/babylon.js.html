@@ -9,6 +9,9 @@
 		<script src="res/babylon.gui.min.js"></script> 
 		<!-- <script src="res/babylon.glTFFileLoader.js"></script> -->
 		<script src="res/babylon.glTFFileLoader.min.js"></script> 
+
+		<!-- <script src="res/babylon.glTFFileLoader.js"></script> -->
+		<script src="res/babylon.glTFFileLoader.min.js"></script> 
 		<script type="text/javascript">
 			window.onload = function() {
 				var createScene = function(engine) {
@@ -17,7 +20,7 @@
 
 					var scene = new BABYLON.Scene(engine);
 					var camera;
-					var meshModel;
+					var meshModels;
 					var meshTextPlaneX, meshTextPlaneY, meshTextPlaneZ;
 
 					scene.useRightHandedSystem = true;
@@ -55,12 +58,12 @@
 
 					// Append glTF model to scene.
 					(function() {
-						//var fname = './res/BoomBox.glb';
+						var fname = './res/BoomBox.glb';
 						//var fname = './res/Buggy.glb';
-						var fname = './res/Duck.gltf';
+						//var fname = './res/Duck.gltf';
 						//BABYLON.SceneLoader.Append('./res/', 'BoomBox.glb', scene, function (scene) {
-						meshModel = BABYLON.SceneLoader.Append(fname, null, scene, function (scene) {
-							//camera.focusOn(meshModel);
+						BABYLON.SceneLoader.ImportMesh('', fname, null, scene, function (meshes) {
+							meshModels = meshes;
 						});
 					})();
 
@@ -138,13 +141,15 @@
 							camera.setPosition(defCameraPos);
 						};
 						var reloadModel = function(url) {
-							var m = BABYLON.SceneLoader.Append(url, null, scene, function (scene) {
-								//if(meshModel) {
-								//	scene.removeMesh(meshModel);
-								//	meshModel = undefined;
-								//}
-								meshModel = m;
-								resetCamera();
+							if(meshModels) {
+								Array.prototype.forEach.call(meshModels, function(mesh) {
+									scene.removeMesh(mesh);
+								});
+								meshModels = undefined;
+							}
+							BABYLON.SceneLoader.ImportMesh('', url, null, scene, function (meshes) {
+								//resetCamera();
+								meshModels = meshes;
 							});
 						};
 						(function() {
