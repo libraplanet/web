@@ -123,9 +123,10 @@
 
 					// option
 					(function() {
-						var options = new BABYLON.SceneOptimizerOptions();
-						var optimizer = new BABYLON.SceneOptimizer(scene, options);
-						optimizer.targetFrameRate = 1;
+						var optimizer, options;
+						options = new BABYLON.SceneOptimizerOptions();
+						options .targetFrameRate = 20;
+						optimizer = new BABYLON.SceneOptimizer(scene, options);
 					})();
 
 					// ui
@@ -207,25 +208,26 @@
 						advancedTexture.addControl(panel);
 					})();
 
-					// Animations
-					scene.registerBeforeRender(function() {
-						//billbording
-						(function() {
-							//var camMat = camera.getViewMatrix();
-							var camMat = camera.getWorldMatrix();
-							if(camMat) {
-								var iMat = BABYLON.Matrix.Identity();
-								var revMat = camMat.multiply(iMat);
-								var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
-								meshTextPlaneX.rotationQuaternion = revQuat;
-								meshTextPlaneY.rotationQuaternion = revQuat;
-								meshTextPlaneZ.rotationQuaternion = revQuat;
-							}
-						})();
-					});
 
 					//render loop
 					engine.runRenderLoop(function() {
+						// Animations
+						(function() {
+							//billbording
+							(function() {
+								//var camMat = camera.getViewMatrix();
+								var camMat = camera.getWorldMatrix();
+								if(camMat) {
+									var iMat = BABYLON.Matrix.Identity();
+									var revMat = camMat.multiply(iMat);
+									var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
+									meshTextPlaneX.rotationQuaternion = revQuat;
+									meshTextPlaneY.rotationQuaternion = revQuat;
+									meshTextPlaneZ.rotationQuaternion = revQuat;
+								}
+							})();
+						})();
+
 						scene.render();
 					});
 
