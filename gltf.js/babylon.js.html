@@ -13,16 +13,29 @@
 		<!-- <script src="babylon.js/babylon.glTFFileLoader.js"></script> -->
 		<script src="babylon.js/babylon.glTFFileLoader.min.js"></script> 
 		<script type="text/javascript">
-			window.onload = function() {
-				var createScene = function(engine) {
+			var Contexts = function() {
+				var self = this;
+				self.canvas = undefined;
+				self.engine = undefined;
+				self.scene = undefined;
+			};
+			var Gear = function() {
+				var self = this;
+				/**
+				 * member properties.
+				 */
+				self.camera = undefined;
+				self.meshModels = undefined
+				self.meshTextPlaneX = undefined
+				self.meshTextPlaneY = undefined
+				self.meshTextPlaneZ = undefined
+
+				/**
+				 * init()
+				 */
+				self.init = function(scene) {
 					var defCameraTgt = new BABYLON.Vector3(0, 0, 0);
 					var defCameraPos = new BABYLON.Vector3(8, 5, 8);
-
-					var scene = new BABYLON.Scene(engine);
-					var camera;
-					var meshModels;
-					var meshTextPlaneX, meshTextPlaneY, meshTextPlaneZ;
-
 					scene.useRightHandedSystem = true;
 
 					// camera
@@ -30,7 +43,7 @@
 						//var camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
 						//camera.setTarget(BABYLON.Vector3.Zero());
 						// Parameters: alpha, beta, radius, target position, scene
-						camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
+						var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
 						// Positions the camera overwriting alpha, beta, radius
 						camera.setPosition(defCameraPos);
 						camera.attachControl(canvas, true);
@@ -38,6 +51,7 @@
 						camera.upperRadiusLimit = 1000;
 						camera.wheelDeltaPercentage = 0.01;
 						camera.pinchdeltapercentage = 0.01;
+						self.camera = camera;
 					})();
 
 					// light
@@ -63,7 +77,7 @@
 						var fname = './babylon.js/Duck.gltf';
 						//BABYLON.SceneLoader.Append('./babylon.js/', 'BoomBox.glb', scene, function (scene) {
 						BABYLON.SceneLoader.ImportMesh('', fname, null, scene, function (meshes) {
-							meshModels = meshes;
+							self.meshModels = meshes;
 						});
 					})();
 
@@ -108,12 +122,12 @@
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0, -len,    0)], color);
 							drawLine('line', [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(   0,    0, -len)], color);
 
-							meshTextPlaneX = createTextPlaneMesh('X', '#FF3333', 1.0);
-							meshTextPlaneY = createTextPlaneMesh('Y', '#33FF33', 1.0);
-							meshTextPlaneZ = createTextPlaneMesh('Z', '#3333FF', 1.0);
-							meshTextPlaneX.position = new BABYLON.Vector3( len,    0,    0);
-							meshTextPlaneY.position = new BABYLON.Vector3(   0,  len,    0);
-							meshTextPlaneZ.position = new BABYLON.Vector3(   0,    0,  len);
+							self.meshTextPlaneX = createTextPlaneMesh('X', '#FF3333', 1.0);
+							self.meshTextPlaneY = createTextPlaneMesh('Y', '#33FF33', 1.0);
+							self.meshTextPlaneZ = createTextPlaneMesh('Z', '#3333FF', 1.0);
+							self.meshTextPlaneX.position = new BABYLON.Vector3( len,    0,    0);
+							self.meshTextPlaneY.position = new BABYLON.Vector3(   0,  len,    0);
+							self.meshTextPlaneZ.position = new BABYLON.Vector3(   0,    0,  len);
 						})();
 					})();
 
@@ -141,15 +155,15 @@
 							camera.setPosition(defCameraPos);
 						};
 						var reloadModel = function(url) {
-							if(meshModels) {
-								Array.prototype.forEach.call(meshModels, function(mesh) {
+							if(self.meshModels) {
+								Array.prototype.forEach.call(self.meshModels, function(mesh) {
 									scene.removeMesh(mesh);
 								});
-								meshModels = undefined;
+								self.meshModels = undefined;
 							}
 							BABYLON.SceneLoader.ImportMesh('', url, null, scene, function (meshes) {
 								//resetCamera();
-								meshModels = meshes;
+								self.meshModels = meshes;
 							});
 						};
 						(function() {
@@ -213,44 +227,55 @@
 						advancedTexture.addControl(panel);
 					})();
 
+				};
 
-					//render loop
-					engine.runRenderLoop(function() {
-						// Animations
+				/**
+				 * update
+				 */
+				self.update = function(scene) {
+					// Animations
+					(function() {
+						//billbording
 						(function() {
-							//billbording
-							(function() {
-								//var camMat = camera.getViewMatrix();
-								var camMat = camera.getWorldMatrix();
-								if(camMat) {
-									var iMat = BABYLON.Matrix.Identity();
-									var revMat = camMat.multiply(iMat);
-									var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
-									meshTextPlaneX.rotationQuaternion = revQuat;
-									meshTextPlaneY.rotationQuaternion = revQuat;
-									meshTextPlaneZ.rotationQuaternion = revQuat;
-								}
-							})();
+							//var camMat = camera.getViewMatrix();
+							var camMat = self.camera.getWorldMatrix();
+							if(camMat) {
+								var iMat = BABYLON.Matrix.Identity();
+								var revMat = camMat.multiply(iMat);
+								var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
+								self.meshTextPlaneX.rotationQuaternion = revQuat;
+								self.meshTextPlaneY.rotationQuaternion = revQuat;
+								self.meshTextPlaneZ.rotationQuaternion = revQuat;
+							}
 						})();
-
-						scene.render();
-					});
-
-					return scene;
+					})();
 				};
-				var init = function() {
-					var canvas = document.querySelectorAll("#canvas")[0];
-					var engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
-					var scene = createScene(engine);
-					
 
-					// event handler
-					window.addEventListener('resize', function() {
-						engine.resize();
-					});
+				/**
+				 * render
+				 */
+				self.render = function(scene) {
+					scene.render();
 				};
-				init();
 			};
+			var contexts = new Contexts();
+			var gear = new Gear();
+
+			window.onload = function() {
+				var canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
+				var engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+				var scene  = contexts.scene = new BABYLON.Scene(engine);
+				gear.init(scene);
+				engine.runRenderLoop(function() {
+					gear.update(scene);
+					gear.render(scene);
+				});
+				// event handler
+				window.addEventListener('resize', function() {
+					engine.resize();
+				});
+			};
+
 		</script> 
 		<style type="text/css">
 		<!--
