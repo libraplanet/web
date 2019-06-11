@@ -4,14 +4,14 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>babylon.js</title>
-		<script src="res/babylon.max.js"></script> 
-		<!-- <script src="res/babylon.gui.js"></script> -->
-		<script src="res/babylon.gui.min.js"></script> 
-		<!-- <script src="res/babylon.glTFFileLoader.js"></script> -->
-		<script src="res/babylon.glTFFileLoader.min.js"></script> 
+		<script src="babylon.js/babylon.max.js"></script> 
+		<!-- <script src="babylon.js/babylon.gui.js"></script> -->
+		<script src="babylon.js/babylon.gui.min.js"></script> 
+		<!-- <script src="babylon.js/babylon.glTFFileLoader.js"></script> -->
+		<script src="babylon.js/babylon.glTFFileLoader.min.js"></script> 
 
-		<!-- <script src="res/babylon.glTFFileLoader.js"></script> -->
-		<script src="res/babylon.glTFFileLoader.min.js"></script> 
+		<!-- <script src="babylon.js/babylon.glTFFileLoader.js"></script> -->
+		<script src="babylon.js/babylon.glTFFileLoader.min.js"></script> 
 		<script type="text/javascript">
 			window.onload = function() {
 				var createScene = function(engine) {
@@ -58,10 +58,10 @@
 
 					// Append glTF model to scene.
 					(function() {
-						//var fname = './res/BoomBox.glb';
-						//var fname = './res/Buggy.glb';
-						var fname = './res/Duck.gltf';
-						//BABYLON.SceneLoader.Append('./res/', 'BoomBox.glb', scene, function (scene) {
+						//var fname = './babylon.js/BoomBox.glb';
+						//var fname = './babylon.js/Buggy.glb';
+						var fname = './babylon.js/Duck.gltf';
+						//BABYLON.SceneLoader.Append('./babylon.js/', 'BoomBox.glb', scene, function (scene) {
 						BABYLON.SceneLoader.ImportMesh('', fname, null, scene, function (meshes) {
 							meshModels = meshes;
 						});
@@ -180,7 +180,7 @@
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){
-								reloadModel('./res/BoomBox.glb');
+								reloadModel('./babylon.js/BoomBox.glb');
 							});
 							panel.addControl(button);
 						})();
@@ -193,7 +193,7 @@
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){
-								reloadModel('./res/Buggy.glb');
+								reloadModel('./babylon.js/Buggy.glb');
 							});
 							panel.addControl(button);
 						})();
@@ -206,7 +206,7 @@
 							button.color = "white";
 							button.background = "red";
 							button.onPointerDownObservable.add(function(){
-								reloadModel('./res/Duck.gltf');
+								reloadModel('./babylon.js/Duck.gltf');
 							});
 							panel.addControl(button);
 						})();
