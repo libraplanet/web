@@ -151,8 +151,8 @@
 						var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 						var panel = new BABYLON.GUI.StackPanel();
 						var resetCamera = function() {
-							camera.setTarget(defCameraTgt);
-							camera.setPosition(defCameraPos);
+							self.camera.setTarget(defCameraTgt);
+							self.camera.setPosition(defCameraPos);
 						};
 						var reloadModel = function(url) {
 							if(self.meshModels) {
