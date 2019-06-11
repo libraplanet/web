@@ -266,14 +266,29 @@
 				var engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
 				var scene  = contexts.scene = new BABYLON.Scene(engine);
 				gear.init(scene);
-				engine.runRenderLoop(function() {
-					gear.update(scene);
-					gear.render(scene);
-				});
+
 				// event handler
 				window.addEventListener('resize', function() {
 					engine.resize();
 				});
+				if(true) {
+					engine.runRenderLoop(function() {
+						gear.update(scene);
+						gear.render(scene);
+					});
+				} else {
+					var lastTime = new Date().getTime();
+					var tick = function() {
+						var t, d;
+						gear.update(scene);
+						gear.render(scene);
+						t =  new Date().getTime();
+						d = (1 / 10) - (t - lastTime);
+						setTimeout(tick, Math.max(0, d));
+						lastTime = t;
+					};
+					tick();
+				}
 			};
 
 		</script> 
