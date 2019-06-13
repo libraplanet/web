@@ -21,7 +21,7 @@
 				 * member properties.
 				 */
 				self.camera = undefined;
-				self.meshModels = undefined
+				self.sceneMeshes = undefined
 				self.meshTextPlaneX = undefined
 				self.meshTextPlaneY = undefined
 				self.meshTextPlaneZ = undefined
@@ -48,10 +48,12 @@
 						var loader = new THREE.GLTFLoader();
 						var path = './three.js/Duck.gltf';
 						//var path = './three.js/BoomBox.glb';
+						//var path = './three.js/Buggy.glb';
 						loader.load(path, function(data){
-							var gltf = data;
-							var obj = gltf.scene;
-							scene.add(obj);
+							var a = self.sceneMeshes = data.scenes;
+							Array.prototype.forEach.call(a, function(glSceheMesh) {
+								scene.add(glSceheMesh);
+							});
 						});
 					})();
 
@@ -100,14 +102,89 @@
 				})();
 
 				// event handler
-				window.addEventListener('resize', function() {
-					var width  = window.innerWidth;
-					var height = window.innerHeight;
-					gear.camera.aspect = width / height;
-					gear.camera.updateProjectionMatrix();
-					contexts.renderer.setSize(width, height);
-					console.log('resize(' + width + ', ' + height + ')')
-				});
+				(function() {
+					// general
+					(function() {
+						window.addEventListener('resize', function(e) {
+							var width  = window.innerWidth;
+							var height = window.innerHeight;
+							gear.camera.aspect = width / height;
+							gear.camera.updateProjectionMatrix();
+							contexts.renderer.setSize(width, height);
+							console.log('resize(' + width + ', ' + height + ')')
+						}, false);
+					})();
+					// canvas
+					(function() {
+						var canvas = contexts.canvas;
+						canvas.addEventListener(null, function(e) {
+						}, false);
+						canvas.addEventListener('webglcontextlost', function(e) {
+						}, false);
+						canvas.addEventListener('webglcontextrestored', function(e) {
+						}, false);
+					})();
+					// control
+					(function() {
+						var canvas = contexts.canvas;
+						var drag = function(e) {
+							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
+							// https://threejs.org/docs/#api/en/scenes/Scene
+							// https://threejs.org/docs/index.html#api/en/math/Matrix4
+							// https://codeday.me/jp/qa/20190115/132954.html
+							// http://www.deqnotes.net/acmicpc/2d_geometry/using_vectors
+							var sceneMeshes = gear.sceneMeshes;
+							var vx = e.movementX;
+							var vy = e.movementY;
+							var vec = new THREE.Vector2(vx, vy);
+							var nomVec = new THREE.Vector2(-vy, vx);
+							var pow = vec.length();
+							var matX = new THREE.Matrix4().makeRotationX(0);
+							var matY = new THREE.Matrix4().makeRotationY(vx * 0.05);
+							var matZ = new THREE.Matrix4().makeRotationZ(vy * 0.05);
+							var matR = new THREE.Matrix4().multiply(matX).multiply(matY).multiply(matZ);
+							//var matR = new THREE.Matrix4().makeRotationAxis (new THREE.Vector3(-vy, vx, 0), pow * 0.05);
+							console.log('vec(' + vx + ',' + vy + ') => nom(' + nomVec.x + ',' + nomVec.y + ') pow(' + pow + ')');
+							Array.prototype.forEach.call(sceneMeshes, function(mesh) {
+								//mesh.matrix.multiply(matR);
+								mesh.setRotationFromMatrix(mesh.matrix.multiply(matR));
+								//mesh.setRotationFromMatrix(mesh.matrix.multiply(matY));
+								//mesh.setRotationFromMatrix(mesh.matrix.multiply(matZ));
+							});
+						}
+						var drop = function(e) {
+							console.log('drop()!');
+						}
+						window.addEventListener(null, function(e) {
+						}, false);
+						window.addEventListener('contextmenu', function(e) {
+							if(e.preventDefault){
+								e.preventDefault();
+							}else{
+								return false;
+							}
+						}, false);
+						canvas.addEventListener('mousedown', function(e) {
+							console.log('event - mousedown!');
+						}, false);
+						canvas.addEventListener('mouseup', function(e) {
+							console.log('event - mouseup!');
+						}, false);
+						canvas.addEventListener('mousemove', function(e) {
+							console.log('event - mousemove!');
+							drag(e);
+						}, false);
+						canvas.addEventListener('dragenter', function(e) {
+							console.log('event - dragenter!');
+						}, false);
+						canvas.addEventListener('dragover', function(e) {
+							console.log('event - dragover!');
+						}, false);
+						canvas.addEventListener('drop', function(e) {
+							console.log('event - drop!');
+						}, false);
+					})();
+				})();
 
 				//render
 				(function() {
