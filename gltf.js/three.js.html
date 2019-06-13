@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>three.js</title>
+		<script src="three.js/three.min.js"></script> 
+		<script src="three.js/OrbitControls.js"></script> 
+		<script src="three.js/GLTFLoader.js"></script> 
+		<script type="text/javascript">
+			var Contexts = function() {
+				var self = this;
+				self.canvas = undefined;
+				self.renderer = undefined;
+				self.scene = undefined;
+			};
+			var Gear = function() {
+				var self = this;
+				/**
+				 * member properties.
+				 */
+				self.camera = undefined;
+				self.meshModels = undefined
+				self.meshTextPlaneX = undefined
+				self.meshTextPlaneY = undefined
+				self.meshTextPlaneZ = undefined
+
+				/**
+				 * init()
+				 */
+				self.init = function(contexts, width, height) {
+					var scene = contexts.scene;
+					var camera = self.camera;
+
+					//camera
+					(function() {
+						var camera = self.camera = new THREE.PerspectiveCamera(50, width / height, 1, 100 );
+						camera.position.set(0, 1, 5);
+					})();
+					//light
+					(function() {
+						var light = new THREE.AmbientLight(0xffffff, 1);
+						scene.add(light);
+					})();
+					//mesh
+					(function() {
+						var loader = new THREE.GLTFLoader();
+						var path = './three.js/Duck.gltf';
+						//var path = './three.js/BoomBox.glb';
+						loader.load(path, function(data){
+							var gltf = data;
+							var obj = gltf.scene;
+							scene.add(obj);
+						});
+					})();
+
+					//grid
+					(function() {
+						const grid = new THREE.GridHelper(10, 5);
+						scene.add(grid);
+					})();
+				};
+
+				/**
+				 * update
+				 */
+				self.update = function(contexts) {
+				};
+
+				/**
+				 * render
+				 */
+				 self.render = function(contexts) {
+					var renderer = contexts.renderer;
+					var scene = contexts.scene;
+					var camera = self.camera;
+					renderer.render(scene, camera);
+				};
+			};
+
+			window.onload = function() {
+				var contexts = new Contexts();
+				var gear = new Gear();
+
+				(function() {
+					var width  = window.innerWidth;
+					var height = window.innerHeight;
+					var canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
+					var renderer = contexts.renderer = new THREE.WebGLRenderer({
+						canvas: canvas,
+						antialias: true
+					});
+					var scene  = contexts.scene = new THREE.Scene();
+
+					renderer.setSize(width, height);
+					renderer.setClearColor(0xC0C0C0, 1.0);
+
+					gear.init(contexts, width, height);
+				})();
+
+				// event handler
+				window.addEventListener('resize', function() {
+					var width  = window.innerWidth;
+					var height = window.innerHeight;
+					gear.camera.aspect = width / height;
+					gear.camera.updateProjectionMatrix();
+					contexts.renderer.setSize(width, height);
+					console.log('resize(' + width + ', ' + height + ')')
+				});
+
+				//render
+				(function() {
+					var tick = function() {
+						gear.update(contexts);
+						gear.render(contexts);
+						requestAnimationFrame(tick);
+					};
+					tick();
+				})();
+			};
+
+		</script> 
+		<style type="text/css">
+		<!--
+			html, body {
+				overflow: hidden;
+				width   : 100%;
+				height  : 100%;
+				margin  : 0;
+				padding : 0;
+			}
+			canvas#canvas {
+				width:100%;
+				height:100%;
+			};
+		-->
+		</style> 
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+	</body>
+</html>

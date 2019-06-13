@@ -19,13 +19,13 @@
 				self.canvas = undefined;
 				self.engine = undefined;
 				self.scene = undefined;
+				self.camera = undefined;
 			};
 			var Gear = function() {
 				var self = this;
 				/**
 				 * member properties.
 				 */
-				self.camera = undefined;
 				self.meshModels = undefined
 				self.meshTextPlaneX = undefined
 				self.meshTextPlaneY = undefined
@@ -34,9 +34,10 @@
 				/**
 				 * init()
 				 */
-				self.init = function(scene) {
+				self.init = function(context) {
 					var defCameraTgt = new BABYLON.Vector3(0, 0, 0);
 					var defCameraPos = new BABYLON.Vector3(8, 5, 8);
+					var scene = context.scene;
 					scene.useRightHandedSystem = true;
 
 					// camera
@@ -44,7 +45,7 @@
 						//var camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
 						//camera.setTarget(BABYLON.Vector3.Zero());
 						// Parameters: alpha, beta, radius, target position, scene
-						var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
+						var camera = context.camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
 						// Positions the camera overwriting alpha, beta, radius
 						camera.setPosition(defCameraPos);
 						camera.attachControl(canvas, true);
@@ -233,7 +234,8 @@
 				/**
 				 * update
 				 */
-				self.update = function(scene) {
+				self.update = function(context) {
+					var scene = context.scene;
 					// Animations
 					(function() {
 						//billbording
@@ -255,34 +257,38 @@
 				/**
 				 * render
 				 */
-				self.render = function(scene) {
-					scene.render();
+				self.render = function(contexts) {
+					contexts.scene.render();
 				};
 			};
-			var contexts = new Contexts();
-			var gear = new Gear();
 
 			window.onload = function() {
-				var canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
-				var engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
-				var scene  = contexts.scene = new BABYLON.Scene(engine);
-				gear.init(scene);
+				var contexts = new Contexts();
+				var gear = new Gear();
+
+				(function() {
+					var canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
+					var engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+					var scene  = contexts.scene = new BABYLON.Scene(engine);
+					gear.init(contexts);
+				})();
 
 				// event handler
 				window.addEventListener('resize', function() {
-					engine.resize();
+					contexts.engine.resize();
 				});
+
 				if(true) {
-					engine.runRenderLoop(function() {
-						gear.update(scene);
-						gear.render(scene);
+					contexts.engine.runRenderLoop(function() {
+						gear.update(contexts);
+						gear.render(contexts);
 					});
 				} else {
 					var lastTime = new Date().getTime();
 					var tick = function() {
 						var t, d;
-						gear.update(scene);
-						gear.render(scene);
+						gear.update(gear.scene);
+						gear.render(gear.scene);
 						t =  new Date().getTime();
 						d = (1 / 10) - (t - lastTime);
 						setTimeout(tick, Math.max(0, d));
