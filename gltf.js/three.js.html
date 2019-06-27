@@ -9,6 +9,7 @@
 		<script src="three.js/OrbitControls.js"></script> 
 		<script src="three.js/GLTFLoader.js"></script> 
 		<script type="text/javascript">
+
 			var Contexts = function() {
 				var self = this;
 				self.canvas = undefined;
@@ -20,27 +21,40 @@
 				/**
 				 * member properties.
 				 */
-				self.camera = undefined;
-				self.sceneMeshes = undefined
-				self.meshTextPlaneX = undefined
-				self.meshTextPlaneY = undefined
-				self.meshTextPlaneZ = undefined
+				self.cnt = 0;
+				self.camera = undefined;;
+				self.sceneMeshes = undefined;
+				self.axesHelper = undefined;
+				self.meshTextPlaneX = undefined;
+				self.meshTextPlaneY = undefined;
+				self.meshTextPlaneZ = undefined;
+
+				self.modelQuaternion = undefined;
 
 				/**
-				 * init()
+				 * Gear.init()
 				 */
 				self.init = function(contexts, width, height) {
 					var scene = contexts.scene;
 					var camera = self.camera;
+					var modelQuaternion;
+
+
+					// Quaternion;
+					(function() {
+						var qy = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), -(Math.PI / 4));
+						var qx = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), (Math.PI / 4 / 2));
+						modelQuaternion = self.modelQuaternion = new THREE.Quaternion().multiply(qx).multiply(qy);
+					})();
 
 					//camera
 					(function() {
 						var camera = self.camera = new THREE.PerspectiveCamera(50, width / height, 1, 100 );
-						camera.position.set(0, 1, 5);
+						camera.position.set(0, 0, 7);
 					})();
 					//light
 					(function() {
-						var light = new THREE.AmbientLight(0xffffff, 1);
+						var light = new THREE.AmbientLight(0xFFFFFF, 1.0);
 						scene.add(light);
 					})();
 					//mesh
@@ -50,11 +64,25 @@
 						//var path = './three.js/BoomBox.glb';
 						//var path = './three.js/Buggy.glb';
 						loader.load(path, function(data){
-							var a = self.sceneMeshes = data.scenes;
-							Array.prototype.forEach.call(a, function(glSceheMesh) {
-								scene.add(glSceheMesh);
+							var sceneMeshes = self.sceneMeshes = data.scenes;
+							Array.prototype.forEach.call(sceneMeshes, function(mesh) {
+								scene.add(mesh);
+
+								mesh.rotation.set(0, 0, 0);
+								mesh.applyQuaternion(modelQuaternion);
 							});
 						});
+					})();
+
+					//AxesHelper
+					(function() {
+						var axesHelper = self.axesHelper = new THREE.AxesHelper(1);
+						scene.add(axesHelper);
+
+						axesHelper.position.set(0,0,0);
+						axesHelper.rotation.set(0,0,0);
+						axesHelper.applyQuaternion(modelQuaternion);
+						axesHelper.position.set(-3, -1 , -10);
 					})();
 
 					//grid
@@ -65,15 +93,15 @@
 				};
 
 				/**
-				 * update
+				 * Gear.update
 				 */
 				self.update = function(contexts) {
 				};
 
 				/**
-				 * render
+				 * Gear.render
 				 */
-				 self.render = function(contexts) {
+				 self.render = function(contexts, gear) {
 					var renderer = contexts.renderer;
 					var scene = contexts.scene;
 					var camera = self.camera;
@@ -127,30 +155,69 @@
 					// control
 					(function() {
 						var canvas = contexts.canvas;
-						var drag = function(e) {
-							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
-							// https://threejs.org/docs/#api/en/scenes/Scene
-							// https://threejs.org/docs/index.html#api/en/math/Matrix4
-							// https://codeday.me/jp/qa/20190115/132954.html
-							// http://www.deqnotes.net/acmicpc/2d_geometry/using_vectors
-							var sceneMeshes = gear.sceneMeshes;
-							var vx = e.movementX;
-							var vy = e.movementY;
-							var vec = new THREE.Vector2(vx, vy);
-							var nomVec = new THREE.Vector2(-vy, vx);
-							var pow = vec.length();
-							var matX = new THREE.Matrix4().makeRotationX(0);
-							var matY = new THREE.Matrix4().makeRotationY(vx * 0.05);
-							var matZ = new THREE.Matrix4().makeRotationZ(vy * 0.05);
-							var matR = new THREE.Matrix4().multiply(matX).multiply(matY).multiply(matZ);
-							//var matR = new THREE.Matrix4().makeRotationAxis (new THREE.Vector3(-vy, vx, 0), pow * 0.05);
-							console.log('vec(' + vx + ',' + vy + ') => nom(' + nomVec.x + ',' + nomVec.y + ') pow(' + pow + ')');
-							Array.prototype.forEach.call(sceneMeshes, function(mesh) {
-								//mesh.matrix.multiply(matR);
-								mesh.setRotationFromMatrix(mesh.matrix.multiply(matR));
-								//mesh.setRotationFromMatrix(mesh.matrix.multiply(matY));
-								//mesh.setRotationFromMatrix(mesh.matrix.multiply(matZ));
-							});
+						var rotModel = function(e) {
+							if(gear.sceneMeshes && gear.modelQuaternion) {
+								// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
+								// https://threejs.org/docs/#api/en/scenes/Scene
+								// https://threejs.org/docs/#api/en/core/Object3D
+								// https://threejs.org/docs/#api/en/math/Matrix4
+								// https://threejs.org/docs/#api/en/math/Quaternion
+								// https://codeday.me/jp/qa/20190115/132954.html
+								// https://codeday.me/jp/qa/20190227/332144.html
+								// http://www.deqnotes.net/acmicpc/2d_geometry/using_vectors
+								// http://gupuru.hatenablog.jp/entry/2013/11/27/214929
+								var q;
+								//calc
+								(function() {
+									var modelQuaternion = gear.modelQuaternion;
+									var vx = e.movementX * 0.005;
+									var vy = e.movementY * 0.005;
+									var qx = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), vy);
+									var qy = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), vx);
+									var qz = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ), 0);
+									gear.modelQuaternion = q = new THREE.Quaternion().multiply(qx).multiply(qy).multiply(qz).multiply(modelQuaternion);
+									console.log('e.movement(' + vx + ',' + vy + ')');
+								})();
+								//mesh
+								(function() {
+									var sceneMeshes = gear.sceneMeshes;
+									Array.prototype.forEach.call(sceneMeshes, function(mesh) {
+										//reset rotation
+										mesh.rotation.set(0, 0, 0);
+										mesh.applyQuaternion(q);
+									});
+								})();
+								//axis helper
+								(function() {
+									var camera = gear.camera;
+									var axesHelper = gear.axesHelper;
+									var matCamR = gear.camera.matrix;
+									var x = matCamR.elements[12];
+									var y = matCamR.elements[13];
+									var z = matCamR.elements[14];
+									//matCamR.elements[12] = 0;
+									//matCamR.elements[13] = 0;
+									//matCamR.elements[14] = 0;
+
+									axesHelper.position.set(0,0,0);
+									axesHelper.rotation.set(0,0,0);
+									axesHelper.applyQuaternion(q);
+									axesHelper.position.set(-3, -1 , -10);
+									//axesHelper.applyMatrix(matCamR);
+								})();
+							}
+						}
+						var cameraMoveDrag = function(e) {
+							var vx = -(e.movementX * 0.01);
+							var vy = (e.movementY * 0.01);
+							var m = new THREE.Matrix4().makeTranslation(vx, vy, 0);
+							gear.camera.applyMatrix(m);
+						}
+						var cameraMoveWheel = function(e) {
+							// https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
+							var v = event.deltaY * -0.01;
+							var m = new THREE.Matrix4().makeTranslation(0, 0, v);
+							gear.camera.applyMatrix(m);
 						}
 						var drop = function(e) {
 							console.log('drop()!');
@@ -172,7 +239,13 @@
 						}, false);
 						canvas.addEventListener('mousemove', function(e) {
 							console.log('event - mousemove!');
-							drag(e);
+							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
+							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent/buttons
+							if(e.buttons == 0x01) {
+								rotModel(e);
+							} else if(e.buttons == 0x04) {
+								cameraMoveDrag(e);
+							}
 						}, false);
 						canvas.addEventListener('dragenter', function(e) {
 							console.log('event - dragenter!');
@@ -182,6 +255,10 @@
 						}, false);
 						canvas.addEventListener('drop', function(e) {
 							console.log('event - drop!');
+						}, false);
+						canvas.addEventListener('wheel', function(e) {
+							console.log('event - wheel!');
+							cameraMoveWheel(e);
 						}, false);
 					})();
 				})();
@@ -194,6 +271,7 @@
 						requestAnimationFrame(tick);
 					};
 					tick();
+					//setInterval(tick, 1000/20);
 				})();
 			};
 
