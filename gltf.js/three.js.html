@@ -6,8 +6,11 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>three.js</title>
 		<script src="three.js/three.min.js"></script> 
-		<script src="three.js/OrbitControls.js"></script> 
 		<script src="three.js/GLTFLoader.js"></script> 
+		<script src="three.js/OrbitControls.js"></script> 
+		<script src="three.js/TrackballControls.js"></script> 
+		<script src="three.js/stats.min.js"></script> 
+
 		<script type="text/javascript">
 
 			var Contexts = function() {
@@ -15,6 +18,7 @@
 				self.canvas = undefined;
 				self.renderer = undefined;
 				self.scene = undefined;
+				self.stats = undefined;
 			};
 			var Gear = function() {
 				var self = this;
@@ -23,47 +27,49 @@
 				 */
 				self.cnt = 0;
 				self.camera = undefined;;
+				self.directionalLight = undefined;;
+				self.controls = undefined;;
 				self.sceneMeshes = undefined;
 				self.axesHelper = undefined;
 				self.meshTextPlaneX = undefined;
 				self.meshTextPlaneY = undefined;
 				self.meshTextPlaneZ = undefined;
 
-				self.modelQuaternion = undefined;
-
 				/**
 				 * Gear.init()
 				 */
 				self.init = function(contexts, width, height) {
 					var scene = contexts.scene;
-					var camera = self.camera;
-					var modelQuaternion;
-
-
-					// Quaternion;
-					(function() {
-						var qy = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), -(Math.PI / 4));
-						var qx = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), (Math.PI / 4 / 2));
-						modelQuaternion = self.modelQuaternion = new THREE.Quaternion().multiply(qx).multiply(qy);
-					})();
+					var renderer = contexts.renderer;
+					var camera, directionalLight;
 
 					//camera
 					(function() {
-						var camera = self.camera = new THREE.PerspectiveCamera(50, width / height, 1, 100 );
+						camera = self.camera = new THREE.PerspectiveCamera(50, width / height, 1, 2000);
 						camera.position.set(0, 1, 7);
+					})();
+					//control
+					(function() {
+						var controls = self.controls = new THREE.TrackballControls(camera, renderer.domElement);
+						controls.staticMoving = true;
 					})();
 					//light
 					(function() {
 						(function() {
 							var light = new THREE.AmbientLight(0xFFFFFF, 0.5);
+							//light.castShadow = true;
 							scene.add(light);
 						})();
 						(function() {
-
-							var light = new THREE.DirectionalLight(0xFFFFFF, 0.75);
-							light.position.set(0, 2, 7);
+							var light = directionalLight = self.directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.75);
+							light.position.set(-2, 2, 5);
 							light.castShadow = true;
+							light.shadow.mapSize.width = 512;
+							light.shadow.mapSize.height = 512;
+							light.shadow.camera.near = 1;
+							light.shadow.camera.far = 2000;
 							scene.add(light);
+							scene.add(light.target);
 						})();
 					})();
 					//mesh
@@ -75,15 +81,35 @@
 						loader.load(path, function(data){
 							var sceneMeshes = self.sceneMeshes = data.scenes;
 							Array.prototype.forEach.call(sceneMeshes, function(mesh) {
-								scene.add(mesh);
-
 								mesh.castShadow = true;
-								mesh.rotation.set(0, 0, 0);
-								mesh.applyQuaternion(modelQuaternion);
+								mesh.receiveShadow = false;
+								scene.add(mesh);
 							});
 						});
 					})();
-
+					//plane
+					(function() {
+						(function() {
+							var geometry = new THREE.PlaneBufferGeometry(10, 5 + 1, 1);
+							var material = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+							var plane = new THREE.Mesh(geometry, material);
+							plane.position.set(0, 2.5 - 0.5, -5);
+							plane.castShadow = false;
+							plane.receiveShadow = true;
+							scene.add(plane);
+						})();
+						(function() {
+							var geometry = new THREE.PlaneBufferGeometry(10, 10, 1);
+							var material = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+							var plane = new THREE.Mesh(geometry, material);
+							var q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI / 2);
+							plane.position.set(0, -1, 0);
+							plane.quaternion.copy(q);
+							plane.castShadow = false;
+							plane.receiveShadow = true;
+							scene.add(plane);
+						})();
+					})();
 					//AxesHelper
 					(function() {
 						var axesHelper = self.axesHelper = new THREE.AxesHelper(1);
@@ -91,8 +117,17 @@
 
 						axesHelper.position.set(0,0,0);
 						axesHelper.rotation.set(0,0,0);
-						axesHelper.applyQuaternion(modelQuaternion);
-						axesHelper.position.set(-3, -1 , -10);
+						axesHelper.position.set(-3, -1 , 0);
+					})();
+					//helper(directionalLight light)
+					(function() {
+						var helper = new THREE.DirectionalLightHelper(directionalLight, 5, 0x0000FF);
+						scene.add(helper);
+					})();
+					//helper(directionalLight shadow)
+					(function() {
+						var helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+						scene.add(helper);
 					})();
 
 					//grid
@@ -106,12 +141,19 @@
 				 * Gear.update
 				 */
 				self.update = function(contexts) {
+					(function() {
+						var camera = self.camera;
+						var light = self.directionalLight;
+						var target = light.target;
+						var pos = self.camera.position;
+						light.position.copy(pos);
+					})();
 				};
 
 				/**
 				 * Gear.render
 				 */
-				 self.render = function(contexts, gear) {
+				self.render = function(contexts) {
 					var renderer = contexts.renderer;
 					var scene = contexts.scene;
 					var camera = self.camera;
@@ -132,12 +174,16 @@
 						antialias: true
 					});
 					var scene  = contexts.scene = new THREE.Scene();
+					var stats = contexts.stats = new Stats();
 
 					renderer.setSize(width, height);
 					renderer.setClearColor(0xF0F0F0, 1.0);
-					renderer.shadowMapEnabled = true;
+					renderer.shadowMap.enabled = true;
 
 					gear.init(contexts, width, height);
+
+					document.body.appendChild( stats.dom );
+
 				})();
 
 				// event handler
@@ -145,11 +191,18 @@
 					// general
 					(function() {
 						window.addEventListener('resize', function(e) {
+							var renderer = contexts.renderer;
+							var scene = contexts.scene;
+							var camera = gear.camera;
+							var controls = gear.controls;
 							var width  = window.innerWidth;
 							var height = window.innerHeight;
-							gear.camera.aspect = width / height;
-							gear.camera.updateProjectionMatrix();
-							contexts.renderer.setSize(width, height);
+							camera.aspect = width / height;
+							camera.updateProjectionMatrix();
+							renderer.setSize(width, height);
+							controls.handleResize();
+							renderer.render(scene, camera);
+
 							console.log('resize(' + width + ', ' + height + ')')
 						}, false);
 					})();
@@ -165,123 +218,20 @@
 					})();
 					// control
 					(function() {
-						var canvas = contexts.canvas;
-						var rotModel = function(e) {
-							if(gear.sceneMeshes && gear.modelQuaternion) {
-								// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
-								// https://threejs.org/docs/#api/en/scenes/Scene
-								// https://threejs.org/docs/#api/en/core/Object3D
-								// https://threejs.org/docs/#api/en/math/Matrix4
-								// https://threejs.org/docs/#api/en/math/Quaternion
-								// https://codeday.me/jp/qa/20190115/132954.html
-								// https://codeday.me/jp/qa/20190227/332144.html
-								// http://www.deqnotes.net/acmicpc/2d_geometry/using_vectors
-								// http://gupuru.hatenablog.jp/entry/2013/11/27/214929
-								var q;
-								//calc
-								(function() {
-									var modelQuaternion = gear.modelQuaternion;
-									var vx = e.movementX * 0.005;
-									var vy = e.movementY * 0.005;
-									var qx = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), vy);
-									var qy = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), vx);
-									var qz = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ), 0);
-									gear.modelQuaternion = q = new THREE.Quaternion().multiply(qx).multiply(qy).multiply(qz).multiply(modelQuaternion);
-									console.log('e.movement(' + vx + ',' + vy + ')');
-								})();
-								//mesh
-								(function() {
-									var sceneMeshes = gear.sceneMeshes;
-									Array.prototype.forEach.call(sceneMeshes, function(mesh) {
-										//reset rotation
-										mesh.rotation.set(0, 0, 0);
-										mesh.applyQuaternion(q);
-									});
-								})();
-								//axis helper
-								(function() {
-									var camera = gear.camera;
-									var axesHelper = gear.axesHelper;
-									var matCamR = gear.camera.matrix;
-									var x = matCamR.elements[12];
-									var y = matCamR.elements[13];
-									var z = matCamR.elements[14];
-									//matCamR.elements[12] = 0;
-									//matCamR.elements[13] = 0;
-									//matCamR.elements[14] = 0;
-
-									axesHelper.position.set(0,0,0);
-									axesHelper.rotation.set(0,0,0);
-									axesHelper.applyQuaternion(q);
-									axesHelper.position.set(-3, -1 , -10);
-									//axesHelper.applyMatrix(matCamR);
-								})();
-							}
-						}
-						var cameraMoveDrag = function(e) {
-							var vx = -(e.movementX * 0.01);
-							var vy = (e.movementY * 0.01);
-							var m = new THREE.Matrix4().makeTranslation(vx, vy, 0);
-							gear.camera.applyMatrix(m);
-						}
-						var cameraMoveWheel = function(e) {
-							// https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
-							var v = event.deltaY * -0.01;
-							var m = new THREE.Matrix4().makeTranslation(0, 0, v);
-							gear.camera.applyMatrix(m);
-						}
-						var drop = function(e) {
-							console.log('drop()!');
-						}
-						window.addEventListener(null, function(e) {
-						}, false);
-						window.addEventListener('contextmenu', function(e) {
-							if(e.preventDefault){
-								e.preventDefault();
-							}else{
-								return false;
-							}
-						}, false);
-						canvas.addEventListener('mousedown', function(e) {
-							console.log('event - mousedown!');
-						}, false);
-						canvas.addEventListener('mouseup', function(e) {
-							console.log('event - mouseup!');
-						}, false);
-						canvas.addEventListener('mousemove', function(e) {
-							console.log('event - mousemove!');
-							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent
-							// https://developer.mozilla.org/ja/docs/Web/API/MouseEvent/buttons
-							if(e.buttons == 0x01) {
-								rotModel(e);
-							} else if(e.buttons == 0x04) {
-								cameraMoveDrag(e);
-							}
-						}, false);
-						canvas.addEventListener('dragenter', function(e) {
-							console.log('event - dragenter!');
-						}, false);
-						canvas.addEventListener('dragover', function(e) {
-							console.log('event - dragover!');
-						}, false);
-						canvas.addEventListener('drop', function(e) {
-							console.log('event - drop!');
-						}, false);
-						canvas.addEventListener('wheel', function(e) {
-							console.log('event - wheel!');
-							cameraMoveWheel(e);
-						}, false);
 					})();
 				})();
 
 				//render
 				(function() {
-					var tick = function() {
+					var animate = function() {
+						requestAnimationFrame(animate);
+
+						gear.controls.update();
 						gear.update(contexts);
 						gear.render(contexts);
-						requestAnimationFrame(tick);
+						contexts.stats.update();
 					};
-					tick();
+					animate();
 					//setInterval(tick, 1000/20);
 				})();
 			};
