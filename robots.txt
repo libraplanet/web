@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /memo/
+Disallow: /projects/
+Allow: /index.html

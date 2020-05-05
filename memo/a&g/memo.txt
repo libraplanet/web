@@ -1,0 +1,18 @@
+http://ic-www.uniqueradio.jp/iphone/3G.m3u8
+
+ŸRTMS
+	rtmp://fms-base1.mitene.ad.jp/agqr/aandg11
+	rtmp://fms-base1.mitene.ad.jp/agqr/aandg22
+	E2019”N08Œ––‚©‚ç
+	rtmp://fms-base1.mitene.ad.jp/agqr/aandg1
+
+Ÿ“®‰æ
+	http://www.uniqueradio.jp/agplayer/ag_movie.asx
+	<ref href="mms://1134mb-live2.daijinakoto.com/uniqueradio/2ch_movie" />
+
+Ÿ‰¹º
+	http://www.uniqueradio.jp/agplayer/ag.asx
+	<ref href="mms://1134mb-live1.daijinakoto.com/uniqueradio/2ch_PBbKu6TwSyYXEc8CgphVfDzxRWa4ZJv7rN5sFMndAU3GmLHekt2Z82Y7bKPSs6WxXNVJMRrnzcCkdwUvhpagEDFG53utA4mfyTHeEuMvFwLHmahVK64AefNBPkZyRTbdJX7YCDr2W8t5xGzcUspS3ngUfh84SXvNxyGwpezHkPnK5YdbEsWruagVRtMCF2Z3BLAJc6T7" />
+	<ref href="mms://1134mb-live2.daijinakoto.com/uniqueradio/2ch_PBbKu6TwSyYXEc8CgphVfDzxRWa4ZJv7rN5sFMndAU3GmLHekt2Z82Y7bKPSs6WxXNVJMRrnzcCkdwUvhpagEDFG53utA4mfyTHeEuMvFwLHmahVK64AefNBPkZyRTbdJX7YCDr2W8t5xGzcUspS3ngUfh84SXvNxyGwpezHkPnK5YdbEsWruagVRtMCF2Z3BLAJc6T7" />
+
+

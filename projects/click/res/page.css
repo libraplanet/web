@@ -1,0 +1,98 @@
+html,body{
+	height:100%;
+}
+body{
+	margin:0px;
+}
+a{
+	color:#639;
+	text-decoration:none;
+}
+a:hover{
+	text-decoration:underline;
+}
+img{
+	border:0px;
+}
+div#container{
+	font-family:Palatino,Palatino Linotype,Georgia,Meiryo,Hiragino Kaku Gothic Pro,VL Gothic,sans-serif;
+	font-size:medium;
+	color:#333;
+	padding-left:2em;
+	padding-top:1em;
+	width:90%;
+}
+hr{
+	margin-top:1em;
+	margin-bottom:1em;
+	border:transparent;
+	border-top:1px dashed #69f;
+}
+ul{
+	margin:0px;
+	padding-left:2em;
+}
+ul li{
+	list-style-type:none;
+}
+ul li:before{
+	content:'- ';
+}
+ol ol{
+	list-style-type:lower-roman;
+}
+ol ol ol{
+	list-style-type:lower-alpha;
+}
+ol ol ol ol{
+	list-style-type:lower-greek;
+}
+.link p{
+	padding-left:3em;
+}
+div.title{
+	font-size:xx-large;
+	font-family:Palatino,Palatino Linotype;
+	text-shadow:1px 1px 1px #ccc;
+	padding-bottom:2em;
+}
+div.subtitle{
+	color:#333;
+	font-size:large;
+	font-family:Meiryo,Hiragino Kaku Gothic Pro,VL Gothic,sans-serif;
+	text-shadow:1px 1px 1px #ccc;
+	border-bottom:2px solid #ddd;
+	margin-bottom:0.5em;
+}
+div.subtitle:before{
+	content:':: ';
+}
+div.subsubtitle{
+	color:#333;
+	font-size:medium;
+	font-family:Meiryo,Hiragino Kaku Gothic Pro,VL Gothic,sans-serif;
+	text-shadow:1px 1px 1px #ccc;
+	padding-bottom:0.5em;
+}
+div.subsubtitle:before{
+	content:'# ';
+}
+div.content{
+	padding-left:2em;
+	padding-bottom:2em;
+	font-size:small;
+}
+pre{
+	border-top:1px solid #999;
+	border-bottom:1px solid #999;
+	padding-top:0.5em;
+	padding-bottom:0.5em;
+	font-size:small;
+	white-space:pre-wrap;
+	word-wrap:break-word;
+	font-family:Consolas,Liberation Mono,Courier,monospace;
+}
+p{
+	text-indent:1em;
+}
+
