@@ -2,64 +2,275 @@
 	<head>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>twitchx</title>
+			<title>twitchx</title>
 		<style type="text/css">
 		<!--
+			@import url(//fonts.googleapis.com/earlyaccess/notosansjp.css);
+			@import url(//fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
+			body, div {
+				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif;
+			}
+
 			body { 
-				background-color: #666666;
-				color: #FFFFFF;
+				background-color: #ffffff;
+				color: #666666;
+			}
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+				width: 100%;
+			}
+			table tr{
+				border-bottom: solid 1px #eee;
+				cursor: pointer;
+			}
+
+			table tr:hover{
+				background-color: #d4f0fd;
+			}
+
+			table th,table td{
+				text-align: center;
+				width: auto;
+				padding: 15px 0;
+			}
+			
+			th.linktwitchx, th.linkplayer, th.linkchat
+			, td.linktwitchx, td.linkplayer, td.linkchat{
+				text-align: center;
+				width: 100px;
+				padding: 15px 0;
+			}
+			
+			
+			input {
+				width: 100%;
 			}
 		-->
 		</style> 
+		<script type="text/javascript">
+		<!--
+			(function() {
+				let self = this;
+				
+				let setLinkTwitchx = function(row, channel) {
+					row.querySelectorAll('td.linktwitchx').forEach(function(cell){
+						var a = document.createElement('a');
+						a.href = './player.html?channel=' + channel;
+						a.target = '_blank';
+						a.text = '[link]';
+						while (cell.firstChild){
+							cell.removeChild(cell.firstChild);
+						}
+						cell.appendChild(a);
+					});
+				};
+				let setLinkPlayer = function(row, channel) {
+					row.querySelectorAll('td.linkplayer').forEach(function(cell){
+						var a = document.createElement('a');
+						a.href = 'https://player.twitch.tv/?channel=' + channel + '&muted=false&parent=twitch.tv';
+						a.target = '_blank';
+						a.text = '[link]';
+						while (cell.firstChild){
+							cell.removeChild(cell.firstChild);
+						}
+						cell.appendChild(a);
+					});
+				};
+				let setLinkChat = function(row, channel) {
+					row.querySelectorAll('td.linkchat').forEach(function(cell){
+						var a = document.createElement('a');
+						a.href = 'https://www.twitch.tv/popout/' + channel + '/chat';
+						a.target = '_blank';
+						a.text = '[link]';
+						while (cell.firstChild){
+							cell.removeChild(cell.firstChild);
+						}
+						cell.appendChild(a);
+					});
+				};
+				
+				window.onload = function(){
+					document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
+						let username = row.getAttribute('data-username');
+						let channel = row.getAttribute('data-channel');
+						row.querySelectorAll('td.username').forEach(function(cell){
+							cell.textContent = username;
+						});
+						if(channel) {
+							let linkTwitchx = './player.html?channel=' + channel;
+							let linkPlayer = '';
+							let linkChat = '';
+							row.querySelectorAll('td.channel').forEach(function(cell){
+								cell.textContent  = channel;
+							});
+						}
+						setLinkTwitchx(row, channel);
+						setLinkPlayer(row, channel);
+						setLinkChat(row, channel);
+					});
+					setInterval(function() {
+						document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
+							row.querySelectorAll('td.channel input').forEach(function(input) {
+								if(input.lastValue !== input.value) {
+									let channel = input.value;
+									let channelEnc = encodeURI(channel);
+									setLinkTwitchx(row, channelEnc);
+									setLinkPlayer(row, channelEnc);
+									setLinkChat(row, channelEnc);
+									input.lastValue = input.value;
+								}
+							});
+						});
+					}, 1000);
+				};
+			})();
+		-->
+		</script> 
 	</head>
 	<body>
-		<el>
-			<li>
-				<a href="./player.html?channel=" target="_blank">(n/a)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=djshimamura" target="_blank">DJ Shimamura (djshimamura)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=dj_noriken" target="_blank">DJ Noriken (dj_noriken)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=abitankh" target="_blank">Abitan (abitankh)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=rockuphardcrew" target="_blank">ROCKUP! CREW (rockuphardcrew)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=mogra" target="_blank">MOGRA (mogra)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=204nws" target="_blank">204 (204nws)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=soundarium" target="_blank">Sound Arium (soundarium)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=0ha3ru1ka4" target="_blank">(0ha3ru1ka4)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=warp2onelive" target="_blank">WARP新宿 (warp2onelive)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=choroyama" target="_blank">choroyama (choroyama)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=aggressive_war" target="_blank"> (aggressive_war)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=ohr_party" target="_blank"> (ohr_party)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=terminal__x" target="_blank">(terminal__x)</a>
-			</li>
-			<li>
-				<a href="./player.html?channel=otaquest" target="_blank">(otaquest)</a>
-			</li>
-		</el>
+		<h1>twitchx link index</h1>
+		<table class='channelTable'>
+			<thead>
+				<tr>
+					<th class="username">username</th>
+					<th class="channel">channel</th>
+					<th class="linktwitchx">twitchx</th>
+					<th class="linkplayer">player</th>
+					<th class="linkchat">chat</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- n/a. -->
+				<tr data-username='n/a' data-channel=''>
+					<td class="username">&#20;</td>
+					<td class="channel"><input text></td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- djshimamura. -->
+				<tr data-username='DJ Shimamura' data-channel='djshimamura'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- dj_noriken. -->
+				<tr data-username='DJ Noriken' data-channel='dj_noriken'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- abitankh. -->
+				<tr data-username='Abitan' data-channel='abitankh'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- rockuphardcrew. -->
+				<tr data-username='ROCKUP! CREW' data-channel='rockuphardcrew'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- mogra. -->
+				<tr data-username='MOGRA' data-channel='mogra'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- 204nws -->
+				<tr data-username='204' data-channel='204nws'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- soundarium -->
+				<tr data-username='Sound Arium' data-channel='soundarium'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- 0ha3ru1ka4. -->
+				<tr data-username='たけやま' data-channel='0ha3ru1ka4'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- warp2onelive. -->
+				<tr data-username='WARP新宿' data-channel='warp2onelive'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- choroyama. -->
+				<tr data-username='choroyama' data-channel='choroyama'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- hara. -->
+				<tr data-username='hara' data-channel='haraqlo'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- aggressive_war. -->
+				<tr data-username='aggressive_war' data-channel='aggressive_war'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- ohr_party. -->
+				<tr data-username='ohr_party' data-channel='ohr_party'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- terminal__x. -->
+				<tr data-username='terminal__x' data-channel='terminal__x'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+				<!-- otaquest. -->
+				<tr data-username='otaquest' data-channel='otaquest'>
+					<td class="username">&#20;</td>
+					<td class="channel">&#20;</td>
+					<td class="linktwitchx">&#20;</td>
+					<td class="linkplayer">&#20;</td>
+					<td class="linkchat">&#20;</td>
+				</tr>
+			</tbody>
+		</table>
 		<hr>
 		<a href="../">back</a>
 	</body>
