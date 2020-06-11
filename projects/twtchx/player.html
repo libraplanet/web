@@ -84,7 +84,8 @@
 				var querys = [...new URLSearchParams(window.location.search).entries()].reduce(function(obj, e) {return {...obj, [e[0]]: e[1]}}, {});
 				var channel = querys['channel'];
 				if(channel) {
-					var myhost = window.location.hostname;
+					// var myhost = window.location.hostname;
+					var myhost = 'localhost'
 					// https://player.twitch.tv/?channel=xxxx&parent=localhost
 					var playerUrl = 'https://player.twitch.tv/?channel=' + channel + '&parent=' + myhost;
 					// https://www.twitch.tv/embed/xxxx/chat?darkpopout&parent=localhost
