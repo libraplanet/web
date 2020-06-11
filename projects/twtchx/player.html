@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!--<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />-->
+		<title>twitchx player</title>
+		<style type="text/css">
+		<!--
+			body {
+				padding:0;
+				margin:0;
+			}
+			iframe {
+				border-width:0;
+			}
+			div#ROOT{
+				width:100%;
+				height:100%;
+				background-color:#FF88FF;
+			}
+			div#PAIN_PLAYER{
+				width:auto;
+				height:100%;
+				background-color:#FFFF88;
+			}
+			div#PAIN_CHAT{
+				float:right;
+				width:400px;
+				height:100%;
+				background-color:#88FFFF;
+			}
+			iframe#FRAME_PLAYER {
+				width:calc(100% - 400px);
+				height:100%;
+				display: inline-block;
+			}
+			iframe#FRAME_CHAT {
+				float:right;
+				width:400px;
+				height:100%;
+				display: inline-block;
+			}
+		-->
+		</style> 
+		<style type="text/css" id="INJECT_CSS">
+		<!--
+			@import url(//fonts.googleapis.com/earlyaccess/notosansjp.css);
+			@import url(//fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
+			body, div {
+				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif;
+			}
+			/** チャット - ヘッダの機能 . */
+			div.chat-room__content div.channel-leaderboard {
+				display:none !important;
+			}
+
+			/** チャット - ヘッダ部分に出てくるハイライト . */
+			div.community-highlight {
+				display:none !important;
+			}
+
+			/** チャット - 強調表示メッセージの非表示 . */
+			div.chat-room__content div.channel-points-reward-line > div:nth-child(1) {
+				display:none !important;
+			}
+		-->
+		</style>
+		<script type="text/javascript">
+		<!--
+			/** init event. */
+			setTimeout(function(){
+				/** css injection */
+				(function(){
+					var elmCss = document.getElementById('INJECT_CSS');
+					var elmIframe = document.getElementById('FRAME_CHAT');
+					var elmIframeDoc = elmIframe.contentDocument;
+					elmCss.removeAttribute('id');
+					elmIframeDoc.querySelectorAll('head').forEach(function() {
+						elmHead.append(elmCss);
+					});
+				})();
+			}, 10000);
+			/** init event. */
+			setTimeout(function() {
+				var querys = [...new URLSearchParams(window.location.search).entries()].reduce(function(obj, e) {return {...obj, [e[0]]: e[1]}}, {});
+				var channel = querys['channel'];
+				if(channel) {
+					var myhost = window.location.hostname;
+					// https://player.twitch.tv/?channel=xxxx&parent=localhost
+					var playerUrl = 'https://player.twitch.tv/?channel=' + channel + '&parent=' + myhost;
+					// https://www.twitch.tv/embed/xxxx/chat?darkpopout&parent=localhost
+					var chatUrl = 'https://www.twitch.tv/embed/' + channel + '/chat?darkpopout&parent=' + myhost;
+					document.querySelectorAll('iframe#FRAME_PLAYER').forEach(function(e) {
+						e.src = playerUrl;
+					});
+					document.querySelectorAll('iframe#FRAME_CHAT').forEach(function(e) {
+						e.src = chatUrl;
+					});
+				}
+			}, 1);
+		-->
+		</script>
+	</head>
+	<body >
+		<div id="ROOT">
+			<iframe id="FRAME_CHAT"></iframe>
+			<iframe id="FRAME_PLAYER"></iframe>
+		</div>
+		<div class="both"></div>
+		<div id="PAIN_MESSAGE" style="display:none;">
+			<ul id="MESSAGE_ITEMS">
+			</ul>
+		</div>
+	</body>
+</html>
