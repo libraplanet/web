@@ -101,10 +101,10 @@
 						cell.appendChild(a);
 					});
 				};
-				
+
 				window.onload = function(){
+					/* init. */
 					(function() {
-						//let 
 						let template = document.querySelectorAll('table.channelTable tbody tr.template')[0];
 						let tbody = document.querySelectorAll('table.channelTable tbody')[0];
 						if(template && tbody) {
@@ -112,9 +112,9 @@
 								let username = content.getAttribute('data-username');
 								let channel = content.getAttribute('data-channel');
 								let row = template.cloneNode(true);
-								
+
 								tbody.appendChild(row);
-								
+
 								row.classList.remove('template');
 								row.removeAttribute('style');
 								row.setAttribute('data-username', username);
@@ -138,27 +138,8 @@
 							});
 						}
 					})();
-					/*
-					document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
-						let username = row.getAttribute('data-username');
-						let channel = row.getAttribute('data-channel');
-						row.querySelectorAll('td.username').forEach(function(cell){
-							cell.textContent = username;
-						});
-						if(channel) {
-							let linkTwitchx = './player.html?channel=' + channel;
-							let linkPlayer = '';
-							let linkChat = '';
-							row.querySelectorAll('td.channel').forEach(function(cell){
-								cell.textContent  = channel;
-							});
-						}
-						setLinkTwitchx(row, channel);
-						setLinkMobile(row, channel);
-						setLinkPlayer(row, channel);
-						setLinkChat(row, channel);
-					});
-					*/
+
+					/* polling. */
 					setInterval(function() {
 						document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
 							row.querySelectorAll('td.channel input').forEach(function(input) {
