@@ -41,11 +41,11 @@
 				width: 100px;
 				padding: 15px 0;
 			}
-			
-			
+
 			input {
 				width: 100%;
 			}
+
 		-->
 		</style> 
 		<script type="text/javascript">
@@ -103,6 +103,42 @@
 				};
 				
 				window.onload = function(){
+					(function() {
+						//let 
+						let template = document.querySelectorAll('table.channelTable tbody tr.template')[0];
+						let tbody = document.querySelectorAll('table.channelTable tbody')[0];
+						if(template && tbody) {
+							document.querySelectorAll('contents content').forEach(function(content) {
+								let username = content.getAttribute('data-username');
+								let channel = content.getAttribute('data-channel');
+								let row = template.cloneNode(true);
+								
+								tbody.appendChild(row);
+								
+								row.classList.remove('template');
+								row.removeAttribute('style');
+								row.setAttribute('data-username', username);
+								row.setAttribute('data-channel', channel);
+
+								row.querySelectorAll('td.username').forEach(function(cell){
+									cell.textContent = username;
+								});
+								if(channel) {
+									let linkTwitchx = './player.html?channel=' + channel;
+									let linkPlayer = '';
+									let linkChat = '';
+									row.querySelectorAll('td.channel').forEach(function(cell){
+										cell.textContent  = channel;
+									});
+								}
+								setLinkTwitchx(row, channel);
+								setLinkMobile(row, channel);
+								setLinkPlayer(row, channel);
+								setLinkChat(row, channel);
+							});
+						}
+					})();
+					/*
 					document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
 						let username = row.getAttribute('data-username');
 						let channel = row.getAttribute('data-channel');
@@ -122,6 +158,7 @@
 						setLinkPlayer(row, channel);
 						setLinkChat(row, channel);
 					});
+					*/
 					setInterval(function() {
 						document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
 							row.querySelectorAll('td.channel input').forEach(function(input) {
@@ -144,6 +181,26 @@
 	</head>
 	<body>
 		<h1>twitchx link index</h1>
+		<div style="dislay:none;">
+			<contents>
+				<content data-username='DJ Shimamura' data-channel='djshimamura'></content>
+				<content data-username='DJ Noriken' data-channel='dj_noriken'></content>
+				<content data-username='Abitan' data-channel='abitankh'></content>
+				<content data-username='ROCKUP! CREW' data-channel='rockuphardcrew'></content>
+				<content data-username='MOGRA' data-channel='mogra'></content>
+				<content data-username='204' data-channel='204nws'></content>
+				<content data-username='Sound Arium' data-channel='soundarium'></content>
+				<content data-username='たけやま' data-channel='0ha3ru1ka4'></content>
+				<content data-username='WARP新宿' data-channel='warp2onelive'></content>
+				<content data-username='choroyama' data-channel='choroyama'></content>
+				<content data-username='hara' data-channel='haraqlo'></content>
+				<content data-username='aggressive_war' data-channel='aggressive_war'></content>
+				<content data-username='ohr_party' data-channel='ohr_party'></content>
+				<content data-username='terminal__x' data-channel='terminal__x'></content>
+				<content data-username='otaquest' data-channel='otaquest'></content>
+				<content data-username='DJ Brisk' data-channel='DJBrisk'></content>
+			</contents>
+		</div>
 		<table class='channelTable'>
 			<thead>
 				<tr>
@@ -156,158 +213,23 @@
 				</tr>
 			</thead>
 			<tbody>
+				<!-- template. -->
+				<tr class="template" style="display:none">
+					<td class="username"></td>
+					<td class="channel"><input type="text"></td>
+					<td class="linktwitchx"></td>
+					<td class="linkmobile"></td>
+					<td class="linkplayer"></td>
+					<td class="linkchat"></td>
+				</tr>
 				<!-- n/a. -->
 				<tr data-username='n/a' data-channel=''>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- djshimamura. -->
-				<tr data-username='DJ Shimamura' data-channel='djshimamura'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- dj_noriken. -->
-				<tr data-username='DJ Noriken' data-channel='dj_noriken'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- abitankh. -->
-				<tr data-username='Abitan' data-channel='abitankh'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- rockuphardcrew. -->
-				<tr data-username='ROCKUP! CREW' data-channel='rockuphardcrew'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- mogra. -->
-				<tr data-username='MOGRA' data-channel='mogra'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- 204nws -->
-				<tr data-username='204' data-channel='204nws'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- soundarium -->
-				<tr data-username='Sound Arium' data-channel='soundarium'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- 0ha3ru1ka4. -->
-				<tr data-username='たけやま' data-channel='0ha3ru1ka4'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- warp2onelive. -->
-				<tr data-username='WARP新宿' data-channel='warp2onelive'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- choroyama. -->
-				<tr data-username='choroyama' data-channel='choroyama'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- hara. -->
-				<tr data-username='hara' data-channel='haraqlo'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- aggressive_war. -->
-				<tr data-username='aggressive_war' data-channel='aggressive_war'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- ohr_party. -->
-				<tr data-username='ohr_party' data-channel='ohr_party'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- terminal__x. -->
-				<tr data-username='terminal__x' data-channel='terminal__x'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- otaquest. -->
-				<tr data-username='otaquest' data-channel='otaquest'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
-				</tr>
-				<!-- DJ Brisk. -->
-				<tr data-username='DJ Brisk' data-channel='DJBrisk'>
-					<td class="username">&#20;</td>
-					<td class="channel"><input text></td>
-					<td class="linktwitchx">&#20;</td>
-					<td class="linkmobile">&#20;</td>
-					<td class="linkplayer">&#20;</td>
-					<td class="linkchat">&#20;</td>
+					<td class="username">n/a</td>
+					<td class="channel"><input type="text"></td>
+					<td class="linktwitchx"></td>
+					<td class="linkmobile"></td>
+					<td class="linkplayer"></td>
+					<td class="linkchat"></td>
 				</tr>
 			</tbody>
 		</table>
