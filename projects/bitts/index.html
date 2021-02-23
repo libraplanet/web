@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -70,7 +71,7 @@
 				text-align:center;
 			}
 			td.bitcell > div {
-				width:100%
+				width:100%;
 				height:auto;
 				background-color: #F0F0F0;
 			}
@@ -320,19 +321,19 @@
 			<!-- title. -->
 			<div class="title">
 				<span>
-					<img src="mario_l0.png">
-					<img src="mario_r1.png">
-					<img src="mario_l0.png">
-					<img src="mario_l1.png">
-					<img src="mario_r2.png">
+					<img alt="" src="mario_l0.png">
+					<img alt="" src="mario_r1.png">
+					<img alt="" src="mario_l0.png">
+					<img alt="" src="mario_l1.png">
+					<img alt="" src="mario_r2.png">
 				</span>
 				<span class="title">bitts</span>
 				<span>
-					<img src="mario_r1.png">
-					<img src="mario_r0.png">
-					<img src="mario_l2.png">
-					<img src="mario_r1.png">
-					<img src="mario_l0.png">
+					<img alt="" src="mario_r1.png">
+					<img alt="" src="mario_r0.png">
+					<img alt="" src="mario_l2.png">
+					<img alt="" src="mario_r1.png">
+					<img alt="" src="mario_l0.png">
 
 				</span>
 			</div>
@@ -340,11 +341,11 @@
 			<div>
 				<div>
 					■ view values
-				<div>
+				</div>
 				<table id="TABLE_VIEW">
 					<colgroup>
-						<col style="width:3em;"></col>
-						<col style="width:auto;"></col>
+						<col style="width:3em;">
+						<col style="width:auto;">
 					</colgroup>
 					<thead>
 						<tr>
@@ -372,25 +373,25 @@
 			<div>
 				<div>
 					■ edit
+				</div>
 				<div>
-				<div>
-					<input id="TEXTBOX_INPUT" type="textbox" placeholder="ここに入力" onchange="changeInput();" onkeyup="changeInput();"></input>
+					<input id="TEXTBOX_INPUT" type="text" placeholder="ここに入力" onchange="changeInput();" onkeyup="changeInput();">
 					<br>
-					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_BIN" onchange="changeInput();"><label for="RADIO_INPUT_FORMAT_BIN">BIN</label></input>
-					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_DEC" onchange="changeInput();" checked><label for="RADIO_INPUT_FORMAT_DEC">DEC</label></input>
-					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_HEX" onchange="changeInput();" ><label for="RADIO_INPUT_FORMAT_HEX">HEX</label></input>
-				<div>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_BIN" onchange="changeInput();"><label for="RADIO_INPUT_FORMAT_BIN">BIN</label>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_DEC" onchange="changeInput();" checked><label for="RADIO_INPUT_FORMAT_DEC">DEC</label>
+					<input type="radio" name="inputFormat" id="RADIO_INPUT_FORMAT_HEX" onchange="changeInput();" ><label for="RADIO_INPUT_FORMAT_HEX">HEX</label>
+				</div>
 				<table id="TABLE_BIT_EDIT">
 					<colgroup>
-						<col style="width:1em;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
-						<col style="width:auto;"></col>
+						<col style="width:1em;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
+						<col style="width:auto;">
 					</colgroup>
 					<thead>
 						<tr>
@@ -443,6 +444,7 @@
 							<td class="bitcell right"><div class="bitpos_0x00000011" onclick="chengeBit(021);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="bitpos_0x00000010" onclick="chengeBit(020);"><div class="img"></div></div></td>
 						</tr>
+						<tr>
 							<!-- 4byte. -->
 							<td class="caption rsolid">4</td>
 							<td class="bitcell right"><div class="bitpos_0x0000001f" onclick="chengeBit(037);"><div class="img"></div></div></td>
@@ -461,11 +463,11 @@
 			<div>
 				<div>
 					■ mario
-				<div>
+				</div>
 				<div class="sample">
-					<img src="mario_l2.png" onclick="chengeTrigImage()">
-					<img src="mario_r2.png" onclick="chengeTrigImage()">
-				<div>
+					<img alt="left" src="mario_l2.png" onclick="chengeTrigImage()">
+					<img alt="right" src="mario_r2.png" onclick="chengeTrigImage()">
+				</div>
 			</div>
 		</div>
 	</body>
