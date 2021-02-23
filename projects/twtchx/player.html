@@ -78,9 +78,9 @@
 				 */
 				let injectCss = function(){
 					(function(){
-						var elmCss = document.getElementById('INJECT_CSS');
-						var elmIframe = document.getElementById('FRAME_CHAT');
-						var elmIframeDoc = elmIframe.contentDocument;
+						let elmCss = document.getElementById('INJECT_CSS');
+						let elmIframe = document.getElementById('FRAME_CHAT');
+						let elmIframeDoc = elmIframe.contentDocument;
 						elmCss.removeAttribute('id');
 						elmIframeDoc.querySelectorAll('head').forEach(function() {
 							elmHead.append(elmCss);
@@ -92,15 +92,15 @@
 				 * init.
 				 */
 				let init = function() {
-					var querys = [...new URLSearchParams(window.location.search).entries()].reduce(function(obj, e) {return {...obj, [e[0]]: e[1]}}, {});
-					var channel = querys['channel'];
+					let querys = [...new URLSearchParams(window.location.search).entries()].reduce(function(obj, e) {return {...obj, [e[0]]: e[1]}}, {});
+					let channel = querys['channel'];
 					if(channel) {
-						var myhost = window.location.hostname;
-						// var myhost = 'localhost'
+						let myhost = window.location.hostname;
+						// let myhost = 'localhost'
 						// https://player.twitch.tv/?channel=xxxx&parent=localhost
-						var playerUrl = 'https://player.twitch.tv/?channel=' + channel + '&parent=' + myhost;
+						let playerUrl = 'https://player.twitch.tv/?channel=' + channel + '&parent=' + myhost;
 						// https://www.twitch.tv/embed/xxxx/chat?darkpopout&parent=localhost
-						var chatUrl = 'https://www.twitch.tv/embed/' + channel + '/chat?darkpopout&parent=' + myhost;
+						let chatUrl = 'https://www.twitch.tv/embed/' + channel + '/chat?darkpopout&parent=' + myhost;
 						document.querySelectorAll('iframe#FRAME_PLAYER').forEach(function(e) {
 							e.src = playerUrl;
 						});

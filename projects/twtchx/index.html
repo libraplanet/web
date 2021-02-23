@@ -56,7 +56,7 @@
 				
 				let setLinkTwitchx = function(row, channel) {
 					row.querySelectorAll('td.linktwitchx').forEach(function(cell){
-						var a = document.createElement('a');
+						let a = document.createElement('a');
 						a.href = './player.html?channel=' + channel;
 						a.target = '_blank';
 						a.text = '[link]';
@@ -68,7 +68,7 @@
 				};
 				let setLinkMobile = function(row, channel) {
 					row.querySelectorAll('td.linkmobile').forEach(function(cell){
-						var a = document.createElement('a');
+						let a = document.createElement('a');
 						a.href = 'https://m.twitch.tv/' + channel;
 						a.target = '_blank';
 						a.text = '[link]';
@@ -80,7 +80,7 @@
 				};
 				let setLinkPlayer = function(row, channel) {
 					row.querySelectorAll('td.linkplayer').forEach(function(cell){
-						var a = document.createElement('a');
+						let a = document.createElement('a');
 						a.href = 'https://player.twitch.tv/?channel=' + channel + '&muted=false&parent=twitch.tv';
 						a.target = '_blank';
 						a.text = '[link]';
@@ -92,7 +92,7 @@
 				};
 				let setLinkChat = function(row, channel) {
 					row.querySelectorAll('td.linkchat').forEach(function(cell){
-						var a = document.createElement('a');
+						let a = document.createElement('a');
 						a.href = 'https://www.twitch.tv/popout/' + channel + '/chat';
 						a.target = '_blank';
 						a.text = '[link]';
@@ -106,38 +106,53 @@
 				window.onload = function(){
 					/* init. */
 					(function() {
-						let template = document.querySelectorAll('table.channelTable tbody tr.template')[0];
-						let tbody = document.querySelectorAll('table.channelTable tbody')[0];
-						if(template && tbody) {
-							document.querySelectorAll('contents content').forEach(function(content) {
-								let username = content.getAttribute('data-username');
-								let channel = content.getAttribute('data-channel');
-								let row = template.cloneNode(true);
-
-								tbody.appendChild(row);
-
-								row.classList.remove('template');
-								row.removeAttribute('style');
-								row.setAttribute('data-username', username);
-								row.setAttribute('data-channel', channel);
-
-								row.querySelectorAll('td.username').forEach(function(cell){
-									cell.textContent = username;
-								});
-								if(channel) {
-									let linkTwitchx = './player.html?channel=' + channel;
-									let linkPlayer = '';
-									let linkChat = '';
-									row.querySelectorAll('td.channel').forEach(function(cell){
-										cell.textContent  = channel;
+						/* argument. */
+						(function() {
+							let querys = [...new URLSearchParams(window.location.search).entries()].reduce(function(obj, e) {return {...obj, [e[0]]: e[1]}}, {});
+							let channel = querys['channel'];
+							if(channel) {
+								document.querySelectorAll('table.channelTable tbody tr').forEach(function(row) {
+									row.querySelectorAll('td.channel input').forEach(function(input) {
+										input.value = channel;
 									});
-								}
-								setLinkTwitchx(row, channel);
-								setLinkMobile(row, channel);
-								setLinkPlayer(row, channel);
-								setLinkChat(row, channel);
-							});
-						}
+								});
+							}
+						})();
+						/* initial. */
+						(function() {
+							let template = document.querySelectorAll('table.channelTable tbody tr.template')[0];
+							let tbody = document.querySelectorAll('table.channelTable tbody')[0];
+							if(template && tbody) {
+								document.querySelectorAll('contents content').forEach(function(content) {
+									let username = content.getAttribute('data-username');
+									let channel = content.getAttribute('data-channel');
+									let row = template.cloneNode(true);
+
+									tbody.appendChild(row);
+
+									row.classList.remove('template');
+									row.removeAttribute('style');
+									row.setAttribute('data-username', username);
+									row.setAttribute('data-channel', channel);
+
+									row.querySelectorAll('td.username').forEach(function(cell){
+										cell.textContent = username;
+									});
+									if(channel) {
+										let linkTwitchx = './player.html?channel=' + channel;
+										let linkPlayer = '';
+										let linkChat = '';
+										row.querySelectorAll('td.channel').forEach(function(cell){
+											cell.textContent  = channel;
+										});
+									}
+									setLinkTwitchx(row, channel);
+									setLinkMobile(row, channel);
+									setLinkPlayer(row, channel);
+									setLinkChat(row, channel);
+								});
+							}
+						})();
 					})();
 
 					/* polling. */
@@ -165,24 +180,25 @@
 		<h1>twitchx link index</h1>
 		<div style="display:none;">
 			<contents>
+				<content data-username='libraplanet' data-channel='libraplanet'></content>
 				<content data-username='DJ Shimamura' data-channel='djshimamura'></content>
 				<content data-username='DJ Noriken' data-channel='dj_noriken'></content>
 				<content data-username='Abitan' data-channel='abitankh'></content>
-				<content data-username='ROCKUP! CREW' data-channel='rockuphardcrew'></content>
-				<content data-username='MOGRA' data-channel='mogra'></content>
+				<content data-username='DJ Sharpnel' data-channel='djsharpnel'></content>
 				<content data-username='204' data-channel='204nws'></content>
 				<content data-username='Sound Arium' data-channel='soundarium'></content>
 				<content data-username='Mu2' data-channel='mu2_mgdc'></content>
 				<content data-username='たけやま' data-channel='0ha3ru1ka4'></content>
-				<content data-username='WARP新宿' data-channel='warp2onelive'></content>
 				<content data-username='choroyama' data-channel='choroyama'></content>
 				<content data-username='hara' data-channel='haraqlo'></content>
-				<content data-username='aggressive_war' data-channel='aggressive_war'></content>
 				<content data-username='ohr_party' data-channel='ohr_party'></content>
 				<content data-username='terminal__x' data-channel='terminal__x'></content>
 				<content data-username='otaquest' data-channel='otaquest'></content>
 				<content data-username='DJ Brisk' data-channel='DJBrisk'></content>
-				<content data-username='libraplanet' data-channel='libraplanet'></content>
+				<content data-username='MOGRA' data-channel='mogra'></content>
+				<content data-username='ROCKUP! CREW' data-channel='rockuphardcrew'></content>
+				<content data-username='aggressive_war' data-channel='aggressive_war'></content>
+				<content data-username='WARP新宿' data-channel='warp2onelive'></content>
 			</contents>
 		</div>
 		<table class='channelTable'>
