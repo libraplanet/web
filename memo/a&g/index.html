@@ -1,8 +1,9 @@
+<!DOCTYPE>
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>超A&G+</title>
+		<title>超A&amp;G+</title>
 		<style type="text/css">
 		<!--
 			body { 
@@ -22,107 +23,62 @@
 		</style> 
 	</head>
 	<body>
-		<h3>web player</h3>
-			
-			<el>
+		<div>
+			<h3>Http Live Streaming</h3>
+			<ul>
 				<li>
-					<a href="aandgp_webplayer.html">aandgp_webplayer</a>
+					<a href="https://fms2.uniqueradio.jp/agqr10/aandg1.m3u8">https://fms2.uniqueradio.jp/agqr10/aandg1.m3u8</a>
 				</li>
 				<li>
-					<a href="http://www.uniqueradio.jp/agplayerf/LIVEPlayer-HD0318.swf">LIVEPlayer-HD0318.swf</a>
+					<a href="https://icraft.hs.llnwd.net/agqr10/aandg1.m3u8">https://icraft.hs.llnwd.net/agqr10/aandg1.m3u8</a>
 				</li>
+			</ul>
+		</div>
 		<hr>
 		<div>
-			<h3>icecast(local)</h3>
-			<el>
+			<h3>icecast (m3u)</h3>
+			<ul>
 				<li>
 					Demux AAC<br>
 					<a href="http://vps.libraplanet.net:8000/aandgp-demux-radio.m3u">aandgp-demux-radio.m3u</a>
 				</li>
 				<li>
+					Transcode MKV (H264 + AAC)<br>
+					<a href="http://vps.libraplanet.net:8000/aandgp-remux-mkv-video.m3u">aandgp-remux-mkv-video.m3u</a>
+				</li>
+			</ul>
+		</div>
+		<hr>
+		<div>
+			<h3>icecast (entry point)</h3>
+			<ul>
+				<li>
+					Demux AAC<br>
 					http://vps.libraplanet.net:8000/aandgp-demux-radio<br>
 					<a href="http://vps.libraplanet.net:8000/aandgp-demux-radio">aandgp-demux-radio</a>
 				</li>
 				<li>
 					Transcode MKV (H264 + AAC)<br>
-					<a href="http://vps.libraplanet.net:8000/aandgp-remux-mkv-video.m3u">aandgp-remux-mkv-video.m3u</a>
-				</li>
-				<li>
 					Thttp://vps.libraplanet.net:8000/aandgp-remux-mkv-video<br>
 					<a href="http://vps.libraplanet.net:8000/aandgp-remux-mkv-video">aandgp-remux-mkv-video</a>
 				</li>
-				<!--
-				<li>
-					Transcode MP3 128kbps<br>
-					<a href="http://vps.libraplanet.net:8000/aandgp-thq-radio.m3u">aandgp-thq-radio.m3u</a>
-				</li>
-				<li>
-					Transcode MP3 64kbps<br>
-					<a href="http://vps.libraplanet.net:8000/aandgp-tlq-radio.m3u">aandgp-tlq-radio.m3u</a>
-				</li>
-				-->
-			</el>
+			</ul>
 		</div>
 		<hr>
 		<div>
 			<h3>memo</h3>
-			<el>
+			<ul>
 				<li>
 					<a href="memo.txt">memo.txt</a>
 				</li>
-			</el>
-		</div>
-		<div>
-			<h3>rtmp://fms-base1.mitene.ad.jp/agqr/aandg11</h3>
-			<el>
+			</ul>
+			<ul>
 				<li>
-					<a href="rtmp://fms-base1.mitene.ad.jp/agqr/aandg11">rtmp://fms-base1.mitene.ad.jp/agqr/aandg11</a>
+					<a href="memo.html">memo.html</a>
 				</li>
-				<li>
-					<a href="ag11.m3u8">ag11.m3u8</a>
-				</li>
-				<li>
-					<a href="ag11.xspf">ag11.xspf</a>
-				</li>
-			</el>
-		</div>
-		<div>
-			<h3>rtmp://fms-base1.mitene.ad.jp/agqr/aandg22</h3>
-			<el>
-				<li>
-					<a href="rtmp://fms-base1.mitene.ad.jp/agqr/aandg22">rtmp://fms-base1.mitene.ad.jp/agqr/aandg22</a>
-				</li>
-				<li>
-					<a href="ag22.m3u8">ag22.m3u8</a>
-				</li>
-				<li>
-					<a href="ag22.xspf">ag22.xspf</a>
-				</li>
-			</el>
-		</div>
-		<div>
-			<h3>Http Live Streaming</h3>
-			<el>
-				<li>
-					<a href="http://ic-www.uniqueradio.jp/iphone/3G.m3u8">http://ic-www.uniqueradio.jp/iphone/3G.m3u8</a>
-				</li>
-			</el>
-		</div>
-		<div>
-			<h3>ASX</h3>
-			<p>(今は使えない)</p>
-			<el>
-				<li>
-					動画<br>
-					<a href="ag_movie.asx">ag_movie.asx</a>
-				</li>
-				<li>
-					音声<br>
-					<a href="ag.asx">ag.asx</a>
-				</li>
-			</el>
+			</ul>
 		</div>
 		<hr>
 		<a href="../">back</a>
 	</body>
-<html>
+</html>
