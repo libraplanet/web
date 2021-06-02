@@ -1,2 +1,5 @@
 ■ Live配信URL(おそらくicecast)
+https://cp8.shoutcheap.com:18164/stream
+
+■ Live配信URL(おそらくicecast)
 http://edge.mixlr.com/channel/bsuau
