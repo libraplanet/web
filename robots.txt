@@ -1,4 +1,50 @@
 User-agent: *
-Disallow: /memo/
-Disallow: /projects/
 Allow: /index.html
+
+User-agent: *
+Disallow: /memo/
+
+User-agent: *
+Disallow: /projects/
+
+User-agent: *
+Disallow: /projects/3DModelPreview/
+
+User-agent: *
+Disallow: /projects/agppps4/
+
+User-agent: *
+Disallow: /projects/bitts/
+
+User-agent: *
+Disallow: /projects/click/
+
+User-agent: *
+Disallow: /projects/fractal.js/
+
+User-agent: *
+Disallow: /projects/gapapi-.js/
+
+User-agent: *
+Disallow: /projects/gltf.js/
+
+User-agent: *
+Disallow: /projects/handspinner/
+
+User-agent: *
+Disallow: /projects/index.html/
+
+User-agent: *
+Disallow: /projects/likewiir/
+
+User-agent: *
+Disallow: /projects/monkeytype.js/
+
+User-agent: *
+Disallow: /projects/RatioUVAnimHTML/
+
+User-agent: *
+Disallow: /projects/swf/
+
+User-agent: *
+Disallow: /projects/twtchx/
