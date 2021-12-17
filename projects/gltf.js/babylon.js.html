@@ -14,15 +14,15 @@
 		<!-- <script src="babylon.js/babylon.glTFFileLoader.js"></script> -->
 		<script src="babylon.js/babylon.glTFFileLoader.min.js"></script> 
 		<script type="text/javascript">
-			var Contexts = function() {
-				var self = this;
+			let Contexts = function() {
+				let self = this;
 				self.canvas = undefined;
 				self.engine = undefined;
 				self.scene = undefined;
 				self.camera = undefined;
 			};
-			var Gear = function() {
-				var self = this;
+			let Gear = function() {
+				let self = this;
 				/**
 				 * member properties.
 				 */
@@ -35,17 +35,17 @@
 				 * init()
 				 */
 				self.init = function(context) {
-					var defCameraTgt = new BABYLON.Vector3(0, 0, 0);
-					var defCameraPos = new BABYLON.Vector3(8, 5, 8);
-					var scene = context.scene;
+					let defCameraTgt = new BABYLON.Vector3(0, 0, 0);
+					let defCameraPos = new BABYLON.Vector3(8, 5, 8);
+					let scene = context.scene;
 					scene.useRightHandedSystem = true;
 
 					// camera
 					(function() {
-						//var camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
+						//let camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
 						//camera.setTarget(BABYLON.Vector3.Zero());
 						// Parameters: alpha, beta, radius, target position, scene
-						var camera = context.camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
+						let camera = context.camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, defCameraTgt, scene);
 						// Positions the camera overwriting alpha, beta, radius
 						camera.setPosition(defCameraPos);
 						camera.attachControl(canvas, true);
@@ -58,25 +58,25 @@
 
 					// light
 					(function() {
-						var light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+						let light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
 					})();
 
 					//// sphere
 					//(function() {
-					//	var sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene, false, BABYLON.Mesh.FRONTSIDE);
+					//	let sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene, false, BABYLON.Mesh.FRONTSIDE);
 					//	sphere.position.y = 1;
 					//})();
 
 					//// ground 
 					//(function() {
-					//	 var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene, false);
+					//	 let ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene, false);
 					//})();
 
 					// Append glTF model to scene.
 					(function() {
-						//var fname = './babylon.js/BoomBox.glb';
-						//var fname = './babylon.js/Buggy.glb';
-						var fname = './babylon.js/Duck.gltf';
+						//let fname = './babylon.js/BoomBox.glb';
+						//let fname = './babylon.js/Buggy.glb';
+						let fname = './babylon.js/Duck.gltf';
 						//BABYLON.SceneLoader.Append('./babylon.js/', 'BoomBox.glb', scene, function (scene) {
 						BABYLON.SceneLoader.ImportMesh('', fname, null, scene, function (meshes) {
 							self.meshModels = meshes;
@@ -85,15 +85,15 @@
 
 					//lines
 					(function() {
-						var drawLine = function (name, points, color) {
-							var meshLine = BABYLON.Mesh.CreateLines(name, points, scene, true);
+						let drawLine = function (name, points, color) {
+							let meshLine = BABYLON.Mesh.CreateLines(name, points, scene, true);
 							meshLine.color = color;
 						};
-						var color = new BABYLON.Color3(0.4, 0.4, 0.4);
-						var len = 10;
+						let color = new BABYLON.Color3(0.4, 0.4, 0.4);
+						let len = 10;
 
 						// Y面
-						for(var i = 0; i < 10; i++) {
+						for(let i = 0; i < 10; i++) {
 							v = i + 1;
 							//X軸
 							drawLine('line', [new BABYLON.Vector3(len, 0,    v), new BABYLON.Vector3(-len, 0,    v)], color);
@@ -105,9 +105,9 @@
 
 						//中心軸
 						(function() {
-							var createTextPlaneMesh = function(text, color, size) {
-								var dynamicTexture, plane;
-								var dynamicTexture = new BABYLON.DynamicTexture('DynamicTexture', 50, scene, true);
+							let createTextPlaneMesh = function(text, color, size) {
+								let dynamicTexture, plane;
+								dynamicTexture = new BABYLON.DynamicTexture('DynamicTexture', 50, scene, true);
 								dynamicTexture.hasAlpha = true;
 								dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color , 'transparent', true);
 								plane = new BABYLON.Mesh.CreatePlane('TextPlane', size, scene, true);
@@ -136,13 +136,13 @@
 
 					// helper
 					(function() {
-						var helper = scene.createDefaultEnvironment();
+						let helper = scene.createDefaultEnvironment();
 						helper.setMainColor(new BABYLON.Color3(0.75, 0.75, 0.75));
 					})();
 
 					// option
 					(function() {
-						var optimizer, options;
+						let optimizer, options;
 						options = new BABYLON.SceneOptimizerOptions();
 						options .targetFrameRate = 20;
 						optimizer = new BABYLON.SceneOptimizer(scene, options);
@@ -150,13 +150,13 @@
 
 					// ui
 					(function() {
-						var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-						var panel = new BABYLON.GUI.StackPanel();
-						var resetCamera = function() {
+						let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+						let panel = new BABYLON.GUI.StackPanel();
+						let resetCamera = function() {
 							self.camera.setTarget(defCameraTgt);
 							self.camera.setPosition(defCameraPos);
 						};
-						var reloadModel = function(url) {
+						let reloadModel = function(url) {
 							if(self.meshModels) {
 								Array.prototype.forEach.call(self.meshModels, function(mesh) {
 									scene.removeMesh(mesh);
@@ -175,7 +175,7 @@
 							panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
 						})();
 						(function() {
-							var button = BABYLON.GUI.Button.CreateSimpleButton("button1", "camera reset");
+							let button = BABYLON.GUI.Button.CreateSimpleButton("button1", "camera reset");
 							button.paddingTop = "5px";
 							button.paddingBottom = "5px";
 							button.width = "160px";
@@ -188,7 +188,7 @@
 							panel.addControl(button);
 						})();
 						(function() {
-							var button = BABYLON.GUI.Button.CreateSimpleButton("button2", "(NG) model BoomBox.glb");
+							let button = BABYLON.GUI.Button.CreateSimpleButton("button2", "(NG) model BoomBox.glb");
 							button.paddingTop = "5px";
 							button.paddingBottom = "5px";
 							button.width = "160px";
@@ -201,7 +201,7 @@
 							panel.addControl(button);
 						})();
 						(function() {
-							var button = BABYLON.GUI.Button.CreateSimpleButton("button3", "(NG) model Buggy.glb");
+							let button = BABYLON.GUI.Button.CreateSimpleButton("button3", "(NG) model Buggy.glb");
 							button.paddingTop = "5px";
 							button.paddingBottom = "5px";
 							button.width = "160px";
@@ -214,7 +214,7 @@
 							panel.addControl(button);
 						})();
 						(function() {
-							var button = BABYLON.GUI.Button.CreateSimpleButton("button4", "(NG) model Duck.glt");
+							let button = BABYLON.GUI.Button.CreateSimpleButton("button4", "(NG) model Duck.glt");
 							button.paddingTop = "5px";
 							button.paddingBottom = "5px";
 							button.width = "160px";
@@ -235,17 +235,17 @@
 				 * update
 				 */
 				self.update = function(context) {
-					var scene = context.scene;
+					let scene = context.scene;
 					// Animations
 					(function() {
 						//billbording
 						(function() {
-							//var camMat = camera.getViewMatrix();
-							var camMat = self.camera.getWorldMatrix();
+							//let camMat = camera.getViewMatrix();
+							let camMat = self.camera.getWorldMatrix();
 							if(camMat) {
-								var iMat = BABYLON.Matrix.Identity();
-								var revMat = camMat.multiply(iMat);
-								var revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
+								let iMat = BABYLON.Matrix.Identity();
+								let revMat = camMat.multiply(iMat);
+								let revQuat = BABYLON.Quaternion.FromRotationMatrix(revMat);
 								self.meshTextPlaneX.rotationQuaternion = revQuat;
 								self.meshTextPlaneY.rotationQuaternion = revQuat;
 								self.meshTextPlaneZ.rotationQuaternion = revQuat;
@@ -263,13 +263,13 @@
 			};
 
 			window.onload = function() {
-				var contexts = new Contexts();
-				var gear = new Gear();
+				let contexts = new Contexts();
+				let gear = new Gear();
 
 				(function() {
-					var canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
-					var engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
-					var scene  = contexts.scene = new BABYLON.Scene(engine);
+					let canvas = contexts.canvas = document.querySelectorAll("#canvas")[0];
+					let engine = contexts.engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+					let scene  = contexts.scene = new BABYLON.Scene(engine);
 					gear.init(contexts);
 				})();
 
@@ -284,9 +284,9 @@
 						gear.render(contexts);
 					});
 				} else {
-					var lastTime = new Date().getTime();
-					var tick = function() {
-						var t, d;
+					let lastTime = new Date().getTime();
+					let tick = function() {
+						let t, d;
 						gear.update(gear.scene);
 						gear.render(gear.scene);
 						t =  new Date().getTime();
