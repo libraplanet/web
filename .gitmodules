@@ -1,4 +1,0 @@
-[submodule "projects/gapapi-.js"]
-	path = projects/gapapi-.js
-	url = https://github.com/libraplanet/gapapi-.js.git
-	branch = gh-pages
