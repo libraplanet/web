@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=5">
+		<title>expandcol</title>
+		<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<style type="text/css">
+		<!--
+			h3 {
+			}
+			table.baseTable {
+				border-collapse: collapse;
+			}
+			table.baseTable thead {
+				background-color: #DDDDDD;
+			}
+			table.baseTable tbody {
+				background-color: #FFFFFF;
+			}
+			table.baseTable td
+			, table.baseTable th {
+				border-style: solid;
+				border-width: 1px;
+				border-color: #666666;
+			}
+			.noselect {
+				user-select: none;
+			}
+			div.caption {
+				border-color:#666666;
+				border-style:solid;
+				border-width: 0px 0px 1px 15px;
+				padding: 5px 5px 5px 10px;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			div.box {
+				margin-bottom: 25px;
+			}
+			
+			/** columnSetD (青). */
+			table.baseTable thead th.columnSetD {
+				background-color: #555599;
+				color: #FFFFFF;
+			}
+			table.baseTable tbody td.columnSetD {
+				background-color: #E0E0FF;
+			}
+			/** columnSetE (赤). */
+			table.baseTable thead th.columnSetE {
+				background-color: #995555;
+				color: #FFFFFF;
+			}
+			table.baseTable tbody td.columnSetE {
+				background-color: #FFE0E0;
+			}
+			/** columnSetF (緑). */
+			table.baseTable thead th.columnSetF {
+				background-color: #559955;
+				color: #FFFFFF;
+			}
+			table.baseTable tbody td.columnSetF {
+				background-color: #E0FFE0;
+			}
+			/** columnSetG (黃). */
+			table.baseTable thead th.columnSetG {
+				background-color: #999955;
+				color: #FFFFFF;
+			}
+			table.baseTable tbody td.columnSetG {
+				background-color: #FFFFE0;
+			}
+
+		-->
+		</style>
+		<script type="text/javascript">
+			function updateColumns() {
+				$('input.columnCheckbox[data-column-set-class]').each(function(index, elm) {
+					var $checkbox = $(elm);
+					var columnSetClass = $checkbox.attr('data-column-set-class');
+
+					var $table = $('table.baseTable');
+					var $td = $table.find('.' + columnSetClass);
+
+					if($checkbox.is(':checked')) {
+						//表示
+						$td.show();
+					} else {
+						//非表示
+						$td.hide();
+					}
+				});
+			}
+
+			window.onload = function() {
+				$('#userAgent').text(window.navigator.userAgent);
+				updateColumns();
+			}
+		</script>
+	</head>
+	<body>
+		<div>
+			<div>
+				<h1>expandcol</h1>
+			</div>
+			<div class="box">
+				<div class="caption">user agent</div>
+				<div>
+					<div><span id="userAgent">xxxxxxxxxxxxx</span></div>
+				</div>
+			</div>
+			<div class="box">
+				<div class="caption">button area</div>
+				<div>
+					<label class="noselect"><input type="checkbox" class="columnCheckbox" onclick="updateColumns();" data-column-set-class="columnSetD" value="on">[D------]</label>
+					<label class="noselect"><input type="checkbox" class="columnCheckbox" onclick="updateColumns();" data-column-set-class="columnSetE" value="on" checked>[E------]</label>
+					<label class="noselect"><input type="checkbox" class="columnCheckbox" onclick="updateColumns();" data-column-set-class="columnSetF" value="on" checked>[F------]</label>
+					<label class="noselect"><input type="checkbox" class="columnCheckbox" onclick="updateColumns();" data-column-set-class="columnSetG" value="on">[G------]</label>
+				</div>
+			</div>
+			<div class="box">
+				<div class="caption">table area</div>
+				<div>
+					<table class="baseTable" style="table-layout:fixed;">
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<!-- columnSetD. -->
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<!-- columnSetE. -->
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<!-- columnSetF. -->
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<!-- columnSetE. -->
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th rowspan="2">#</th>
+								<th class="columnSetA" rowspan="2">A</th>
+								<th class="columnSetB" rowspan="2">B</th>
+								<th class="columnSetC" rowspan="2">C</th>
+								<th class="columnSetD" colspan="4">D</th>
+								<th class="columnSetE" colspan="4">E</th>
+								<th class="columnSetF" colspan="4">F</th>
+								<th class="columnSetG" colspan="4">G</th>
+							</tr>
+							<tr>
+								<th class="columnSetD">D00</th>
+								<th class="columnSetD">D01</th>
+								<th class="columnSetD">D02</th>
+								<th class="columnSetD">D03</th>
+								<th class="columnSetE">E00</th>
+								<th class="columnSetE">E01</th>
+								<th class="columnSetE">E02</th>
+								<th class="columnSetE">E03</th>
+								<th class="columnSetF">F00</th>
+								<th class="columnSetF">F01</th>
+								<th class="columnSetF">F02</th>
+								<th class="columnSetF">F03</th>
+								<th class="columnSetG">G00</th>
+								<th class="columnSetG">G01</th>
+								<th class="columnSetG">G02</th>
+								<th class="columnSetG">G03</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>000</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>001</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>002</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>003</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>004</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>005</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>006</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+							<tr>
+								<td>007</td>
+								<td class="columnSetA">aaa</td>
+								<td class="columnSetB">bbb</td>
+								<td class="columnSetC">ccc</td>
+								<td class="columnSetD">d00</td><td class="columnSetD">d01</td><td class="columnSetD">d02</td><td class="columnSetD">d03</td>
+								<td class="columnSetE">e00</td><td class="columnSetE">e01</td><td class="columnSetE">e02</td><td class="columnSetE">e03</td>
+								<td class="columnSetF">f00</td><td class="columnSetF">f01</td><td class="columnSetF">f02</td><td class="columnSetF">f03</td>
+								<td class="columnSetG">g00</td><td class="columnSetG">g01</td><td class="columnSetG">g02</td><td class="columnSetG">g03</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<a href="../">back</a>
+	</body>
+</html>
