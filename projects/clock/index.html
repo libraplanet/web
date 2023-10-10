@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>projects</title>
+		<style type="text/css">
+		</style> 
+		<script type="text/javascript">
+			/**
+			 * onload
+			 */
+			window.onload = function() {
+				var update = function() {
+					var date = new Date();
+					var strYear = "" + date.getFullYear();
+					var strMonth = ("00" + (date.getMonth() + 1)).slice(-2);
+					var strDay = ("00" + date.getDate()).slice(-2);
+					var strHour = ("00" + date.getHours()).slice(-2);
+					var strMin = ("00" + date.getMinutes()).slice(-2);
+					var strSec = ("00" + date.getSeconds()).slice(-2);
+					var strMillisec = ("000" + date.getMilliseconds()).slice(-3);
+					var strDate = strYear + '/' + strMonth + '/' + strDay;
+					var strTime = strHour + ':' + strMin + ':' + strSec + '.' + strMillisec;
+					document.getElementById('time').textContent = strDate + ' ' + strTime;
+					return date.getMilliseconds();
+				};
+				setInterval(update, 1000);
+			}
+		</script>
+	</head>
+	<body>
+		<div>
+			<h1>clock!</h1>
+			<h2 id="time"></h2>
+		</div>
+	</body>
+</html>
