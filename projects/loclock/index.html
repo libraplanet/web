@@ -71,10 +71,28 @@
 				let dateFormatter = new DateFormatter();
 				let blank = () => undefined;
 				let init = function(date) {
-					let nengo = new WarekiConverter().getNengo(date);
-					document.getElementById('wareki').textContent = nengo.gengo + ' ' + nengo.getYear() + "年";
+					(function() {
+						let nengo = new WarekiConverter().getNengo(date);
+						document.getElementById('wareki').textContent = nengo.gengo + ' ' + nengo.getYear() + "年";
+					})();
+					updateLoc(function(latitude, longitude) {
+						try {
+							let latlng = new google.maps.LatLng(latitude, longitude);
+							let map = new google.maps.Map(document.getElementById('googleMaps'), {
+								zoom:17,
+								center: latlng
+							});
+							let marker = new google.maps.Marker({
+								position: latlng,
+								map: map,
+							});
+						} finally {
+							return;
+						}
+					});
 				};
-				let updateLoc = function() {
+
+				let updateLoc = function(updateMap) {
 					navigator.geolocation.getCurrentPosition(
 						/** successCallback. */
 						function(position) {
@@ -82,20 +100,13 @@
 							let latitude = position.coords.latitude;
 							// 経度
 							let longitude = position.coords.longitude;
-							try {
-								let latlng = new google.maps.LatLng(latitude, longitude);
-								let map = new google.maps.Map(document.getElementById('googleMaps'), {
-									zoom:17,
-									center: latlng
-								});
-								let marker = new google.maps.Marker({
-									position: latlng,
-									map: map,
-								});
-							} finally {
-								document.getElementById('latitude').textContent = latitude;
-								document.getElementById('longitude').textContent = longitude;
+
+							if(updateMap) {
+								updateMap(latitude, longitude);
 							}
+
+							document.getElementById('latitude').textContent = latitude;
+							document.getElementById('longitude').textContent = longitude;
 						},
 						/** errorCallback. */
 						function(error) {
@@ -106,20 +117,18 @@
 				let tick = function() {
 					let date = new Date();
 					(function() {
-						init(date);
-						navigator.geolocation.getCurrentPosition(function(_) {
-							updateLoc();
-							setTimeout(function() {
-								updateLoc();
-							}, 5000);
-						}, () => undefined);
-						init = blank;
+						(function() {
+							init(date);
+							init = blank;
+						})();
 					})();
 					(function() {
 						let str = dateFormatter.getFormatString(date);
 						document.getElementById('time').textContent = str;
 					})();
+
 					updateLoc();
+
 					setTimeout(tick, 1000 - new Date().getMilliseconds());
 				};
 				setTimeout(tick, 0);
