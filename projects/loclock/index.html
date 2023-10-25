@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE>
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
@@ -69,26 +69,12 @@
 			window.onload = function() {
 
 				let dateFormatter = new DateFormatter();
-				let blank = function() {};
+				let blank = () => undefined;
 				let init = function(date) {
 					let nengo = new WarekiConverter().getNengo(date);
 					document.getElementById('wareki').textContent = nengo.gengo + ' ' + nengo.getYear() + "年";
 				};
-
-				let tick = function() {
-					let date = new Date();
-					(function() {
-						init(date);
-						init = blank;
-					})();
-					(function() {
-						let str = dateFormatter.getFormatString(date);
-						document.getElementById('time').textContent = str;
-					})();
-					setTimeout(tick, 1000 - new Date().getMilliseconds());
-				};
-				setTimeout(tick, 0);
-				setTimeout(function() {
+				let updateLoc = function() {
 					navigator.geolocation.getCurrentPosition(
 						/** successCallback. */
 						function(position) {
@@ -96,12 +82,8 @@
 							let latitude = position.coords.latitude;
 							// 経度
 							let longitude = position.coords.longitude;
-							//
-							document.getElementById('latitude').textContent = latitude;
-							document.getElementById('longitude').textContent = longitude;
-
-							if(google) {
-								let latlng = new google.maps.LatLng(lat, lng);
+							try {
+								let latlng = new google.maps.LatLng(latitude, longitude);
 								let map = new google.maps.Map(document.getElementById('googleMaps'), {
 									zoom:17,
 									center: latlng
@@ -110,13 +92,34 @@
 									position: latlng,
 									map: map,
 								});
+							} finally {
+								document.getElementById('latitude').textContent = latitude;
+								document.getElementById('longitude').textContent = longitude;
 							}
 						},
 						/** errorCallback. */
 						function(error) {
 						}
 					);
-				}, 1000);
+				};
+
+				let tick = function() {
+					let date = new Date();
+					(function() {
+						init(date);
+						navigator.geolocation.getCurrentPosition(() => undefined, function() {
+							updateLoc = blank;
+						});
+						init = blank;
+					})();
+					(function() {
+						let str = dateFormatter.getFormatString(date);
+						document.getElementById('time').textContent = str;
+					})();
+					updateLoc();
+					setTimeout(tick, 1000 - new Date().getMilliseconds());
+				};
+				setTimeout(tick, 0);
 			}
 		</script>
 	</head>
