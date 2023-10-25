@@ -96,24 +96,27 @@
 							let latitude = position.coords.latitude;
 							// 経度
 							let longitude = position.coords.longitude;
-							let latlng = new google.maps.LatLng(lat, lng);
-							let map = new google.maps.Map(document.getElementById('googleMaps'), {
-								zoom:17,
-								center: latlng
-							});
-							let marker = new google.maps.Marker({
-								position: latlng,
-								map: map,
-							});
 							//
 							document.getElementById('latitude').textContent = latitude;
 							document.getElementById('longitude').textContent = longitude;
+
+							if(google) {
+								let latlng = new google.maps.LatLng(lat, lng);
+								let map = new google.maps.Map(document.getElementById('googleMaps'), {
+									zoom:17,
+									center: latlng
+								});
+								let marker = new google.maps.Marker({
+									position: latlng,
+									map: map,
+								});
+							}
 						},
 						/** errorCallback. */
 						function(error) {
 						}
 					);
-				}, 0);
+				}, 1000);
 			}
 		</script>
 	</head>
