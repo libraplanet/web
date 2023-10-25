@@ -107,9 +107,12 @@
 					let date = new Date();
 					(function() {
 						init(date);
-						navigator.geolocation.getCurrentPosition(() => undefined, function() {
-							updateLoc = blank;
-						});
+						navigator.geolocation.getCurrentPosition(function(_) {
+							updateLoc();
+							setTimeout(function() {
+								updateLoc();
+							}, 5000);
+						}, () => undefined);
 						init = blank;
 					})();
 					(function() {
