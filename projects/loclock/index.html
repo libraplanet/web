@@ -6,33 +6,131 @@
 		<title>loclock</title>
 		<style type="text/css">
 		</style> 
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFrWu7rIWx931zBs1tqOj_kEoYzioKfLg"></script>
 		<script type="text/javascript">
+			let DateFormatter = function() {
+				this.formatOpt = { weekday: "short" };
+				this.dateTimeFormat = new Intl.DateTimeFormat("ja-JP", this.formatOpt);
+				this.getDatesString = (date) => {
+					let strYear = "" + date.getFullYear();
+					let strMonth = ("00" + (date.getMonth() + 1)).slice(-2);
+					let strDay = ("00" + date.getDate()).slice(-2);
+					let strWeek = this.dateTimeFormat.format(date);
+					let ret = strYear + '/' + strMonth + '/' + strDay + ' (' + strWeek + ')';
+					return ret;
+				}
+				this.getTimesString = (date) => {
+					let strHour = ("00" + date.getHours()).slice(-2);
+					let strMin = ("00" + date.getMinutes()).slice(-2);
+					let strSec = ("00" + date.getSeconds()).slice(-2);
+					let strMillisec = ("000" + date.getMilliseconds()).slice(-3);
+					let ret = strHour + ':' + strMin + ':' + strSec;
+					//ret += '.' + strMillisec;
+					return ret;
+				}
+				this.getFormatString = (date) => {
+					let strDate = this.getDatesString(date);
+					let strTime = this.getTimesString(date);
+					return strDate + ' ' + strTime;
+				};
+			};
+			let WarekiConverter = function() {
+				let WarekiYear = function(startDate, gengo, date) {
+					this.startDate = startDate;
+					this.gengo = gengo;
+					this.date = date;
+					this.getYear = () => {
+						return this.date.getFullYear() - this.startDate.getFullYear() + 1;
+					}
+				};
+				this.reiwa = new WarekiYear(new Date('2019/05/01 UTC+9'), '令和');
+				this.heisei = new WarekiYear(new Date('1989/01/08 UTC+9'), '平成');
+				this.showa = new WarekiYear(new Date('1926/12/26 UTC+9'), '昭和');
+				this.taisho = new WarekiYear(new Date('1912/07/30 UTC+9'), '大正');
+				this.meiji = new WarekiYear(new Date('1868/09/04 UTC+9'), '明治');
+				this.getNengo = (date) => {
+					let list = [this.reiwa, this.heisei, this.showa, this.taisho, this.meiji];
+					for(let i = 0; i < list.length; i++) {
+						if(date >= list[i].startDate) {
+							return new WarekiYear(
+								list[i].startDate,
+								list[i].gengo,
+								date
+							);
+						}
+					}
+					return null;
+				}
+			}
+
 			/**
 			 * onload
 			 */
 			window.onload = function() {
-				var update = function() {
-					var date = new Date();
-					var strYear = "" + date.getFullYear();
-					var strMonth = ("00" + (date.getMonth() + 1)).slice(-2);
-					var strDay = ("00" + date.getDate()).slice(-2);
-					var strHour = ("00" + date.getHours()).slice(-2);
-					var strMin = ("00" + date.getMinutes()).slice(-2);
-					var strSec = ("00" + date.getSeconds()).slice(-2);
-					var strMillisec = ("000" + date.getMilliseconds()).slice(-3);
-					var strDate = strYear + '/' + strMonth + '/' + strDay;
-					var strTime = strHour + ':' + strMin + ':' + strSec + '.' + strMillisec;
-					document.getElementById('time').textContent = strDate + ' ' + strTime;
-					return date.getMilliseconds();
+
+				let dateFormatter = new DateFormatter();
+				let blank = function() {};
+				let init = function(date) {
+					let nengo = new WarekiConverter().getNengo(date);
+					document.getElementById('wareki').textContent = nengo.gengo + ' ' + nengo.getYear() + "年";
 				};
-				setInterval(update, 1000);
+
+				let tick = function() {
+					let date = new Date();
+					(function() {
+						init(date);
+						init = blank;
+					})();
+					(function() {
+						let str = dateFormatter.getFormatString(date);
+						document.getElementById('time').textContent = str;
+					})();
+					setTimeout(tick, 1000 - new Date().getMilliseconds());
+				};
+				setTimeout(tick, 0);
+				setTimeout(function() {
+					navigator.geolocation.getCurrentPosition(
+						/** successCallback. */
+						function(position) {
+							// 緯度
+							let latitude = position.coords.latitude;
+							// 経度
+							let longitude = position.coords.longitude;
+							let latlng = new google.maps.LatLng(lat, lng);
+							let map = new google.maps.Map(document.getElementById('googleMaps'), {
+								zoom:17,
+								center: latlng
+							});
+							let marker = new google.maps.Marker({
+								position: latlng,
+								map: map,
+							});
+							//
+							document.getElementById('latitude').textContent = latitude;
+							document.getElementById('longitude').textContent = longitude;
+						},
+						/** errorCallback. */
+						function(error) {
+						}
+					);
+				}, 0);
 			}
 		</script>
 	</head>
 	<body>
 		<div>
-			<h1>clock!</h1>
-			<h2 id="time"></h2>
+			<h1>loclock!</h1>
+		</div>
+		<div>
+			<h2 id="time">&nbsp;</h2>
+			<h2 id="wareki">&nbsp;</h2>
+		</div>
+		<div>
+			<h2>map</h2>
+			<h2 id="latitude">&nbsp;</h2>
+			<h2 id="longitude">&nbsp;</h2>
+			<div id="googleMaps">
+			</div>
 		</div>
 	</body>
 </html>
