@@ -70,6 +70,7 @@
 
 				let dateFormatter = new DateFormatter();
 				let blank = () => undefined;
+				let googleMap = undefined;
 				let init = function(date) {
 					(function() {
 						let nengo = new WarekiConverter().getNengo(date);
@@ -78,13 +79,9 @@
 					updateLoc(function(latitude, longitude) {
 						try {
 							let latlng = new google.maps.LatLng(latitude, longitude);
-							let map = new google.maps.Map(document.getElementById('googleMaps'), {
+							googleMap = new google.maps.Map(document.getElementById('googleMaps'), {
 								zoom:17,
 								center: latlng
-							});
-							let marker = new google.maps.Marker({
-								position: latlng,
-								map: map,
 							});
 						} finally {
 							return;
@@ -127,7 +124,15 @@
 						document.getElementById('time').textContent = str;
 					})();
 
-					updateLoc();
+					updateLoc(function(latitude, longitude) {
+						if(googleMap) {
+							let latlng = new google.maps.LatLng(latitude, longitude);
+							let marker = new google.maps.Marker({
+								position: latlng,
+								map: googleMap,
+							});
+						}
+					});
 
 					setTimeout(tick, 1000 - new Date().getMilliseconds());
 				};
@@ -147,7 +152,7 @@
 			<h2>map</h2>
 			<h2 id="latitude">&nbsp;</h2>
 			<h2 id="longitude">&nbsp;</h2>
-			<div id="googleMaps" style="height: 1000px;">
+			<div id="googleMaps" style="height: 500px;">
 			</div>
 		</div>
 	</body>
