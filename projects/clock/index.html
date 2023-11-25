@@ -1,0 +1,109 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>loclock</title>
+		<style type="text/css">
+		</style> 
+		<script type="text/javascript">
+			let DateFormatter = function() {
+				this.formatOpt = { weekday: "short" };
+				this.dateTimeFormat = new Intl.DateTimeFormat("ja-JP", this.formatOpt);
+				this.getDatesString = (date) => {
+					let strYear = "" + date.getFullYear();
+					let strMonth = ("00" + (date.getMonth() + 1)).slice(-2);
+					let strDay = ("00" + date.getDate()).slice(-2);
+					let strWeek = this.dateTimeFormat.format(date);
+					let ret = strYear + '/' + strMonth + '/' + strDay + ' (' + strWeek + ')';
+					return ret;
+				}
+				this.getTimesString = (date) => {
+					let strHour = ("00" + date.getHours()).slice(-2);
+					let strMin = ("00" + date.getMinutes()).slice(-2);
+					let strSec = ("00" + date.getSeconds()).slice(-2);
+					let strMillisec = ("000" + date.getMilliseconds()).slice(-3);
+					let ret = strHour + ':' + strMin + ':' + strSec;
+					//ret += '.' + strMillisec;
+					return ret;
+				}
+				this.getFormatString = (date) => {
+					let strDate = this.getDatesString(date);
+					let strTime = this.getTimesString(date);
+					return strDate + ' ' + strTime;
+				};
+			};
+			let WarekiConverter = function() {
+				let WarekiYear = function(startDate, gengo, date) {
+					this.startDate = startDate;
+					this.gengo = gengo;
+					this.date = date;
+					this.getYear = () => {
+						return this.date.getFullYear() - this.startDate.getFullYear() + 1;
+					}
+				};
+				this.reiwa = new WarekiYear(new Date('2019/05/01 UTC+9'), '令和');
+				this.heisei = new WarekiYear(new Date('1989/01/08 UTC+9'), '平成');
+				this.showa = new WarekiYear(new Date('1926/12/26 UTC+9'), '昭和');
+				this.taisho = new WarekiYear(new Date('1912/07/30 UTC+9'), '大正');
+				this.meiji = new WarekiYear(new Date('1868/09/04 UTC+9'), '明治');
+				this.getNengo = (date) => {
+					let list = [this.reiwa, this.heisei, this.showa, this.taisho, this.meiji];
+					for(let i = 0; i < list.length; i++) {
+						if(date >= list[i].startDate) {
+							return new WarekiYear(
+								list[i].startDate,
+								list[i].gengo,
+								date
+							);
+						}
+					}
+					return null;
+				}
+			}
+
+			/**
+			 * onload
+			 */
+			window.onload = function() {
+
+				let dateFormatter = new DateFormatter();
+				let blank = () => undefined;
+				let init = function(date) {
+					(function() {
+						let nengo = new WarekiConverter().getNengo(date);
+						document.getElementById('wareki').textContent = nengo.gengo + ' ' + nengo.getYear() + "年";
+					})();
+				};
+
+				let tick = function() {
+					let date = new Date();
+					(function() {
+						(function() {
+							init(date);
+							init = blank;
+						})();
+					})();
+					(function() {
+						let str = dateFormatter.getFormatString(date);
+						document.getElementById('time').textContent = str;
+					})();
+
+					setTimeout(tick, 1000 - new Date().getMilliseconds());
+				};
+				setTimeout(tick, 0);
+			}
+		</script>
+	</head>
+	<body>
+		<div>
+			<h1>loclock!</h1>
+		</div>
+		<div>
+			<div>
+				<h2><span id="time">&nbsp;</span></h2>
+				<h2><span id="wareki">&nbsp;</span></h2>
+			</div>
+		</div>
+	</body>
+</html>
