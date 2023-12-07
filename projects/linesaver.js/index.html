@@ -22,8 +22,13 @@
 				width: 100%
 			}
 
-			div.gridWrap div.value {
+			div.value {
 				text-align: right;
+			}
+
+			div.gridWrap div.vmergin {
+				margin-top: 25px;
+				margin-bottom: 25px;
 			}
 		</style> 
 		<script type="text/javascript">
@@ -272,17 +277,17 @@
 	<body>
 		<canvas id="canvas">
 		</canvas>
-		<div id="controller" style="position:fixed; left:5px; bottom:5px; padding: 5px; background-color:rgba(255, 255, 255, 0.5)">
+		<div id="controller" style="position:fixed; left:5px; bottom:100px; padding: 5px; background-color:rgba(255, 255, 255, 0.5)">
 			<div class="gridWrap">
-				<div class="caption" ><span>移動量 : </span></div>
-				<div class="slider" ><input class="movementNum" type="range" value="5" min="0" max="10"></div>
-				<div class="value" ><span class="movementNum"></span></div>
-				<div class="caption" ><span>残像数 : </span></div>
-				<div class="slider" ><input class="historyNum" type="range" value="6" min="1" max="200"></div>
-				<div class="value" ><span class="historyNum"></span></div>
-				<div class="caption" ><span>ポイント数 : </span></div>
-				<div class="slider" ><input class="pointNum" type="range" value="6" min="3" max="200"></div>
-				<div class="value" ><span class="pointNum"></span></div>
+				<div class="caption vmergin" ><span>移動量 : </span></div>
+				<div class="slider vmergin" ><input class="movementNum" type="range" value="5" min="0" max="10"></div>
+				<div class="value vmergin" ><span class="movementNum"></span></div>
+				<div class="caption vmergin" ><span>残像数 : </span></div>
+				<div class="slider vmergin" ><input class="historyNum" type="range" value="6" min="1" max="200"></div>
+				<div class="value vmergin" ><span class="historyNum"></span></div>
+				<div class="caption vmergin" ><span>ポイント数 : </span></div>
+				<div class="slider vmergin" ><input class="pointNum" type="range" value="6" min="3" max="200"></div>
+				<div class="value vmergin" ><span class="pointNum"></span></div>
 			</div>
 		</div>
 	</body>
