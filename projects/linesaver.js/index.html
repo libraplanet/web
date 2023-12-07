@@ -1,0 +1,289 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			div.gridWrap {
+				display: grid;
+				grid-template-columns: 150px 200px 50px;
+				font-size: x-large;
+				user-select: none;
+			}
+			div.gridWrap div.caption {
+			}
+			div.gridWrap div.slider {
+				vertical-align: bottom;
+			}
+			div.gridWrap div.slider input[type="range"] {
+				width: 100%
+			}
+
+			div.gridWrap div.value {
+				text-align: right;
+			}
+		</style> 
+		<script type="text/javascript">
+			/**
+			 * degree to radian.
+			 */
+			function deg2rad(deg) {
+				return deg * Math.PI / 180;
+			}
+			/**
+			 * radian to degree.
+			 */
+			function rad2deg(rad) {
+				return rad * 180 / Math.PI;
+			}
+			function degFlipX(deg) {
+				let ret = rad2deg(Math.atan2(Math.sin(deg2rad(deg)), -Math.cos(deg2rad(deg))));
+				ret += 360;
+				ret %= 360;
+				return ret;
+			}
+			function degFlipY(deg) {
+				let ret = degFlipX((deg + 90) % 360);
+				ret -= 90;
+				ret += 360;
+				ret %= 360;
+				return ret;
+			}
+			function getLinearColor(col0, col1, vol) {
+				let a = (col0.a + ((col1.a - col0.a) * vol));
+				let r = (col0.r + ((col1.r - col0.r) * vol));
+				let g = (col0.g + ((col1.g - col0.g) * vol));
+				let b = (col0.b + ((col1.b - col0.b) * vol));
+				return new Color(a, r, g, b);
+			}
+
+			/**
+			 * Color class.
+			 */
+			function Color(a, r, g, b) {
+				this.a = a;
+				this.r = r;
+				this.g = g;
+				this.b = b;
+				this.toStyleStyle = () => `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+			}
+
+			/**
+			 * Point class.
+			 */
+			function Point(x, y) {
+				this.x = 0.0;
+				this.y = 0.0;
+				if(x != undefined) {
+					this.x = x;
+				}
+				if(y != undefined) {
+					this.y = y;
+				}
+			}
+
+			/**
+			 * Pointer class.
+			 */
+			function Pointer(width, height) {
+				this.deg;
+				this.pos = new Point();
+				this.init = () => {
+					this.pos.x = (Math.random() * width);
+					this.pos.y = (Math.random() * height);
+					this.deg = (Math.random() * 360);
+				};
+				this.update = (v, width, height) => {
+					this.pos.x += Math.cos(deg2rad(this.deg)) * v;
+					this.pos.y += Math.sin(deg2rad(this.deg)) * v;
+					
+					if (this.pos.x < 0) {
+						this.pos.x = 0 + (this.pos.x - 0);
+						this.deg = degFlipX(this.deg);
+					}
+					if (this.pos.x > width) {
+						this.pos.x = width - (this.pos.x - width);
+						this.deg = degFlipX(this.deg);
+					}
+					if (this.pos.y < 0) {
+						this.pos.y = 0 + (this.pos.y - 0);
+						this.deg = degFlipY(this.deg);
+					}
+					if (this.pos.y > height) {
+						this.pos.y = height - (this.pos.y - height);
+						this.deg = degFlipY(this.deg);
+					}
+				}
+			}
+
+			function Viewer(canvas) {
+				this.canvas = canvas;
+				// new List<Pointer>()
+				this.pointers = [];
+				// new List<List<PointF>>()
+				this.historyList = [];
+				this.historyLimit = 10;
+				this.movement = 5.0;
+
+				for(let i = 0; i < 6; i++) {
+					let p = new Pointer(canvas.width, canvas.height);
+					p.init();
+					this.pointers.push(p);
+				}
+
+				this.setMovementNum = (movement) => {
+					this.movement = movement;
+					
+				}
+
+				this.setHistroyLimit = (historyLimit) => {
+					this.historyLimit = historyLimit;
+
+					this.historyList = this.historyList.slice(Math.max(this.historyList.length - this.historyLimit, 0), this.historyList.length);
+				}
+
+				this.setPointerNum = (n) => {
+					for (let i = this.pointers.length; i < n; i++) {
+						let p = new Pointer(canvas.width, canvas.height);
+						p.init();
+						this.pointers.push(p);
+					}
+					this.pointers = this.pointers.slice(0, n)
+				}
+
+				this.update = () => {
+					let v = [];
+					this.pointers.forEach((pointer) => {
+						pointer.update(this.movement, this.canvas.width, this.canvas.height);
+						
+						let p = new Point(pointer.pos.x, pointer.pos.y)
+						v.push(p);
+					});
+					this.historyList.push(v);
+					this.historyList = this.historyList.slice(Math.max(this.historyList.length - this.historyLimit, 0), this.historyList.length);
+				}
+
+				this.draw = (g) => {
+					let bgcolor = new Color(255, 0, 0, 0x33);
+					g.fillStyle = bgcolor.toStyleStyle();
+					g.fillRect(0, 0, canvas.width, canvas.height);
+					//g.fillRect(0, 0, 800, 600);
+
+					//pointer
+					for (let p = 0; p < this.historyLimit; p++) {
+						let q = p - (this.historyLimit - this.historyList.length);
+						if (q >= 0) {
+							let v = this.historyList[q];
+							let color = getLinearColor(bgcolor, new Color(255, 255, 0, 0), (p + 1) / this.historyLimit);
+							g.strokeStyle = color.toStyleStyle();
+							g.beginPath();
+							v.forEach((point, index) => {
+								if(index == 0) {
+									g.moveTo(point.x, point.y);
+								} else {
+									g.lineTo(point.x, point.y);
+								}
+							});
+							g.closePath();
+							g.stroke();
+						}
+					}
+				}
+
+			};
+
+			/**
+			 * load.
+			 */
+			window.addEventListener('load', function() {
+				let self = this;
+				let canvas = document.querySelector('canvas#canvas');
+				let viewer = new Viewer(canvas);
+				if(canvas) {
+					/**
+					 * init.
+					 */
+					self.init = function() {
+						// register event.
+						window.addEventListener('resize', self.resize);
+						let updateMovementNum = function(value) {
+							viewer.setMovementNum(value);
+						};
+						let updateHistoryNum = function(value) {
+							viewer.setHistroyLimit(value);
+						};
+						let updatePointNum = function(value) {
+							viewer.setPointerNum(value);
+						};
+						updateMovementNum.className = 'movementNum';
+						updateHistoryNum.className = 'historyNum';
+						updatePointNum.className = 'pointNum';
+
+						[updateMovementNum, updateHistoryNum, updatePointNum].forEach(function(func) {
+							document.querySelectorAll('input.' + func.className + '[type="range"]').forEach(function(input) {
+								let update = function() {
+									document.querySelectorAll('span.' + func.className).forEach(function(span) {
+										span.textContent = input.value;
+									});
+									func(input.value);
+								};
+								input.addEventListener('input', update);
+								update();
+							});
+						});
+
+						//interval
+						setInterval(self.tick, 1000 / 30);
+
+						// first resize.
+						self.resize();
+					};
+
+					/**
+					 * resize.
+					 */
+					self.resize = function() {
+						canvas.width = window.innerWidth;
+						canvas.height = window.innerHeight;
+					};
+
+					/**
+					 * tick.
+					 */
+					self.tick = function() {
+						let g = canvas.getContext('2d');
+						if(g) {
+							// update
+							viewer.update();
+							// draw
+							viewer.draw(g);
+						}
+					};
+
+					// init.
+					self.init();
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas">
+		</canvas>
+		<div id="controller" style="position:fixed; left:5px; bottom:5px; padding: 5px; background-color:rgba(255, 255, 255, 0.5)">
+			<div class="gridWrap">
+				<div class="caption" ><span>移動量 : </span></div>
+				<div class="slider" ><input class="movementNum" type="range" value="5" min="0" max="10"></div>
+				<div class="value" ><span class="movementNum"></span></div>
+				<div class="caption" ><span>残像数 : </span></div>
+				<div class="slider" ><input class="historyNum" type="range" value="6" min="1" max="200"></div>
+				<div class="value" ><span class="historyNum"></span></div>
+				<div class="caption" ><span>ポイント数 : </span></div>
+				<div class="slider" ><input class="pointNum" type="range" value="6" min="3" max="200"></div>
+				<div class="value" ><span class="pointNum"></span></div>
+			</div>
+		</div>
+	</body>
+</html>
