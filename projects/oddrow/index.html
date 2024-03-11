@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=5">
+		<title>oddrow</title>
+		<script src="./jquery-1.9.1.min.js"></script>
+		<style type="text/css">
+		<!--
+			h3 {
+			}
+			.center {
+				text-align: center;
+			}
+			table.commonTable {
+				table-layout: fixed;
+				border-collapse: collapse;
+			}
+			table.commonTable thead {
+				background-color: #DDDDDD;
+			}
+			table.commonTable tbody {
+				background-color: #FFFFFF;
+			}
+			table.commonTable td
+			, table.commonTable th {
+				border-style: solid;
+				border-width: 1px;
+				border-color: #666666;
+			}
+			.noselect {
+				user-select: none;
+			}
+			div.caption {
+				border-color:#666666;
+				border-style:solid;
+				border-width: 0px 0px 1px 15px;
+				padding: 5px 5px 5px 10px;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			div.box {
+				margin-bottom: 25px;
+			}
+			div.showButtonsArea {
+				height : 50px;
+				overflow-y : scroll;
+				border-color: #666666;
+				border-style: dashed;
+				border-width: 1px 1px 1px 1px;
+			}
+			table.commonTable.testCss tbody tr:not(:nth-child(2n)) {
+				background-color: #FFFFFF;
+			}
+			table.commonTable.testCss tbody tr:nth-child(2n) {
+				background-color: #F0F0FF;
+			}
+			table.commonTable.testJquery tbody tr.even {
+				background-color: #FFFFFF;
+			}
+			table.commonTable.testJquery tbody tr.odd {
+				background-color: #F0F0FF;
+			}
+		-->
+		</style>
+		<script type="text/javascript">
+			var $j = jQuery.noConflict();
+			function randomText(len) {
+				var numbers = '0123456789';
+				var alphabets = 'abcdefghijklmnopqrstuvwxyz';
+				var list = [alphabets, alphabets, numbers];
+				var ret = '';
+				while(ret.length < len) {
+					var charas = list[ret.length % list.length];
+					var n = Math.floor(Math.random() * charas.length);
+					ret += charas.charAt(n);
+				}
+				return ret;
+			}
+			
+			window.onload = function() {
+				$j('#userAgent').text(window.navigator.userAgent);
+
+				$j('div.tableBox').each(function(_, tableBox) {
+					var $tableBox = $j(tableBox);
+					var $showButtonsArea = $tableBox.find('div.showButtonsArea');
+					var $tbody = $tableBox.find('table.commonTable tbody');
+
+					/** 行番号の再設定. */
+					var resetRowNumber = function() {
+						$tbody.find('tr').each(function(index, tr) {
+							var str = ('000' + index).slice(-3);
+							$j(tr).find('span.rowNumber').text(str);
+						});
+					}
+
+					/** odd/evenクラスの再設定. */
+					var resetOddEvenClass = function() {
+						$tbody.find('tr:visible').each(function(index, tr) {
+							var $tr = $j(tr);
+							if((index % 2) == 0) {
+								$tr.addClass('even');
+								$tr.removeClass('odd');
+							} else {
+								$tr.addClass('odd');
+								$tr.removeClass('even');
+							}
+						});
+					}
+
+					var registerEvent = function(tr) {
+						var $tr = $j(tr);
+						$tr.find('input.addButton').click(function() {
+							var $newTr = $tr.clone(false);
+							$newTr .find('input.rowName').val(randomText(5));
+							$newTr.insertAfter($tr);
+							$newTr.each(function(_, newTr) {
+								registerEvent(newTr);
+							});
+							// 追加時は行番号とclassを更新する。
+							resetRowNumber();
+							resetOddEvenClass();
+						});
+						$tr.find('input.hideButton').click(function() {
+							var rowName = $tr.find('input.rowName').val();
+							var $showInput = $j('<input>');
+							$showInput.attr('type', 'button');
+							$showInput.val(rowName + '.show()');
+							$showInput.click(function() {
+								$showInput.remove();
+								$tr.show();
+								// 表示時はclassのみ更新する。
+								resetOddEvenClass();
+							});
+							$showButtonsArea.append($showInput);
+							$tr.hide();
+							// 非表示時はclassのみ更新する。
+							resetOddEvenClass();
+						});
+						$tr.find('input.removeButton').click(function() {
+							$tr.remove();
+							// 削除時は行番号とclassを更新する。
+							resetRowNumber();
+							resetOddEvenClass();
+						});
+					}
+
+					$tbody.find('tr').each(function(_, tr) {
+						registerEvent(tr);
+					});
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div>
+			<div>
+				<h1>oddrow</h1>
+			</div>
+			<div class="box">
+				<div class="caption">user agent</div>
+				<div>
+					<div><span id="userAgent">n/a</span></div>
+				</div>
+			</div>
+			<div class="box tableBox">
+				<div class="caption">table type CSS Selector</div>
+				<div class="showButtonsArea"></div>
+				<div>
+					<table class="commonTable testCss" style="table-layout:fixed;">
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:200px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>name</th>
+								<th>add</th>
+								<th>hide</th>
+								<th>remove</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="even">
+								<td><div class="center"><span class="rowNumber">000</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="aA1"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+							<tr class="odd">
+								<td><div class="center"><span class="rowNumber">001</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="bB2"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+							<tr class="even">
+								<td><div class="center"><span class="rowNumber">002</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="cC3"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="box tableBox">
+				<div class="caption">table type jQuery</div>
+				<div class="showButtonsArea"></div>
+				<div>
+					<table class="commonTable testJquery" style="table-layout:fixed;">
+						<colgroup>
+							<col style="width:70px;">
+							<col style="width:200px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+							<col style="width:70px;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>name</th>
+								<th>add</th>
+								<th>hide</th>
+								<th>remove</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="even">
+								<td><div class="center"><span class="rowNumber">000</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="aA1"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+							<tr class="odd">
+								<td><div class="center"><span class="rowNumber">001</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="bB2"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+							<tr class="even">
+								<td><div class="center"><span class="rowNumber">002</span></div></td>
+								<td><div class="center"><input class="rowName" type="text" value="cC3"></div></td>
+								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
+								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
+								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div style="height:800px"></div>
+		<hr>
+		<a href="../">back</a>
+	</body>
+</html>
