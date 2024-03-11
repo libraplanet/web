@@ -110,6 +110,7 @@
 
 					var registerEvent = function(tr) {
 						var $tr = $j(tr);
+						//追加ボタンのクリック イベントを登録
 						$tr.find('input.addButton').click(function() {
 							var $newTr = $tr.clone(false);
 							$newTr .find('input.rowName').val(randomText(5));
@@ -121,8 +122,12 @@
 							resetRowNumber();
 							resetOddEvenClass();
 						});
+
+						//非表示ボタンのクリック イベントを登録
 						$tr.find('input.hideButton').click(function() {
 							var rowName = $tr.find('input.rowName').val();
+
+							// 再表示用のボタンの作成
 							var $showInput = $j('<input>');
 							$showInput.attr('type', 'button');
 							$showInput.val(rowName + '.show()');
@@ -132,11 +137,16 @@
 								// 表示時はclassのみ更新する。
 								resetOddEvenClass();
 							});
+							// 再表示用のボタンの追加
 							$showButtonsArea.append($showInput);
+
+							// 非表示
 							$tr.hide();
 							// 非表示時はclassのみ更新する。
 							resetOddEvenClass();
 						});
+						
+						//削除ボタンのクリック イベントを登録
 						$tr.find('input.removeButton').click(function() {
 							$tr.remove();
 							// 削除時は行番号とclassを更新する。
