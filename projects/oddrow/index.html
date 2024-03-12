@@ -43,7 +43,7 @@
 				margin-bottom: 25px;
 			}
 			div.showButtonsArea {
-				height : 50px;
+				height : 75px;
 				overflow-y : scroll;
 				border-color: #666666;
 				border-style: dashed;
@@ -126,11 +126,12 @@
 						//非表示ボタンのクリック イベントを登録
 						$tr.find('input.hideButton').click(function() {
 							var rowName = $tr.find('input.rowName').val();
+							var rowCaption = $tr.find('span.caption').text();
 
 							// 再表示用のボタンの作成
 							var $showInput = $j('<input>');
 							$showInput.attr('type', 'button');
-							$showInput.val(rowName + '.show()');
+							$showInput.val(rowName + '@' + rowCaption + '.show()');
 							$showInput.click(function() {
 								$showInput.remove();
 								$tr.show();
@@ -174,7 +175,10 @@
 				</div>
 			</div>
 			<div class="box tableBox">
-				<div class="caption">table type CSS Selector</div>
+				<div class="caption">
+					<div>table type CSS Selector</div>
+					<div>(非表示行も勘定されてしまう失敗例)</div>
+				</div>
 				<div class="showButtonsArea"></div>
 				<div>
 					<table class="commonTable testCss" style="table-layout:fixed;">
@@ -189,6 +193,7 @@
 							<tr>
 								<th>#</th>
 								<th>name</th>
+								<th>note</th>
 								<th>add</th>
 								<th>hide</th>
 								<th>remove</th>
@@ -198,6 +203,7 @@
 							<tr class="even">
 								<td><div class="center"><span class="rowNumber">000</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="aA1"></div></td>
+								<td><div class="center"><span class="caption">hoge</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -205,6 +211,7 @@
 							<tr class="odd">
 								<td><div class="center"><span class="rowNumber">001</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="bB2"></div></td>
+								<td><div class="center"><span class="caption">gebu</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -212,6 +219,7 @@
 							<tr class="even">
 								<td><div class="center"><span class="rowNumber">002</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="cC3"></div></td>
+								<td><div class="center"><span class="caption">foo</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -221,7 +229,10 @@
 				</div>
 			</div>
 			<div class="box tableBox">
-				<div class="caption">table type jQuery</div>
+				<div class="caption">
+					<div>table type jQuery</div>
+					<div>(jQuery独自疑似タグ「:visible」を用いて表示行だけで勘定)</div>
+				</div>
 				<div class="showButtonsArea"></div>
 				<div>
 					<table class="commonTable testJquery" style="table-layout:fixed;">
@@ -236,6 +247,7 @@
 							<tr>
 								<th>#</th>
 								<th>name</th>
+								<th>note</th>
 								<th>add</th>
 								<th>hide</th>
 								<th>remove</th>
@@ -245,6 +257,7 @@
 							<tr class="even">
 								<td><div class="center"><span class="rowNumber">000</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="aA1"></div></td>
+								<td><div class="center"><span class="caption">hoge</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -252,6 +265,7 @@
 							<tr class="odd">
 								<td><div class="center"><span class="rowNumber">001</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="bB2"></div></td>
+								<td><div class="center"><span class="caption">gebu</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -259,6 +273,7 @@
 							<tr class="even">
 								<td><div class="center"><span class="rowNumber">002</span></div></td>
 								<td><div class="center"><input class="rowName" type="text" value="cC3"></div></td>
+								<td><div class="center"><span class="caption">foo</span></div></td>
 								<td><div class="center"><input class="addButton" type="button" value="add"></div></td>
 								<td><div class="center"><input class="hideButton" type="button" value="hide"></div></td>
 								<td><div class="center"><input class="removeButton" type="button" value="remove"></div></td>
@@ -270,6 +285,8 @@
 		</div>
 		<div style="height:800px"></div>
 		<hr>
-		<a href="../">back</a>
+		<div>
+			<a href="../">back</a>
+		</div>
 	</body>
 </html>
