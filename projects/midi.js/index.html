@@ -1,0 +1,784 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>midi.js</title>
+        <style type="text/css">
+            span.link {
+                color: #0000ff;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            .noselect {
+                user-select: none;
+            }
+
+            div.section {
+                margin-left: 40px;
+            }
+
+            table.playlist {
+                border-collapse:collapse;
+            }
+
+            table.playlist thead th
+            , table.playlist tbody td {
+                border-style: solid;
+                border-width: 1px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            table.playlist thead tr {
+                background-color: #333366;
+                color:white;
+            }
+            table.playlist tbody tr {
+                background-color: #FFFFFF;
+                color:black;
+            }
+            table.playlist thead th {
+                border-color: white;
+            }
+            table.playlist tbody td {
+                border-color: black;
+            }
+        </style>
+
+        <!-- (MIDI.js) polyfill -->
+        <script src="./inc/shim/Base64.js" type="text/javascript"></script>
+        <script src="./inc/shim/Base64binary.js" type="text/javascript"></script>
+        <script src="./inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+        <!-- (MIDI.js) midi.js package -->
+        <script src="./js/midi/audioDetect.js" type="text/javascript"></script>
+        <script src="./js/midi/gm.js" type="text/javascript"></script>
+        <script src="./js/midi/loader.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.audiotag.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.webaudio.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.webmidi.js" type="text/javascript"></script>
+        <!-- (MIDI.js) utils -->
+        <script src="./js/util/dom_request_xhr.js" type="text/javascript"></script>
+        <script src="./js/util/dom_request_script.js" type="text/javascript"></script>
+
+        <script type="text/javascript">
+            /** (prototype) MidiPlayer. */
+            function MidiPlayer () {
+                /**
+                 * init.
+                 */
+                MidiPlayer.prototype.init = function() {
+                    //const instrument = 'bright_acoustic_piano';
+                    const instruments = [
+                        'acoustic_guitar_nylon',
+                        'acoustic_guitar_steel',
+                        'synth_bass_1',
+                        'synth_bass_2',
+                        'violin',
+                        'viola',
+                    ];
+                    MIDI.loadPlugin({
+                        // https://gleitz.github.io/midi-js-soundfonts/
+                        soundfontUrl: 'https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/',
+                        instruments: instruments,
+                        onsuccess: function() {
+                            console.log(console.log('Tabla loaded as instrument [' + instruments + '].'));
+                            instruments.forEach(function(inst, i) {
+                                // set instrumental for channnel.
+                                MIDI.programChange(i, MIDI.GM.byName[inst].number);
+                                MIDI.setVolume(i, 127);
+                            });
+                        },
+                    });
+                };
+
+                /**
+                 * noteOn.
+                 * @param ch channel.
+                 * @param note note.
+                 * @param velocity velocity.
+                 */
+                MidiPlayer.prototype.noteOn = function(ch, note, velocity) {
+                    MIDI.noteOn(ch, note, velocity);
+                };
+            }
+
+            /** member. */
+            const midiPlayer = new MidiPlayer();
+
+            /** init. */
+            window.addEventListener('DOMContentLoaded', function() {
+                midiPlayer.init();
+            }, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <div class="caption">
+                <h1>MIDI.js Soundfonts</h1>
+            </div>
+            <div class="section">
+                <div class="contents">
+                    <table class="playlist">
+                        <thead>
+                            <tr>
+                                <th>ch</th>
+                                <th>instrument</th>
+                                <th>A0</th>
+                                <th>Bb0</th>
+                                <th>B0</th>
+                                <th>C1</th>
+                                <th>Db1</th>
+                                <th>D1</th>
+                                <th>Eb1</th>
+                                <th>E1</th>
+                                <th>F1</th>
+                                <th>Gb1</th>
+                                <th>G1</th>
+                                <th>Ab1</th>
+                                <th>A1</th>
+                                <th>Bb1</th>
+                                <th>B1</th>
+                                <th>C2</th>
+                                <th>Db2</th>
+                                <th>D2</th>
+                                <th>Eb2</th>
+                                <th>E2</th>
+                                <th>F2</th>
+                                <th>Gb2</th>
+                                <th>G2</th>
+                                <th>Ab2</th>
+                                <th>A2</th>
+                                <th>Bb2</th>
+                                <th>B2</th>
+                                <th>C3</th>
+                                <th>Db3</th>
+                                <th>D3</th>
+                                <th>Eb3</th>
+                                <th>E3</th>
+                                <th>F3</th>
+                                <th>Gb3</th>
+                                <th>G3</th>
+                                <th>Ab3</th>
+                                <th>A3</th>
+                                <th>Bb3</th>
+                                <th>B3</th>
+                                <th>C4</th>
+                                <th>Db4</th>
+                                <th>D4</th>
+                                <th>Eb4</th>
+                                <th>E4</th>
+                                <th>F4</th>
+                                <th>Gb4</th>
+                                <th>G4</th>
+                                <th>Ab4</th>
+                                <th>A4</th>
+                                <th>Bb4</th>
+                                <th>B4</th>
+                                <th>C5</th>
+                                <th>Db5</th>
+                                <th>D5</th>
+                                <th>Eb5</th>
+                                <th>E5</th>
+                                <th>F5</th>
+                                <th>Gb5</th>
+                                <th>G5</th>
+                                <th>Ab5</th>
+                                <th>A5</th>
+                                <th>Bb5</th>
+                                <th>B5</th>
+                                <th>C6</th>
+                                <th>Db6</th>
+                                <th>D6</th>
+                                <th>Eb6</th>
+                                <th>E6</th>
+                                <th>F6</th>
+                                <th>Gb6</th>
+                                <th>G6</th>
+                                <th>Ab6</th>
+                                <th>A6</th>
+                                <th>Bb6</th>
+                                <th>B6</th>
+                                <th>C7</th>
+                                <th>Db7</th>
+                                <th>D7</th>
+                                <th>Eb7</th>
+                                <th>E7</th>
+                                <th>F7</th>
+                                <th>Gb7</th>
+                                <th>G7</th>
+                                <th>Ab7</th>
+                                <th>A7</th>
+                                <th>Bb7</th>
+                                <th>B7</th>
+                                <th>C8</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0ch</td>
+                                <td>acoustic_guitar_nylon</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(0, 108, 127);">C8</span></td>
+                            </tr>
+                            <tr>
+                                <td>1ch</td>
+                                <td>acoustic_guitar_steel</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(1, 108, 127);">C8</span></td>
+                            </tr>
+                            <tr>
+                                <td>2ch</td>
+                                <td>synth_bass_1</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(2, 108, 127);">C8</span></td>
+                            </tr>
+                            <tr>
+                                <td>3ch</td>
+                                <td>synth_bass_2</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(3, 108, 127);">C8</span></td>
+                            </tr>
+                            <tr>
+                                <td>4ch</td>
+                                <td>violin</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(4, 108, 127);">C8</span></td>
+                            </tr>
+                            <tr>
+                                <td>5ch</td>
+                                <td>viola</td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  21, 127);">A0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  22, 127);">Bb0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  23, 127);">B0</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  24, 127);">C1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  25, 127);">Db1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  26, 127);">D1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  27, 127);">Eb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  28, 127);">E1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  29, 127);">F1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  30, 127);">Gb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  31, 127);">G1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  32, 127);">Ab1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  33, 127);">A1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  34, 127);">Bb1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  35, 127);">B1</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  36, 127);">C2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  37, 127);">Db2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  38, 127);">D2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  39, 127);">Eb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  40, 127);">E2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  41, 127);">F2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  42, 127);">Gb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  43, 127);">G2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  44, 127);">Ab2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  45, 127);">A2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  46, 127);">Bb2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  47, 127);">B2</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  48, 127);">C3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  49, 127);">Db3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  50, 127);">D3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  51, 127);">Eb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  52, 127);">E3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  53, 127);">F3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  54, 127);">Gb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  55, 127);">G3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  56, 127);">Ab3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  57, 127);">A3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  58, 127);">Bb3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  59, 127);">B3</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  60, 127);">C4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  61, 127);">Db4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  62, 127);">D4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  63, 127);">Eb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  64, 127);">E4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  65, 127);">F4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  66, 127);">Gb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  67, 127);">G4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  68, 127);">Ab4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  69, 127);">A4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  70, 127);">Bb4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  71, 127);">B4</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  72, 127);">C5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  73, 127);">Db5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  74, 127);">D5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  75, 127);">Eb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  76, 127);">E5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  77, 127);">F5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  78, 127);">Gb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  79, 127);">G5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  80, 127);">Ab5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  81, 127);">A5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  82, 127);">Bb5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  83, 127);">B5</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  84, 127);">C6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  85, 127);">Db6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  86, 127);">D6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  87, 127);">Eb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  88, 127);">E6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  89, 127);">F6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  90, 127);">Gb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  91, 127);">G6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  92, 127);">Ab6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  93, 127);">A6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  94, 127);">Bb6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  95, 127);">B6</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  96, 127);">C7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  97, 127);">Db7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  98, 127);">D7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5,  99, 127);">Eb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 100, 127);">E7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 101, 127);">F7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 102, 127);">Gb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 103, 127);">G7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 104, 127);">Ab7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 105, 127);">A7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 106, 127);">Bb7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 107, 127);">B7</span></td>
+                                <td><span class="link noselect" onclick="midiPlayer.noteOn(5, 108, 127);">C8</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div><span class="thanx">powerd by <a href="https://galactic.ink/midi-js/">Midi.js (official)</a></span></div>
+                    <div><span class="thanx">powerd by <a href="https://github.com/mudcube/MIDI.js">Midi.js (github)</a></span></div>
+                    <div><span class="thanx">powerd by <a href="https://ritz078.github.io/midi-js-soundfonts/">Midi.js Soundfonts (gh-pages)</a></span></div>
+                    <div><span class="thanx">powerd by <a href="https://github.com/gleitz/midi-js-soundfonts">Midi.js Soundfonts (github)</a></span></div>
+                    <div><span class="thanx">thanx! by <a href="https://qiita.com/Stosstruppe/items/3979bf85b8877265f69f">MIDI.js Soundfontsを鳴らしてみる #JavaScript - Qiita</a></span></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
