@@ -45,6 +45,12 @@
             table.playlist tbody td {
                 border-color: black;
             }
+
+            div.loading table.playlist tbody tr
+            , div.loading table.playlist tbody td {
+                background-color: #666666;
+            }
+
         </style>
 
         <!-- (MIDI.js) polyfill -->
@@ -63,6 +69,20 @@
         <script src="./js/util/dom_request_script.js" type="text/javascript"></script>
 
         <script type="text/javascript">
+            /** (prototype) SilentPlayer. */
+            function SilentPlayer () {
+                let audio = undefined;
+                SilentPlayer.prototype.init = function() {
+                    audio = document.querySelector('audio#silentPlayer');
+                };
+                SilentPlayer.prototype.play = function() {
+                    if(audio) {
+                        audio.currentTime = 0;
+                        audio.play();
+                    }
+                };
+            };
+
             /** (prototype) MidiPlayer. */
             function MidiPlayer () {
                 /**
@@ -90,6 +110,10 @@
                                 MIDI.programChange(i, MIDI.GM.byName[inst].number);
                                 MIDI.setVolume(i, 127);
                             });
+                            document.querySelectorAll('div.loading').forEach(function(elm) {
+                                elm.classList.remove('loading');
+                                elm.classList.add('loaded');
+                            });
                         },
                     });
                 };
@@ -101,16 +125,19 @@
                  * @param velocity velocity.
                  */
                 MidiPlayer.prototype.noteOn = function(ch, note, velocity) {
+                    silentPlayer.play();
                     MIDI.noteOn(ch, note, velocity);
                 };
-            }
+            };
 
             /** member. */
             const midiPlayer = new MidiPlayer();
+            const silentPlayer = new SilentPlayer();
 
             /** init. */
             window.addEventListener('DOMContentLoaded', function() {
                 midiPlayer.init();
+                silentPlayer.init();
             }, false);
         </script>
     </head>
@@ -120,7 +147,7 @@
                 <h1>MIDI.js Soundfonts</h1>
             </div>
             <div class="section">
-                <div class="contents">
+                <div class="contents loading">
                     <table class="playlist">
                         <thead>
                             <tr>
@@ -780,6 +807,9 @@
                     <div><span class="thanx">thanx! by <a href="https://qiita.com/Stosstruppe/items/3979bf85b8877265f69f">MIDI.js Soundfontsを鳴らしてみる #JavaScript - Qiita</a></span></div>
                 </div>
             </div>
+        </div>
+        <div style="display:none">
+            <audio id="silentPlayer" controls src="data:audio/mp3;base64,/+MYZAACwADSAAQAAAKoAawICAAABAEAQ/////////o5AHz4Pg+BAQBAECf//////////+CCBcQH//2dfs6/Z///10xBTUUz/+MYRBIBnALgaAAAAAAAA0gAAAAALjEwMC4xVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYZDgAAAGkAAAAAAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"></audio>
         </div>
     </body>
 </html>
