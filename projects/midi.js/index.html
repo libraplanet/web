@@ -82,6 +82,7 @@
                         // https://gleitz.github.io/midi-js-soundfonts/
                         soundfontUrl: 'https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/',
                         instruments: instruments,
+                        targetFormat: 'mp3',
                         onsuccess: function() {
                             console.log(console.log('Tabla loaded as instrument [' + instruments + '].'));
                             instruments.forEach(function(inst, i) {
