@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>watcher-in bookmarklet</title>
+        <style type="text/css">
+            div#root {
+            }
+            div#warp {
+                max-width:1000px;
+                margin-left:auto;
+                margin-right:auto;
+            }
+            div.section {
+                margin: 10px;
+                padding: 5px;
+            }
+            div.caption {
+                border-style: solid;
+                border-width: 0px 0px 1px 10px;
+                padding: 2px 10px 2px 10px;
+                border-color: #6666FF;
+                margin-bottom: 5px;
+            }
+            div.contents {
+                border-color: #6666FF;
+                margin-left: 1em;
+            }
+
+            #textareaScript {
+                width: 100%;
+                height: 15em;
+                margin: 0;
+                padding: 0;
+            }
+
+            #textareaBookmarklet {
+                width: 100%;
+                height: 10em;
+                margin: 0;
+                padding: 0;
+            }
+            #textareaBookmarklet[readonly] {
+                background-color: #F0F0F0;
+                color: #666666;
+            }
+
+        </style>
+        <script type="text/javascript">
+            <!--
+            window.addEventListener('DOMContentLoaded', function(event) {
+                document.querySelectorAll('div.section').forEach(function(section) {
+                    const updateBookmaerklet = function(script) {
+                        const line = [...script.split(/\n/)].filter(Boolean).reduce((str, val) => str + val.trim(), '');
+                        const bookmarklet = `javascript:(function(){${line}})();`;
+                        section.querySelectorAll('#textareaBookmarklet').forEach(function(textarea) {
+                            textarea.value = bookmarklet;
+                        });
+                        section.querySelectorAll('a.exec').forEach(function(a) {
+                            a.href = bookmarklet;
+                        });
+                    };
+
+                    section.querySelectorAll('#textareaScript').forEach(function(textarea) {
+                        textarea.addEventListener('change', function(event) {
+                            updateBookmaerklet(event.target.value);
+                        });
+                        updateBookmaerklet(textarea.value);
+                    });
+
+                    section.querySelectorAll('input.button.exec').forEach(function(button) {
+                        button.addEventListener('click', function(event) {
+                            const script = section.querySelector('#textareaScript')?.value;
+                            if(script) {
+                                eval(script);
+                            }
+                        });
+                    });
+
+                    section.querySelectorAll('input.button.clear').forEach(function(button) {
+                        button.addEventListener('click', function(event) {
+                            section.querySelectorAll('span#watchers_inputs').forEach(function(span) {
+                                [...span.childNodes].forEach(function(node) {
+                                    node.remove();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+            -->
+        </script>
+    </head>
+    <body>
+        <div id="root">
+            <div id="warp">
+                <div class="section">
+                    <h1>watcher-in bookmarklet</h1>
+                </div>
+                <div class="section">
+                    <div class="caption">
+                        <span>script</span>
+                    </div>
+                    <div class="contents">
+                        <div class="content">
+<textarea id="textareaScript">
+document.querySelectorAll('#watchers_inputs').forEach(function(span) {
+    [ ['xa', '😊', true], ['xb', '😄', true], ['xc', '🤓', true],['xd', '🙃', true]
+    , ['xe', '👨', true], ['xf', '👧', true], ['xg', '🙄', true], ['xh', '🤗', true]
+    , ['xi', '😇', true], ['xj', '🙃', true], ['xk', '👲', true]
+    , ['xl', '🧐', false], ['xm', '😬', false], ['xn', '🤔', false]].reduce((a, o) => [...a, {id: o[0], name: o[1], execCheck: o[2]}], []).forEach(function(idSet) {
+        const labelId = `issue_watcher_user_ids_${idSet.id}`;
+        if(![...document.querySelectorAll(`#${labelId}`)].reduce(function(ret, label) {
+            if(idSet.execCheck) {
+                label.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+                    input.checked = true;
+                });
+            }
+            return true;
+        }, false)) {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            label.id = labelId;
+            label.classList.add('floating');
+            checkbox.setAttribute('type', 'checkbox');
+            checkbox.setAttribute('name', 'issue[watcher_user_ids][]');
+            checkbox.setAttribute('value', idSet.id);
+            checkbox.checked = idSet.execCheck;
+            label.append(checkbox);
+            label.append(idSet.name);
+            span.append(label);
+        };
+    });
+});
+</textarea>
+                        </div>
+                        <div class="content">
+                            <textarea id="textareaBookmarklet" readonly></textarea>
+                        </div>
+                        <div class="content">
+                            <input class="button exec" type="submit" value="run script (plane)"/>
+                        </div>
+                        <div class="content">
+                            <span><span>URL for bookmarklet (javascript) : </span><span><a class="exec" href="javascript:">watcher-in</a></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section" style="min-height:20em;">
+                    <div class="caption">
+                        <span>watcher</span>
+                        <input class="button clear" type="submit" value="clear"/>
+                    </div>
+                    <div class="contents">
+                        <div class="content">
+                            <span id="watchers_inputs">
+                                <label id="issue_watcher_user_ids_abc" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="abc">abc</label>
+                                <label id="issue_watcher_user_ids_def" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="def">def</label>
+                                <label id="issue_watcher_user_ids_ghi" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="ghi">ghi</label>
+                                <label id="issue_watcher_user_ids_jkl" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="jkl">jkl</label>
+                                <label id="issue_watcher_user_ids_mno" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="mno">mno</label>
+                                <label id="issue_watcher_user_ids_pqr" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="pqr">pqr</label>
+                                <label id="issue_watcher_user_ids_stu" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="stu">stu</label>
+                                <label id="issue_watcher_user_ids_vwx" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="vwx">vwx</label>
+                                <label id="issue_watcher_user_ids_yza" class="floating"><input type="checkbox" name="issue[watcher_user_ids][]" value="yza">yza</label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
