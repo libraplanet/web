@@ -106,10 +106,10 @@
                         <div class="content">
 <textarea id="textareaScript">
 document.querySelectorAll('#watchers_inputs').forEach(function(span) {
-    [ ['xa', 'zonoh', true], ['xb', 'kinkin', true], ['xc', 'kenken', true],['xd', 'rinrin', true]
-    , ['xe', 'youki', true], ['xf', 'umio', true], ['xg', 'mush', true], ['xh', 'jumper', true]
-    , ['xi', 'noize', true], ['xj', '@laooh', true], ['xk', 'tikitiki', true]
-    , ['xl', 'tomio', false], ['xm', 'hiroshi', false], ['xn', 'mountain', false]].reduce((a, o) => [...a, {id: o[0], name: o[1], execCheck: o[2]}], []).forEach(function(idSet) {
+    [ ['xa', 'zonoh😊', true], ['xb', 'kinkin💰', true], ['xc', 'kenken😎', true],['xd', 'rinrin🔔', true]
+    , ['xe', 'youki⛄️', true], ['xf', 'umio🏄️', true], ['xg', 'mush🤗', true], ['xh', 'jumper🙄', true]
+    , ['xi', 'noize🙃', true], ['xj', 'javelin😝', true], ['xk', 'tikitiki🧐', true]
+    , ['xl', 'tomio🤭', false], ['xm', 'hiroshi😇', false], ['xn', 'mountain🤔', false]].reduce((a, o) => [...a, {id: o[0], name: o[1], execCheck: o[2]}], []).forEach(function(idSet) {
         const labelId = `issue_watcher_user_ids_${idSet.id}`;
         if(![...document.querySelectorAll(`#${labelId}`)].reduce(function(ret, label) {
             if(idSet.execCheck) {
