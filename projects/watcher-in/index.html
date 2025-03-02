@@ -35,38 +35,90 @@
                 padding: 0;
             }
 
-            #textareaBookmarklet {
+            #textareaBookmarkletPlane
+            , #textareaBookmarkletEscaped {
                 width: 100%;
                 height: 10em;
                 margin: 0;
                 padding: 0;
             }
-            #textareaBookmarklet[readonly] {
+            #textareaBookmarkletPlane[readonly] 
+            , #textareaBookmarkletEscaped[readonly] {
                 background-color: #F0F0F0;
                 color: #666666;
             }
-
         </style>
+        <script type="text/javascript" id="script">
+            document.querySelectorAll('#watchers_inputs').forEach(function(span) {
+                [ ['xa', 'zonoh😊', true], ['xb', 'kinkin💰', true], ['xc', 'kenken😎', true],['xd', 'rinrin🔔', true]
+                , ['xe', 'youki⛄️', true], ['xf', 'umio🏄️', true], ['xg', 'mush🤗', true], ['xh', 'jumper🙄', true]
+                , ['xi', 'noize🙃', true], ['xj', 'javelin😝', true], ['xk', 'tikitiki🧐', true]
+                , ['xl', 'tomio🤭', false], ['xm', 'hiroshi😇', false], ['xn', 'mountain🤔', false]].reduce((a, o) => [...a, {id: o[0], name: o[1], execCheck: o[2]}], []).forEach(function(idSet) {
+                    const labelId = `issue_watcher_user_ids_${idSet.id}`;
+                    if(![...document.querySelectorAll(`#${labelId}`)].map(function(label) {
+                        if(idSet.execCheck) {
+                            label.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+                                input.checked = true;
+                            });
+                        }
+                    }).length) {
+                        const label = document.createElement('label');
+                        const checkbox = document.createElement('input');
+                        label.id = labelId;
+                        label.classList.add('floating');
+                        checkbox.setAttribute('type', 'checkbox');
+                        checkbox.setAttribute('name', 'issue[watcher_user_ids][]');
+                        checkbox.setAttribute('value', idSet.id);
+                        checkbox.checked = idSet.execCheck;
+                        label.append(checkbox);
+                        label.append(idSet.name);
+                        span.append(label);
+                    };
+                });
+            });
+        </script>
         <script type="text/javascript">
             <!--
             window.addEventListener('DOMContentLoaded', function(event) {
                 document.querySelectorAll('div.section').forEach(function(section) {
                     const updateBookmaerklet = function(script) {
-                        const line = [...script.split(/\n/)].filter(Boolean).reduce((str, val) => str + val.trim(), '');
-                        const bookmarklet = `javascript:(function(){${line}})();`;
-                        section.querySelectorAll('#textareaBookmarklet').forEach(function(textarea) {
-                            textarea.value = bookmarklet;
+                        const scriptPlane = [...script.split(/\n/)].map((str) => (str || '').split('//')[0].trim()).filter(Boolean).join('');
+                        const scriptEscaped = encodeURI(scriptPlane);
+                        const bookmarkletPlane = `javascript:(function(){${scriptPlane}})();`;
+                        const bookmarkletEscaped = `javascript:(function(){${scriptEscaped}})();`;
+                        section.querySelectorAll('#textareaBookmarkletPlane').forEach(function(textarea) {
+                            textarea.value = bookmarkletPlane;
                         });
-                        section.querySelectorAll('a.exec').forEach(function(a) {
-                            a.href = bookmarklet;
+                        section.querySelectorAll('#textareaBookmarkletEscaped').forEach(function(textarea) {
+                            textarea.value = bookmarkletEscaped;
+                        });
+                        section.querySelectorAll('a.exec.plane').forEach(function(a) {
+                            a.href = bookmarkletPlane;
+                        });
+                        section.querySelectorAll('a.exec.escaped').forEach(function(a) {
+                            a.href = bookmarkletEscaped;
                         });
                     };
 
                     section.querySelectorAll('#textareaScript').forEach(function(textarea) {
+                        const script = (function() {
+                            let str = (document.querySelector('#script')?.text) || '';
+                            str = (function() {
+                                return str.replace(/^\n+/, '').replace(/\n+$/, '');
+                            })();
+                            str = (function() {
+                                const lines = str.split(/\n/);
+                                const maxLength = lines.reduce((n, s) => Math.max(s.length, n), 0);
+                                const indent = lines.map((s) => s.replace(/\s+$/, '')).filter(Boolean).reduce((n, s) => Math.min(s.length - s.replace(/^\s+/, '').length, n), maxLength);
+                                return lines.map((s) => s.substr(Math.min(indent, s.length))).join('\n');
+                            })();
+                            return str;
+                        })();
+                        textarea.value = script
+                        updateBookmaerklet(script);
                         textarea.addEventListener('change', function(event) {
                             updateBookmaerklet(event.target.value);
                         });
-                        updateBookmaerklet(textarea.value);
                     });
 
                     section.querySelectorAll('input.button.exec').forEach(function(button) {
@@ -96,7 +148,7 @@
         <div id="root">
             <div id="warp">
                 <div class="section">
-                    <h1>watcher-in bookmarklet</h1>
+                    <h1>redmine watcher bookmarklet</h1>
                 </div>
                 <div class="section">
                     <div class="caption">
@@ -104,45 +156,16 @@
                     </div>
                     <div class="contents">
                         <div class="content">
-<textarea id="textareaScript">
-document.querySelectorAll('#watchers_inputs').forEach(function(span) {
-    [ ['xa', 'zonoh😊', true], ['xb', 'kinkin💰', true], ['xc', 'kenken😎', true],['xd', 'rinrin🔔', true]
-    , ['xe', 'youki⛄️', true], ['xf', 'umio🏄️', true], ['xg', 'mush🤗', true], ['xh', 'jumper🙄', true]
-    , ['xi', 'noize🙃', true], ['xj', 'javelin😝', true], ['xk', 'tikitiki🧐', true]
-    , ['xl', 'tomio🤭', false], ['xm', 'hiroshi😇', false], ['xn', 'mountain🤔', false]].reduce((a, o) => [...a, {id: o[0], name: o[1], execCheck: o[2]}], []).forEach(function(idSet) {
-        const labelId = `issue_watcher_user_ids_${idSet.id}`;
-        if(![...document.querySelectorAll(`#${labelId}`)].reduce(function(ret, label) {
-            if(idSet.execCheck) {
-                label.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
-                    input.checked = true;
-                });
-            }
-            return true;
-        }, false)) {
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            label.id = labelId;
-            label.classList.add('floating');
-            checkbox.setAttribute('type', 'checkbox');
-            checkbox.setAttribute('name', 'issue[watcher_user_ids][]');
-            checkbox.setAttribute('value', idSet.id);
-            checkbox.checked = idSet.execCheck;
-            label.append(checkbox);
-            label.append(idSet.name);
-            span.append(label);
-        };
-    });
-});
-</textarea>
+                            <div><input class="button exec" type="submit" value="run script (source)"/></div>
+                            <div><textarea id="textareaScript"></textarea></div>
                         </div>
                         <div class="content">
-                            <textarea id="textareaBookmarklet" readonly></textarea>
+                            <div><span><span>URL for bookmarklet (javascript) : </span><span><a class="exec plane" href="javascript:">redmine watcher</a></span></span></div>
+                            <div><textarea id="textareaBookmarkletPlane" readonly></textarea></div>
                         </div>
                         <div class="content">
-                            <input class="button exec" type="submit" value="run script (plane)"/>
-                        </div>
-                        <div class="content">
-                            <span><span>URL for bookmarklet (javascript) : </span><span><a class="exec" href="javascript:">watcher-in</a></span></span>
+                            <div><span><span>Escaped URL for bookmarklet (javascript) : </span><span><a class="exec escaped" href="javascript:">redmine watcher</a></span></span></div>
+                            <div><textarea id="textareaBookmarkletEscaped" readonly></textarea></div>
                         </div>
                     </div>
                 </div>
