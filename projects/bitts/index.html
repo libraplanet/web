@@ -4,11 +4,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
 		<title>bits</title>
+		<link rel="manifest" href="manifest.json">
+		<link rel="icon" href="icon-192x192.png">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=M+PLUS+1p&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 		<style type="text/css">
 		<!--
+			/** .disable to pull to refresh. */
+			html, body {
+				overscroll-behavior: none;
+			}
 			body {
 				font-family: 'M PLUS 1p', 'Noto Sans JP', 'Noto Sans', system-ui, sans-serif, "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic";
 				background-color:#666666;
@@ -195,7 +201,6 @@
 			}
 		-->
 		</style>
-
 		<script type="text/javascript">
 			/*member*/
 			const self = this;
@@ -355,9 +360,20 @@
 				});
 			}
 
+
 			/**
 			 * onload
 			 */
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('serviceWorker.js').then(registration => {
+					console.log('Service Worker registered with scope:', registration.scope);
+				}).catch(error => {
+					console.error('Service Worker registration failed:', error);
+				});
+			} else {
+				console.error('no Service Worker in navigator.');
+			}
+
 			addEventListener("load", function(event) {
 				self.updateText(rootValue);
 			});
