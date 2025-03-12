@@ -4,13 +4,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
 		<title>bits</title>
-		<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=M+PLUS+1p&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 		<style type="text/css">
 		<!--
-			@import url(//fonts.googleapis.com/earlyaccess/notosansjp.css);
-			@import url(//fonts.googleapis.com/css?family=Inconsolata|Noto+Sans);
 			body {
-				font-family: 'Noto Sans JP', 'Noto Sans', sans-serif, "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic";
+				font-family: 'M PLUS 1p', 'Noto Sans JP', 'Noto Sans', system-ui, sans-serif, "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic";
 				background-color:#666666;
 				color:#FFFFFF;
 			}
@@ -18,8 +18,48 @@
 				/*margin: 0px;*/
 				height: 100%;
 			}
+			.monospace {
+				font-family: 'Inconsolata', monospace;
+			}
+			.nobreak {
+				word-break: keep-all;
+			}
+			.noselect {
+				user-select: none;
+			}
+			.selectable-all {
+				user-select: all;
+			}
+			.pointer {
+				cursor: pointer;
+			}
+			.flex {
+				display: -webkit-flex;
+				display: -moz-flex;
+				display: -ms-flex;
+				display: -o-flex;
+				display: flex;
+				justify-content: center;
+			}
+
 			div.title {
 				text-align:center;
+			}
+			div.title .flex{
+				align-items: center;
+			}
+			div.title .img {
+				text-align:center;
+				width:16px;
+				height:32px;
+				background-size:100%;
+				margin:0px;
+				padding:0px;
+				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
+				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
+				image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
+				image-rendering: -o-crisp-edges;            /* Opera 12.x */
+				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 			}
 			span.title {
 				font-size:2em;
@@ -28,8 +68,6 @@
 				border-collapse:collapse;
 				border:solid 2px #000000;
 			}
-			
-			
 			thead {
 				border:solid 2px #000000;
 				background-color:#444488;
@@ -62,6 +100,10 @@
 				/*font-size:0.75em;*/
 				/*font-weight:0.75em;*/
 			}
+			span.view_value {
+				font-size:1.2em;
+				/*font-weight:0.75em;*/
+			}
 			td.caption, td.value {
 			}
 			td.value {
@@ -73,11 +115,10 @@
 			td.bitcell > div {
 				width:100%;
 				height:auto;
-				background-color: #F0F0F0;
 			}
 			td.bitcell > div > div.img{
-				height:56px;
 				width:28px;
+				height:56px;
 				background-size:100%;
 				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
 				image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
@@ -86,33 +127,60 @@
 				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 				margin:auto;
 			}
+			td.bitcell > div.false {
+				background-color:#F0F0F0;
+				filter: grayscale(1);
+			}
 			td.bitcell > div.true {
 				background-color:#D0FFFF;
 			}
-			td.bitcell.left > div > div.img{
-				background-image: url("./mario_l0.png")
+
+			.img.mario.type0.left
+			, td.bitcell.left > div > div.img {
+				/*background-image: url("./mario_l0.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABJklEQVRIie1UMQ7CMAx0qqy8ATEgOmfhA0jMPIMyF4kXdOiAxNBOPASJD7Bk7oYqntAHhCE4bV2bwsbATa3ju9rX2AB//PELUKfFsReYTgpHk+omUZJARANmO0yaTgrHCbMCkohUnaYHtuTJEjRA2+Nm3wpl9g4HMwvPiPjKCHSJlIAIYpC6+JoHU9XjPB+QMVl695V4EXVaHKFapazDXaIkoDniO/L65uP1K6alZIl8WaI/3gvNHXI9S2BbGCMhqlXqoq6B2N83CFcZy5dEJJ9UstO9XzhWRWsiqUBKGDvrmRjKNMOhMlsAA8PZiLDkT+4C/dD6NvMtUDI30jSGHF03iYKycLhEMnuHuMnZFXaxqUOiLf0aCDuRDlR3ZN+da2kSx4C8J2mrjrMmhr4LAAAAAElFTkSuQmCC");
 			}
-			td.bitcell.right > div > div.img{
-				background-image: url("./mario_r0.png")
+			.img.mario.type0.right
+			, td.bitcell.right > div > div.img {
+				/*background-image: url("./mario_r0.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABOklEQVRIie1UO46DMBB9jmj3DCuqULvJBZCoc4zQEyknQEqKlbaAY6RG4gI0rukQZ+AA3gKN8Wccdrst8ip/Zt68N4wB3njjP0B8H7+il58fjfbP5qUU9j75bSIAyAsw392zw1+SObAKOKg2LDAvpQgIutNk1jeZAgBqNZk1ADzvWx8cC2Ne6ZtMnWBCrTbi87XR5+uqxHyFMa+0XZWr7O+BnR7YFjglWf8QxkIxpCiG1AnwiTgkJH+0iGqEUjmSZ//CAinxe0BFutOEDEBCzdsjiiGYxD0Uw6ZozCvNEsSaRsn2sLE9UC1QgCexkwHGgh+wd+coMNLl9ngI8gJIhIN1IF+vhsUHxRZDulrwk/3q3BnlJPNSCrSNph9GrSZky0OAQafW10qE81KK4DUSst4lid3vTmIMlPcDb/2Li9R6/54AAAAASUVORK5CYII=");
 			}
-			td.bitcell.left > div.true > div.img{
-				background-image: url("./mario_l1.png")
+			.img.mario.type1.left
+			, td.bitcell.left > div.true > div.img {
+				/*background-image: url("./mario_l1.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABZ0lEQVRIiZWVMY6DMBBFx5bbPcOKYhVqmr1AJOocI2xNpJwAKSkipUiqPUPqSFyAhjodivYIewC2YMeMxx7j/IoQ/zff4wHUeXWCze4ywr9uh0rBC9JobvoBAMCBpchQM+r9zYc8f8PJ1M/3h7e4v8oVOUhVX8YDlF0mExjEpJokWcD9c+rDvphBTT/Y37RPeRsAUKMkC4N6zNujAgDQMXOoOpcO3YwZuNR5dYLHuhaHJ5QOC+TtUenYQn6v6QcvnaF/pjQSK3sAGq3sMnusdD5KyLxJNEgM9QHNCJs0r3N6QE3U4JpdPdb1aAF0Xzx6TE4CXj2kfZE5zXYAxdavTq+pEa8dQH+dDQjjEJ4mOMoIo5IgOjbGMSi+fDUARJ8FCbLZXcbboVLeKy3l+Og0ij2QxI/ZCOtEY9llcCdbXgSEHqqkBLjPsot/qQx/Bp5LkZgWmyh90myClCockrfz7Lx8jDNk2vofBQGheSVz3Y4AAAAASUVORK5CYII=");
 			}
-			td.bitcell.right > div.true > div.img{
-				background-image: url("./mario_r1.png")
+			.img.mario.type1.right
+			, td.bitcell.right > div.true > div.img {
+				/*background-image: url("./mario_r1.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABXElEQVRIiZ1UO26EMBAdW9vuGVau4pomF0CizjFCTyROgARFpBSbY1BH8gXcuKZDe4YcgBS7A+PPsCavMmO/98aeYcTXyyccwdvHdcH12NdC/ofcuXn9PnGHL+fNKYXOzdAWCiKBZ0QAgLZQ69oTyHENwV4hhcpuzj+vcyyAQZom3pXLYq3CVDZLWyjvcArhGbaM6MQJYjy7D1IPCPB4g6lsvNfn7hyKaDP4ndi5OTqUukLUB9oMIpUJJ0JNvDJqM4jL+bo4u8WwtJVVXpk9Aeo8kc3KKpaIWUsubeqOa9qJiKwyhkR09wRyujCVhUQyFUo547p490Ul50rJSKqsAvcdCDwjA0BEigTGvhY5h0NMZbPIsa8FDsujZAAAQcd6zjwMm0rubebgRDuRtm2q65ICYQCJuULsVEbi7fdeIe59ssc6Cmnjx3d/JiTtYc1Am0HcctMJM6C/51H8AQQPn6EkEK72AAAAAElFTkSuQmCC");
 			}
+			.img.mario.type2.left {
+				/*background-image: url("./mario_l2.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABR0lEQVRIiaVVMW7DMAw8CVnzhsBDEc9Z8oEAnvuMeHeBviBAPBTokE59Q+YC/oCXzNmKoE/IA5ShoCpRpKK4NxkU70hR0tm8L9/AsZgfHI9drq1JEgFYKbjaprHF/OAkYVFAE5G6m0kLpw9NNoUXoD0+v/wJ7U7feF1V/ptQD4JASOQEghdD5+qhN16Ak8NkTYwgDjFHIJw3nQMAQ/eAArlOeIF66I16jPfIBD/EeuiNNAutciIAAMf971GeN52TqnNyIkDkZqywQ9xqM1bAOhWMZqANMpdjtYVSEfsomYskx9iM8vC0NTulethFcgolnUQdSEHJTDSDMT+fT9EW7pkJF8q+hRJYur5TcNy38Wss8UKe4/1AsuwcyENtjny5tkb7oRBHHWJI1ESyAqWYUQV+pUPvB4CvdewPZCz/72DqY1Kf86O4AfFikGCGS9GBAAAAAElFTkSuQmCC");
+			}
+			.img.mario.type2.right {
+				/*background-image: url("./mario_r2.png");*/
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABSklEQVRIiZ1VMW7DMAw8CVn7hsJDEc9e+oEAmfOMek+AvMCAMxTokEx9Q+YA/kAWzd0Mo0/IA5xJCimRjuKbBJk8HimSNj/Lb0h4fzuO8d1wq018t8hxBIDqCxja9N7mOmtIFEhwpzSAT4cRXD77cN5XBQCgcX04A8C55XUIKfyttuO+KpixR+MexJvdcdzsHkpsYh05aaSexProGpGkgkIsIo1IHem57A4mKJiKIsmnMLQTfSrPnOhLsBTK7mC0ejSuD7IpxBq4E+8JAFhfC1xW2zEmYTXIeY3Yxmofckmy+0AjSTpxfdVfQPpm50SnKtRxnlLCFEiX0gLRlor5//1gKfjloSEmUsc5FzbeMK/g3NaGKXgmX7IJ06htZA1+qdop5+FWG+lnQn3UIlJHjWSSIBcLHyFu6bLjhvF+EHfiLAVzh0kd51dxBxLIkgtcwWviAAAAAElFTkSuQmCC");
+			}
+
+			td.bitcell > div.bitpos:hover {
+				background-color:#FFD0D0;
+			}
+
 			table#TABLE_VIEW
 			, table#TABLE_BIT_EDIT
 			, input#TEXTBOX_INPUT {
 				width:100%;
 			}
 			div.sample {
-				text-align:center;
+				justify-content: center;
 				background-color:#FFFFFF;
 			}
-			div.sample img {
-				height:128px;
+			div.sample div.img {
 				width:64px;
+				height:128px;
+				background-size:100%;
 				margin:0px;
 				padding:4px;
 				-ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
@@ -121,51 +189,23 @@
 				image-rendering: -o-crisp-edges;            /* Opera 12.x */
 				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 			}
+			div.sample div.img:hover {
+				background-color:#FFD0D0;
+			}
 		-->
 		</style>
 
 		<script type="text/javascript">
 			/*member*/
-			var self = this;
+			const self = this;
 
 			/* values. */
-			var rootValue = 0;
-
-
-
-			self.getNumberOnlyString = function (str){
-				var ret = "";
-				for(var c of str) {
-					if((c >= '0') && (c <= '9')) {
-						ret += c;
-					}
-				}
-				return ret;
-			}
-
-			self.getBitValueString = function (val, bitLength) {
-				var ret = '';
-				var n = val;
-				for(var i = 0; i < bitLength; i++) {
-					var s = '' + (n % 2);
-					ret = s + ret;
-					n = Math.floor(n /2);
-				}
-				return ret;
-			}
-
-			self.getReverseString = function (str) {
-				var ret = [];
-				for(var c of str) {
-					ret.unshift(c);
-				}
-				return ret.join('');
-			}
+			let rootValue = 0;
 
 			self.getAddedDelimiterString = function (str, count,delim) {
-				var ret = '';
-				var i = 0;
-				for(var c of str) {
+				let ret = '';
+				let i = 0;
+				for(let c of str) {
 					if(((i % count) == 0) && (i != 0)) {
 						ret += delim;
 					}
@@ -176,110 +216,111 @@
 			}
 
 			self.updateText = function (curValue){
-				var $elmViewValueBin = $('#VIEW_VALUE_BIN');
-				var $elmViewValueDec = $('#VIEW_VALUE_DEC');
-				var $elmViewValueHex = $('#VIEW_VALUE_HEX');
-				var valueU32 = (curValue >>> 0);
+				let elmViewValueBin = document.querySelector('#VIEW_VALUE_BIN');
+				let elmViewValueDec = document.querySelector('#VIEW_VALUE_DEC');
+				let elmViewValueHex = document.querySelector('#VIEW_VALUE_HEX');
+				let valueU32 = (curValue >>> 0);
 				/** bin. */
 				(function(){
-					var str = valueU32.toString(2);
+					let str = valueU32.toString(2);
 					str += '00000000000000000000000000000000' + str;
 					str = str.slice(-32);
-					//str = getReverseString(str);
 					str = getAddedDelimiterString(str, 8, '-');
-					//str = getReverseString(str);
-					$elmViewValueBin.text(str);
+					elmViewValueBin.textContent = str;
 				})();
 
 				/** dec. */
 				(function(){
-					var str = valueU32.toString(10);
+					let str = valueU32.toString(10);
 					//str += '00000000000000000000000000000000' + str;
 					//str = str.slice(-32);
-					str = getReverseString(str);
 					str = getAddedDelimiterString(str, 3, ',');
-					str = getReverseString(str);
-					$elmViewValueDec.text(str);
+					elmViewValueDec.textContent = str;
 				})();
 
 				/** hex. */
 				(function(){
-					var str = valueU32.toString(16);
+					let str = valueU32.toString(16);
 					str = str.toUpperCase();
 					str = '00000000' + str;
 					str = str.slice(-8);
 					str = '0x' + str;
-					$elmViewValueHex.text(str);
+					elmViewValueHex.textContent = str;
 				})();
 			}
 			self.updateStyle = function (curValue){
-				$bitcell = $('.bitcell');
-				for(var i = 0; i < 32; i++) {
-					var $classes;
-					var className = 'bitpos_0x'
-					var flg = ((curValue & (1 << i)) != 0);
-					var str = i.toString(16);
-					str = str.toLowerCase();
-					str = '00000000' + str;
-					str = str.slice(-8);
-					className += str;
-					$classes = $bitcell.find('div.' + className);
-					$classes.each(function() {
-						var index = i;
-						var $e = $(this);
-						if(flg) {
-							$e.addClass('true');
-						} else {
-							$e.removeClass('true');
-						}
+				const bitcells = document.querySelectorAll('.bitcell');
+				for(let i = 0; i < 32; i++) {
+					const flg = ((curValue & (1 << i)) != 0);
+					const str = ('00000000' + i.toString(16).toLowerCase()).slice(-8);
+					const className = 'bitpos_0x' + str;
+					bitcells.forEach(function(bitcell) {
+						bitcell.querySelectorAll('div.' + className).forEach(function(div) {
+							div.classList.remove('true', 'false');
+							if(flg) {
+								div.classList.add('true');
+							} else {
+								div.classList.add('false');
+							}
+						});
 					});
 				}
 			}
 
-			function chengeBit (bitPos) {
-				var b = (1 << bitPos);
-				var n = rootValue ^ b;
+			function clearValues() {
+				rootValue = 0;
+				updateText(0);
+				updateStyle(0);
+				document.querySelectorAll('#TEXTBOX_INPUT').forEach(function(input) {
+					input.value=""
+				});
+			}
+
+
+			function chengeBit(bitPos) {
+				const b = (1 << bitPos);
+				const n = rootValue ^ b;
 				rootValue = n;
 				updateText(n);
 				updateStyle(n);
 			}
 
 			function changeInput() {
-				var $textbox = $('#TEXTBOX_INPUT');
-				var $radioInputFormatBinVal = $('input#RADIO_INPUT_FORMAT_BIN:checked');
-				var $radioInputFormatDecVal = $('input#RADIO_INPUT_FORMAT_DEC:checked');
-				var $radioInputFormatHexVal = $('input#RADIO_INPUT_FORMAT_HEX:checked');
-				var charList;
-				var str0 = $textbox.val();
-				var str1;
-				var strCleand = '';
-				var num;
+				let elmTextbox = document.querySelector('#TEXTBOX_INPUT');
+				let elmRadioInputFormatBinVal = document.querySelector('input#RADIO_INPUT_FORMAT_BIN:checked');
+				let elmRadioInputFormatDecVal = document.querySelector('input#RADIO_INPUT_FORMAT_DEC:checked');
+				let elmRadioInputFormatHexVal = document.querySelector('input#RADIO_INPUT_FORMAT_HEX:checked');
+				let charList;
+				let str0 = (elmTextbox?.value || '');
+				let str1;
+				let strCleand = '';
+				let num;
 
-				if($radioInputFormatBinVal.val()) {
+				if(elmRadioInputFormatBinVal?.value) {
 					charList = ['0', '1'];
-				} else if($radioInputFormatDecVal.val()) {
+				} else if(elmRadioInputFormatDecVal?.value) {
 					charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-				} else if($radioInputFormatHexVal.val()) {
+				} else if(elmRadioInputFormatHexVal?.value) {
 					charList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 				} else {
 					charList = [];
 				}
 
 				str1 = str0.toUpperCase();
-				for(var c of str1) {
+				for(let c of str1) {
 					if(charList.indexOf(c) >= 0) {
 						strCleand += c;
 					}
 				}
 
 
-				if($radioInputFormatBinVal.val()) {
+				if(elmRadioInputFormatBinVal?.value) {
 					strCleand = strCleand.slice(-32);
 					num = parseInt(strCleand, 2);
-				} else if($radioInputFormatDecVal.val()) {
+				} else if(elmRadioInputFormatDecVal?.value) {
 					strCleand = strCleand.slice(-10);
 					num = parseInt(strCleand, 10);
-				} else if($radioInputFormatHexVal.val()) {
+				} else if(elmRadioInputFormatHexVal?.value) {
 					strCleand = strCleand.slice(-8);
 					num = parseInt(strCleand, 16);
 				} else {
@@ -293,55 +334,58 @@
 			}
 
 			function chengeTrigImage() {
-				$bitcellsL = $('.bitcell.left');
-				$bitcellsR = $('.bitcell.right');
-				$bitcellsL.removeClass('left');
-				$bitcellsL.addClass('right');
-				$bitcellsR.removeClass('right');
-				$bitcellsR.addClass('left');
+				const bitcellsL = document.querySelectorAll('.bitcell.left');
+				const bitcellsR = document.querySelectorAll('.bitcell.right');
+				bitcellsL.forEach(function(cell) {
+					cell.classList.remove('left');
+					cell.classList.add('right');
+				});
+				bitcellsR.forEach(function(cell) {
+					cell.classList.remove('right');
+					cell.classList.add('left');
+				});
 			}
 
 			function chengeImage(type) {
-				$bitcells = $('.bitcell');
-				$bitcells.removeClass('left');
-				$bitcells.removeClass('right');
-				$bitcells.addClass(type);
+				document.querySelectorAll('.bitcell').forEach(function(cell) {
+					cell.classList.remove('left');
+					cell.classList.remove('right');
+					cell.classList.add(type);
+				});
 			}
 
 			/**
 			 * onload
 			 */
-			window.onload = function() {
+			addEventListener("load", function(event) {
 				self.updateText(rootValue);
-			}
+			});
 		</script>
 	</head>
 	<body>
 		<div>
 			<!-- title. -->
-			<div class="title">
-				<span>
-					<img alt="" src="mario_l0.png">
-					<img alt="" src="mario_r1.png">
-					<img alt="" src="mario_l0.png">
-					<img alt="" src="mario_l1.png">
-					<img alt="" src="mario_r2.png">
-				</span>
-				<span class="title">bitts</span>
-				<span>
-					<img alt="" src="mario_r1.png">
-					<img alt="" src="mario_r0.png">
-					<img alt="" src="mario_l2.png">
-					<img alt="" src="mario_r1.png">
-					<img alt="" src="mario_l0.png">
-
-				</span>
+			<div class="title noselect">
+				<div class="flex">
+					<div class="img mario type0 left"></div>
+					<div class="img mario type1 right"></div>
+					<div class="img mario type0 left"></div>
+					<div class="img mario type1 left"></div>
+					<div class="img mario type2 right"></div>
+					<div><span class="title">bitts</span></div>
+					<div class="img mario type1 right"></div>
+					<div class="img mario type0 right"></div>
+					<div class="img mario type2 left"></div>
+					<div class="img mario type1 right"></div>
+					<div class="img mario type0 left"></div>
+				</div>
+				<div>
+					<span>(unofficial)</span>
+				</div>
 			</div>
 			<!-- view -->
-			<div>
-				<div>
-					■ view values
-				</div>
+			<div class="noselect">
+				<div><span>■ view values</span></div>
 				<table id="TABLE_VIEW">
 					<colgroup>
 						<col style="width:3em;">
@@ -356,23 +400,24 @@
 					<tbody>
 						<tr>
 							<td class="caption">2進</td>
-							<td class="value" id="VIEW_VALUE_BIN"></td>
+							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_BIN" class="view_value monospace"></span></div></td>
 						</tr>
 						<tr>
 							<td class="caption">10進</td>
-							<td class="value" id="VIEW_VALUE_DEC"></td>
+							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_DEC" class="view_value monospace"></span></div></td>
 						</tr>
 						<tr>
 							<td class="caption">16進</td>
-							<td class="value" id="VIEW_VALUE_HEX"></td>
+							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_HEX" class="view_value monospace"></span></div></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<!-- edit. -->
-			<div>
+			<div class="noselect">
 				<div>
-					■ edit
+					<span>■ edit</span>
+					<input type="submit" value="clear" onclick="clearValues();">
 				</div>
 				<div>
 					<input id="TEXTBOX_INPUT" type="text" placeholder="ここに入力" onchange="changeInput();" onkeyup="changeInput();">
@@ -395,79 +440,78 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th class="caption rsolid">n</th>
-							<th>7</th>
-							<th>6</th>
-							<th>5</th>
-							<th>4</th>
-							<th>3</th>
-							<th>2</th>
-							<th>1</th>
-							<th class="rsolid">0</th>
+							<th class="caption rsolid"><span class="monospace">n bit</span></th>
+							<th><span class="monospace">7</span></th>
+							<th><span class="monospace">6</span></th>
+							<th><span class="monospace">5</span></th>
+							<th><span class="monospace">4</span></th>
+							<th><span class="monospace">3</span></th>
+							<th><span class="monospace">2</span></th>
+							<th><span class="monospace">1</span></th>
+							<th class="rsolid"><span class="monospace">0</span></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 						<tr>
-							<!-- 1byte. -->
-							<td class="caption rsolid">1</td>
-							<td class="bitcell right"><div class="bitpos_0x00000007" onclick="chengeBit(007);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000006" onclick="chengeBit(006);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000005" onclick="chengeBit(005);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000004" onclick="chengeBit(004);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000003" onclick="chengeBit(003);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000002" onclick="chengeBit(002);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000001" onclick="chengeBit(001);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000000" onclick="chengeBit(000);"><div class="img"></div></div></td>
-						</tr>
-						<tr>
-							<!-- 2byte. -->
-							<td class="caption rsolid">2</td>
-							<td class="bitcell right"><div class="bitpos_0x0000000f" onclick="chengeBit(017);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000000e" onclick="chengeBit(016);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000000d" onclick="chengeBit(015);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000000c" onclick="chengeBit(014);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000000b" onclick="chengeBit(013);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000000a" onclick="chengeBit(012);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000009" onclick="chengeBit(011);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000008" onclick="chengeBit(010);"><div class="img"></div></div></td>
+							<!-- 4byte. -->
+							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x??000000</span></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001f" onclick="chengeBit(037);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001e" onclick="chengeBit(036);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001d" onclick="chengeBit(035);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001c" onclick="chengeBit(034);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001b" onclick="chengeBit(033);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001a" onclick="chengeBit(032);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000019" onclick="chengeBit(031);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000018" onclick="chengeBit(030);"><div class="img"></div></div></td>
 						</tr>
 						<tr>
 							<!-- 3byte. -->
-							<td class="caption rsolid">3</td>
-							<td class="bitcell right"><div class="bitpos_0x00000017" onclick="chengeBit(027);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000016" onclick="chengeBit(026);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000015" onclick="chengeBit(025);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000014" onclick="chengeBit(024);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000013" onclick="chengeBit(023);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000012" onclick="chengeBit(022);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000011" onclick="chengeBit(021);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000010" onclick="chengeBit(020);"><div class="img"></div></div></td>
+							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x00??0000</span></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000017" onclick="chengeBit(027);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000016" onclick="chengeBit(026);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000015" onclick="chengeBit(025);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000014" onclick="chengeBit(024);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000013" onclick="chengeBit(023);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000012" onclick="chengeBit(022);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000011" onclick="chengeBit(021);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000010" onclick="chengeBit(020);"><div class="img"></div></div></td>
 						</tr>
 						<tr>
-							<!-- 4byte. -->
-							<td class="caption rsolid">4</td>
-							<td class="bitcell right"><div class="bitpos_0x0000001f" onclick="chengeBit(037);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000001e" onclick="chengeBit(036);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000001d" onclick="chengeBit(035);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000001c" onclick="chengeBit(034);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000001b" onclick="chengeBit(033);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x0000001a" onclick="chengeBit(032);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000019" onclick="chengeBit(031);"><div class="img"></div></div></td>
-							<td class="bitcell right"><div class="bitpos_0x00000018" onclick="chengeBit(030);"><div class="img"></div></div></td>
+							<!-- 2byte. -->
+							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x0000??00</span></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000f" onclick="chengeBit(017);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000e" onclick="chengeBit(016);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000d" onclick="chengeBit(015);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000c" onclick="chengeBit(014);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000b" onclick="chengeBit(013);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000a" onclick="chengeBit(012);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000009" onclick="chengeBit(011);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000008" onclick="chengeBit(010);"><div class="img"></div></div></td>
+						</tr>
+						<tr>
+							<!-- 1byte. -->
+							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x000000??</span></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000007" onclick="chengeBit(007);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000006" onclick="chengeBit(006);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000005" onclick="chengeBit(005);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000004" onclick="chengeBit(004);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000003" onclick="chengeBit(003);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000002" onclick="chengeBit(002);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000001" onclick="chengeBit(001);"><div class="img"></div></div></td>
+							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000000" onclick="chengeBit(000);"><div class="img"></div></div></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<!-- . -->
-			<div>
-				<div>
-					■ mario
+			<div class="noselect">
+				<div><span>■ mario</span></div>
+				<div class="flex sample">
+					<div class="pointer img mario type2 left" style="" onclick="chengeTrigImage()"></div>
+					<div class="pointer img mario type2 right" style="" onclick="chengeTrigImage()"></div>
 				</div>
-				<div class="sample">
-					<img alt="left" src="mario_l2.png" onclick="chengeTrigImage()">
-					<img alt="right" src="mario_r2.png" onclick="chengeTrigImage()">
-				</div>
+				<div><span>※ 任天堂の許可を取っていない非公式のものです。</span></div>
 			</div>
 		</div>
 	</body>
