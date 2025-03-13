@@ -241,21 +241,21 @@
 			}
 
 			self.updateText = function (curValue){
-				let elmViewValueBin = document.querySelector('#VIEW_VALUE_BIN');
-				let elmViewValueDec = document.querySelector('#VIEW_VALUE_DEC');
-				let elmViewValueHex = document.querySelector('#VIEW_VALUE_HEX');
-				let valueU32 = (curValue >>> 0);
+				const valueU32 = (curValue >>> 0);
 				/** bin. */
 				(function(){
+					const elmViewValueBin = document.querySelector('#VIEW_VALUE_BIN');
 					let str = valueU32.toString(2);
 					str += '00000000000000000000000000000000' + str;
 					str = str.slice(-32);
-					str = getAddedDelimiterString(str, 8, '-');
+					// str = getAddedDelimiterString(str, 8, '-');
+					str = str.match(/.{1,8}/g).map((s) => s.match(/.{1,4}/g).join('-')).join('\u2011');
 					elmViewValueBin.textContent = str;
 				})();
 
 				/** dec. */
 				(function(){
+					const elmViewValueDec = document.querySelector('#VIEW_VALUE_DEC');
 					let str = valueU32.toString(10);
 					//str += '00000000000000000000000000000000' + str;
 					//str = str.slice(-32);
@@ -265,6 +265,7 @@
 
 				/** hex. */
 				(function(){
+					const elmViewValueHex = document.querySelector('#VIEW_VALUE_HEX');
 					let str = valueU32.toString(16);
 					str = str.toUpperCase();
 					str = '00000000' + str;
@@ -415,7 +416,7 @@
 					<div class="img mario type1 right"></div>
 					<div class="img mario type0 left"></div>
 				</div>
-				<div>
+				<div style="font-size:0.75em;">
 					<span>Base converter</span>
 					<br>
 					<span>with unofficial mario.</span>
