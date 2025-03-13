@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,maximum-scale = 1.0,user-scalable=no" />
-		<title>bits</title>
+		<title>bitts (unofficial)</title>
 		<link rel="manifest" href="manifest.json">
 		<link rel="icon" href="icon-192x192.png">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,13 +48,17 @@
 				justify-content: center;
 			}
 
-			div.title {
-				text-align:center;
+			div.section {
+				margin-bottom: 1em;
 			}
-			div.title .flex{
+
+			div.logo {
+				text-align: center;
+			}
+			div.logo .flex{
 				align-items: center;
 			}
-			div.title .img {
+			div.logo .img {
 				text-align:center;
 				width:16px;
 				height:32px;
@@ -67,9 +71,16 @@
 				image-rendering: -o-crisp-edges;            /* Opera 12.x */
 				image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
 			}
-			span.title {
+
+			span.logo {
 				font-size:2em;
 			}
+
+			div.title {
+				font-size:1.2em;
+				font-weight: bold;
+			}
+
 			table {
 				border-collapse:collapse;
 				border:solid 2px #000000;
@@ -168,6 +179,14 @@
 			.img.mario.type2.right {
 				/*background-image: url("./mario_r2.png");*/
 				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAABSklEQVRIiZ1VMW7DMAw8CVn7hsJDEc9e+oEAmfOMek+AvMCAMxTokEx9Q+YA/kAWzd0Mo0/IA5xJCimRjuKbBJk8HimSNj/Lb0h4fzuO8d1wq018t8hxBIDqCxja9N7mOmtIFEhwpzSAT4cRXD77cN5XBQCgcX04A8C55XUIKfyttuO+KpixR+MexJvdcdzsHkpsYh05aaSexProGpGkgkIsIo1IHem57A4mKJiKIsmnMLQTfSrPnOhLsBTK7mC0ejSuD7IpxBq4E+8JAFhfC1xW2zEmYTXIeY3Yxmofckmy+0AjSTpxfdVfQPpm50SnKtRxnlLCFEiX0gLRlor5//1gKfjloSEmUsc5FzbeMK/g3NaGKXgmX7IJ06htZA1+qdop5+FWG+lnQn3UIlJHjWSSIBcLHyFu6bLjhvF+EHfiLAVzh0kd51dxBxLIkgtcwWviAAAAAElFTkSuQmCC");
+			}
+
+			span.hexHighlight {
+				color: #FF0000;
+				font-weight: bold;
+			}
+			span.hexGray {
+				color: #909090;
 			}
 
 			td.bitcell > div.bitpos:hover {
@@ -278,7 +297,7 @@
 				updateText(0);
 				updateStyle(0);
 				document.querySelectorAll('#TEXTBOX_INPUT').forEach(function(input) {
-					input.value=""
+					input.value = '';
 				});
 			}
 
@@ -381,15 +400,15 @@
 	</head>
 	<body>
 		<div>
-			<!-- title. -->
-			<div class="title noselect">
+			<!-- logo. -->
+			<div class="logo noselect">
 				<div class="flex">
 					<div class="img mario type0 left"></div>
 					<div class="img mario type1 right"></div>
 					<div class="img mario type0 left"></div>
 					<div class="img mario type1 left"></div>
 					<div class="img mario type2 right"></div>
-					<div><span class="title">bitts</span></div>
+					<div><span class="logo">bitts</span></div>
 					<div class="img mario type1 right"></div>
 					<div class="img mario type0 right"></div>
 					<div class="img mario type2 left"></div>
@@ -397,12 +416,14 @@
 					<div class="img mario type0 left"></div>
 				</div>
 				<div>
-					<span>(unofficial)</span>
+					<span>Base converter</span>
+					<br>
+					<span>with unofficial mario.</span>
 				</div>
 			</div>
 			<!-- view -->
-			<div class="noselect">
-				<div><span>■ view values</span></div>
+			<div class="section noselect">
+				<div class="title"><span>■ view values</span></div>
 				<table id="TABLE_VIEW">
 					<colgroup>
 						<col style="width:3em;">
@@ -410,29 +431,29 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<td>進数</td>
-							<td>値</td>
+							<th><div class="nobreak"><span>進数</span></div></th>
+							<th><div class="nobreak"><span>値</span></div></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td class="caption">2進</td>
+							<td class="caption"><div class="nobreak"><span>2進</span></div></td>
 							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_BIN" class="view_value monospace"></span></div></td>
 						</tr>
 						<tr>
-							<td class="caption">10進</td>
+							<td class="caption"><div class="nobreak"><span>10進</span></div></td>
 							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_DEC" class="view_value monospace"></span></div></td>
 						</tr>
 						<tr>
-							<td class="caption">16進</td>
+							<td class="caption"><div class="nobreak"><span>16進</span></div></td>
 							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_HEX" class="view_value monospace"></span></div></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<!-- edit. -->
-			<div class="noselect">
-				<div>
+			<div class="section noselect">
+				<div class="title">
 					<span>■ edit</span>
 					<input type="submit" value="clear" onclick="clearValues();">
 				</div>
@@ -472,7 +493,7 @@
 						<tr>
 						<tr>
 							<!-- 4byte. -->
-							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x??000000</span></div></td>
+							<td class="caption rsolid"><div class="nobreak monospace"><span class="hexGray">0x</span><span class="hexHighlight">??</span><span class="hexGray">000000</span></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001f" onclick="chengeBit(037);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001e" onclick="chengeBit(036);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000001d" onclick="chengeBit(035);"><div class="img"></div></div></td>
@@ -484,7 +505,7 @@
 						</tr>
 						<tr>
 							<!-- 3byte. -->
-							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x00??0000</span></div></td>
+							<td class="caption rsolid"><div class="nobreak monospace"><span class="hexGray">0x00</span><span class="hexHighlight">??</span><span class="hexGray">0000</span></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000017" onclick="chengeBit(027);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000016" onclick="chengeBit(026);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000015" onclick="chengeBit(025);"><div class="img"></div></div></td>
@@ -496,7 +517,7 @@
 						</tr>
 						<tr>
 							<!-- 2byte. -->
-							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x0000??00</span></div></td>
+							<td class="caption rsolid"><div class="nobreak monospace"><span class="hexGray">0x0000</span><span class="hexHighlight">??</span><span class="hexGray">00</span></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000f" onclick="chengeBit(017);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000e" onclick="chengeBit(016);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x0000000d" onclick="chengeBit(015);"><div class="img"></div></div></td>
@@ -508,7 +529,7 @@
 						</tr>
 						<tr>
 							<!-- 1byte. -->
-							<td class="caption rsolid"><div class=" nobreak"><span class="monospace">0x000000??</span></div></td>
+							<td class="caption rsolid"><div class="nobreak monospace"><span class="hexGray">0x000000</span><span class="hexHighlight">??</span></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000007" onclick="chengeBit(007);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000006" onclick="chengeBit(006);"><div class="img"></div></div></td>
 							<td class="bitcell right"><div class="false pointer bitpos bitpos_0x00000005" onclick="chengeBit(005);"><div class="img"></div></div></td>
@@ -522,8 +543,8 @@
 				</table>
 			</div>
 			<!-- . -->
-			<div class="noselect">
-				<div><span>■ mario</span></div>
+			<div class="section noselect">
+				<div class="title"><span>■ mario</span></div>
 				<div class="flex sample">
 					<div class="pointer img mario type2 left" style="" onclick="chengeTrigImage()"></div>
 					<div class="pointer img mario type2 right" style="" onclick="chengeTrigImage()"></div>
