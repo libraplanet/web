@@ -231,6 +231,8 @@
 			/* values. */
 			let rootValue = 0;
 
+			self.getReverseString = (str) => [...str].reverse().join('');
+
 			self.getAddedDelimiterString = function (str, count,delim) {
 				let ret = '';
 				let i = 0;
@@ -242,7 +244,7 @@
 					i++;
 				}
 				return ret;
-			}
+			};
 
 			self.updateText = function (curValue){
 				const valueU32 = (curValue >>> 0);
@@ -269,7 +271,9 @@
 					let str = valueU32.toString(10);
 					//str += '00000000000000000000000000000000' + str;
 					//str = str.slice(-32);
+					str = getReverseString(str);
 					str = getAddedDelimiterString(str, 3, ',');
+					str = getReverseString(str);
 					elmViewValueDec.textContent = str;
 				})();
 
@@ -283,7 +287,8 @@
 					str = '0x' + str;
 					elmViewValueHex.textContent = str;
 				})();
-			}
+			};
+
 			self.updateStyle = function (curValue){
 				const bitcells = document.querySelectorAll('.bitcell');
 				for(let i = 0; i < 32; i++) {
@@ -301,7 +306,7 @@
 						});
 					});
 				}
-			}
+			};
 
 			function clearValues() {
 				rootValue = 0;
@@ -310,7 +315,7 @@
 				document.querySelectorAll('#TEXTBOX_INPUT').forEach(function(input) {
 					input.value = '';
 				});
-			}
+			};
 
 
 			function chengeBit(bitPos) {
@@ -319,7 +324,7 @@
 				rootValue = n;
 				updateText(n);
 				updateStyle(n);
-			}
+			};
 
 			function changeInput() {
 				let elmTextbox = document.querySelector('#TEXTBOX_INPUT');
@@ -367,7 +372,7 @@
 					updateText(num);
 					updateStyle(num);
 				}
-			}
+			};
 
 			function chengeTrigImage() {
 				const bitcellsL = document.querySelectorAll('.bitcell.left');
@@ -380,7 +385,7 @@
 					cell.classList.remove('right');
 					cell.classList.add('left');
 				});
-			}
+			};
 
 			function chengeImage(type) {
 				document.querySelectorAll('.bitcell').forEach(function(cell) {
@@ -388,7 +393,7 @@
 					cell.classList.remove('right');
 					cell.classList.add(type);
 				});
-			}
+			};
 
 
 			/**
