@@ -151,6 +151,10 @@
 			td.bitcell > div.true {
 				background-color:#D0FFFF;
 			}
+			
+			#VIEW_VALUE_BIN {
+				hyphens: none;
+			}
 
 			.img.mario.type0.left
 			, td.bitcell.left > div > div.img {
@@ -249,7 +253,13 @@
 					str += '00000000000000000000000000000000' + str;
 					str = str.slice(-32);
 					// str = getAddedDelimiterString(str, 8, '-');
-					str = str.match(/.{1,8}/g).map((s) => s.match(/.{1,4}/g).join('-')).join('\u2011');
+					// \u0020 SPACE
+					// \u002D HYPHEN
+					// \u00A0 NON-BREAKING SPACE
+					// \u00AD SOFT HYPHEN
+					// \u2011 NON-BREAKING HYPHEN
+					// \u200B ZERO WIDTH SPACE
+					str = str.match(/.{1,16}/g).map((s) => s.match(/.{1,8}/g).join('\u00A0')).join('\u0020');
 					elmViewValueBin.textContent = str;
 				})();
 
@@ -439,15 +449,15 @@
 					<tbody>
 						<tr>
 							<td class="caption"><div class="nobreak"><span>2進</span></div></td>
-							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_BIN" class="view_value monospace"></span></div></td>
+							<td class="value"><div class="selectable-all view_value monospace"><span id="VIEW_VALUE_BIN"></span></div></td>
 						</tr>
 						<tr>
 							<td class="caption"><div class="nobreak"><span>10進</span></div></td>
-							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_DEC" class="view_value monospace"></span></div></td>
+							<td class="value"><div class="selectable-all view_value monospace"><span id="VIEW_VALUE_DEC"></span></div></td>
 						</tr>
 						<tr>
 							<td class="caption"><div class="nobreak"><span>16進</span></div></td>
-							<td class="value"><div class="nobreak selectable-all"><span id="VIEW_VALUE_HEX" class="view_value monospace"></span></div></td>
+							<td class="value"><div class="selectable-all view_value monospace"><span id="VIEW_VALUE_HEX"></span></div></td>
 						</tr>
 					</tbody>
 				</table>
