@@ -1,0 +1,11 @@
+{
+  "name": "clock (libraplanet.github.io)",
+  "short_name": "clock (libraplanet.github.io)",
+  "description": "clock (libraplanet.github.io)",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+  ]
+}
