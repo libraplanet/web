@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bit-calculator-cache-v1';
+const CACHE_NAME = 'bit-calculator-cache-v1.0.0.1';
 const urlsToCache = [
 	'index.html',
 	'icon-192x192.png',
