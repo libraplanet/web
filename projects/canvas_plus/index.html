@@ -69,11 +69,14 @@
                 const elmImgText = document.querySelector('textarea#imgText');
                 const elmImgUri = document.querySelector('textarea#imgUri');
                 const elmBgRadios = document.querySelectorAll('input[type="radio"][name="background-color"]');
+                const elmLink = document.querySelector('a#downloadLink');
+
+                const clip = document.querySelector('div.canvas_clip');
+                const canvas = document.querySelector('canvas#canvas');
+                const context = canvas?.getContext('2d');
 
                 const updateCanvas = function(mime, base64, bgColorCd) {
                     const draw = function(img) {
-                        const canvas = document.querySelector('canvas#canvas');
-                        const context = canvas?.getContext('2d');
                         if(context) {
                             const width = canvas.width = (img?.width || canvas.width);
                             const height = canvas.height = (img?.height || canvas.height);
@@ -93,13 +96,13 @@
                         img.onload = function() {
                             draw(img);
                             (function(){
-                                const clip = document.querySelector('div.canvas_clip');
-                                const canvas = document.querySelector('canvas#canvas');
                                 clip.style.height = `${canvas.height + 40}`;
+                                elmLink.setAttribute('href', canvas.toDataURL());
                             })();
                         }
                     } else {
                         draw();
+                        elmLink.setAttribute('href', canvas.toDataURL());
                     }
                 };
 
@@ -163,6 +166,21 @@
                 // first load.
                 updateFromText();
 
+                (function() {
+                    let deg = 0;
+                    setInterval(function() {
+                        document.querySelectorAll('div.bounding-char').forEach(function(div, i) {
+                            const d = ((deg + (-i * 17)) + 180) % 180;
+                            const r = d * Math.PI / 180;
+                            div.style.paddingBottom = (Math.sin(r) * 15) + 'px';
+                            div.setAttribute('data-deg', `${d}`);
+                            div.setAttribute('data-rad', `${r}`);
+                        });
+                        deg += 8;
+                        deg %= 180;
+                    }, 1000 / 30);
+                })();
+
                 console.info('loaded.');
             });
         </script>
@@ -171,9 +189,19 @@
         <div class="root">
             <div class="section">
                 <div class="title noselect">
-                    <span style="color: #C0C0FF;">c</span><span style="color: #FFFFC0;">a</span><span style="color: #C0FFC0;">n</span><span style="color: #FFC0FF;">v</span><span style="color: #C0C0C0;">a</span><span style="color: #C0FFFF;">s</span>
-                    <span style="color: #FFFFFF;"> </span>
-                    <span style="color: #FFC0FF;">p</span><span style="color: #FFFFFF;">l</span><span style="color: #C0FFC0;">u</span><span style="color: #FFC0C0;">s</span>
+                    <div style="height:80px; display:grid;grid-template-columns:1em 1em 1em 1em 1em 1em 1em 1em 1em 1em 1em;justify-content: center;align-items: end;">
+                        <div class="bounding-char"><span style="color: #C0C0FF;">c</span></div>
+                        <div class="bounding-char"><span style="color: #FFFFC0;">a</span></div>
+                        <div class="bounding-char"><span style="color: #C0FFC0;">n</span></div>
+                        <div class="bounding-char"><span style="color: #FFC0FF;">v</span></div>
+                        <div class="bounding-char"><span style="color: #C0C0C0;">a</span></div>
+                        <div class="bounding-char"><span style="color: #C0FFFF;">s</span></div>
+                        <div class="bounding-char"><span style="color: #FFFFFF;"> </span></div>
+                        <div class="bounding-char"><span style="color: #FFC0FF;">p</span></div>
+                        <div class="bounding-char"><span style="color: #FFFFFF;">l</span></div>
+                        <div class="bounding-char"><span style="color: #C0FFC0;">u</span></div>
+                        <div class="bounding-char"><span style="color: #FFC0C0;">s</span></div>
+                    </div>
                 </div>
                 <div class="desctiption noselect">
                     <ul>
@@ -217,19 +245,19 @@
                     <span>options.</span>
                 </div>
                 <div class="contents">
-                    <div style='display:grid; grid-gap 2px 2px; grid-template-columns: auto auto auto;'>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="" checked>transparent</label></div>
-                        <div class='noselect' ></div>
-                        <div class='noselect' ></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#FFFFFF">white  (#FFFFFF)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#888888">gray   (#888888)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#000000">black  (#000000)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#FF00FF">purple (#FF00FF)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#FFFF00">yellow (#FFFF00)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#00FFFF">cyan   (#00FFFF)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#FF0000">red    (#FF0000)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#00FF00">green  (#00FF00)</label></div>
-                        <div class='noselect' ><label><input type="radio" name="background-color" value="#0000FF">blue   (#0000FF)</label></div>
+                    <div style="display:grid; grid-gap: 2px 2px; grid-template-columns: auto auto auto;">
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="" checked>transparent</label></div>
+                        <div class="noselect" ></div>
+                        <div class="noselect" ></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#FFFFFF">white  (#FFFFFF)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#888888">gray   (#888888)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#000000">black  (#000000)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#FF00FF">purple (#FF00FF)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#FFFF00">yellow (#FFFF00)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#00FFFF">cyan   (#00FFFF)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#FF0000">red    (#FF0000)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#00FF00">green  (#00FF00)</label></div>
+                        <div class="noselect" ><label><input type="radio" name="background-color" value="#0000FF">blue   (#0000FF)</label></div>
                     </div>
                 </div>
             </div>
@@ -240,6 +268,9 @@
                 <div class="canvas_clip contents">
                     <canvas id="canvas">
                     </canvas>
+                </div>
+                <div class="contents">
+                    <a id="downloadLink" target="_blank">download</a>
                 </div>
             </div>
 
@@ -254,6 +285,7 @@
                             <li>もしくはSVGのテキストを貼り付ける。</li>
                             <li>背景色を選択する。</li>
                             <li>出力画像を右クリックで保存する。</li>
+                            <li>もしくはdownloadのリンクを右クリックで保存する。</li>
                             <li>(ﾟДﾟ)ｳﾏｰ</li>
                         </ul>
                     </div>
