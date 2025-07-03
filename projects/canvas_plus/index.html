@@ -97,12 +97,12 @@
                             draw(img);
                             (function(){
                                 clip.style.height = `${canvas.height + 40}`;
-                                elmLink.setAttribute('href', canvas.toDataURL());
+                                canvas.toBlob((blob) => elmLink.setAttribute('href', URL.createObjectURL(blob)));
                             })();
                         }
                     } else {
                         draw();
-                        elmLink.setAttribute('href', canvas.toDataURL());
+                        canvas.toBlob((blob) => elmLink.setAttribute('href', URL.createObjectURL(blob)));
                     }
                 };
 
